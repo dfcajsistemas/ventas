@@ -24,20 +24,20 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UbigeoSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(EmpresaSeeder::class);
+        $this->call(SucursalSeeder::class);
+
 
         User::factory()->create([
-            'name' => 'Gerardo Severino',
-            'surname' => 'Intor Osorio',
+            'name' => 'Admin',
             'doc_tipo' => '1',
-            'doc_numero' => '40450444',
-            'sexo' => '1',
+            'doc_numero' => '11111111',
             'email' => 'deargerard@hotmail.com',
             'fec_nac' => '1979-12-07',
-            'est_civil' => '2',
-            'gru_san' => 'O+',
-            'cuenta_bn' => '193-200000000-0',
             'password' => bcrypt('12345678'),
-            'distrito_id' => '551'
+            'sucursal_id' => 1
         ])->assignRole('accesos admin');
+
+        User::factory(50)->create();
     }
 }

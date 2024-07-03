@@ -1,6 +1,25 @@
-@props(['mTitle' => 'modal', 'mEvent' => 'modal'])
-<div class="modal fade" id="modalCom" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+@props(['mId'=>'modal', 'mTitle' => 'Titulo', 'mMethod' => 'render', 'mSize'=>'md'])
+@php
+        switch ($mSize ?? '') {
+        case 'sm':
+            $mSize = ' modal-sm';
+            break;
+        case 'md':
+            $mSize = '';
+            break;
+        case 'lg':
+            $mSize = ' modal-lg';
+            break;
+        case 'xl':
+            $mSize = ' modal-xl';
+            break;
+        default:
+            $mSize = '';
+            break;
+    }
+@endphp
+<div class="modal fade" id="{{$mId}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog {{$mSize}}" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel1">{{ $mTitle }}</h5>
@@ -10,12 +29,10 @@
                 {{ $slot }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal"
-                    wire:click="$set('isOpen','0')">
-                    Close
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                    Cerrar
                 </button>
-                <button @click="$dispatch('{{ $mEvent }}')" type="button" class="btn btn-primary">Save
-                    changes</button>
+                <button wire:click='{{$mMethod}}()' type="button" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </div>

@@ -60,4 +60,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    //Relacion uno a muchos inversa
+    public function sucursal(){
+        return $this->belongsTo(Sucursal::class);
+    }
 }

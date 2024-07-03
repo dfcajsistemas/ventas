@@ -22,6 +22,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'doc_tipo' => $this->faker->randomElement([1, 2, 3]),
+            'doc_numero' => $this->faker->unique()->numerify('########'),
+            'fec_nac' => $this->faker->date(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -30,6 +33,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'estado' => 1,
+            'sucursal_id' => 1,
         ];
     }
 

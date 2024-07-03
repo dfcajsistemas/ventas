@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Departamento extends Model
 {
     use HasFactory;
+
+    //Relacion uno a muchos
+    public function provincias(){
+        return $this->hasMany(Provincia::class);
+    }
 }

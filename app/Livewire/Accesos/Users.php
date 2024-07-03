@@ -10,7 +10,7 @@ class Users extends Component
 {
     use WithPagination;
 
-    public $password, $rpassword, $mevent, $mtitle, $idm, $nombre;
+    public $password, $rpassword, $mMethod, $mTitle, $idm, $nombre;
     public $perPage = '10';
     public $search = '';
     public $isOpen=0;
@@ -32,12 +32,10 @@ class Users extends Component
 
     public function render()
     {
-        $users= User::select('id', 'name', 'surname', 'doc_numero', 'estado')
+        $users= User::select('id', 'name', 'doc_numero', 'estado')
                     ->where('name', 'LIKE', "%$this->search%")
-                    ->orWhere('surname', 'LIKE', "%$this->search%")
                     ->orWhere('doc_numero', 'LIKE', "%$this->search%")
                     ->where('estado', 1)
-                    ->orderBy('surname')
                     ->orderBy('name')
                     ->paginate($this->perPage);
         return view('livewire.accesos.users', compact('users'))
@@ -46,11 +44,26 @@ class Users extends Component
 
     public function create()
     {
-        $this->mtitle = 'Cambiar contraseña';
-        $this->mevent = 'password';
-        $this->resetInputFields();
-        $this->openModal();
+        $this->mTitle = 'Nuevo usuario';
+        $this->mMethod = 'store';
+        $this->dispatch('sm');
     }
 
-    
+    public function store()
+    {
+        // $this->validate([
+        //     'nombre' => 'required',
+        //     'password' => 'required|min:8',
+        //     'rpassword' => 'required|same:password'
+        // ]);
+
+        // User::create([
+        //     'name' => $this->nombre,
+        //     'password' => bcrypt($this->password)
+        // ]);
+
+        $this->dispatch('hm', ['m' => 'Usuario creado', 't' => 'success']);
+    }
+
+
 }
