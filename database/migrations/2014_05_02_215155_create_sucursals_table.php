@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('telefono', 15)->nullable();
             $table->string('cod_sunat', 6)->nullable();
 
+            $table->tinyInteger('estado')->default(1); //1 activo, null inactivo
+
             $table->unsignedBigInteger('empresa_id');
             $table->foreign('empresa_id')->references('id')->on('empresas');
 

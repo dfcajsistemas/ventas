@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->tinyInteger('doc_tipo'); // 1 - DNI, 2 - Carnet de Extranjería, 3 - Pasaporte
-            $table->string('doc_numero', 15)->unique();
+            //$table->tinyInteger('doc_tipo'); // 1 - DNI, 2 - Carnet de Extranjería, 3 - Pasaporte
+            $table->string('ndocumento', 15)->unique();
             $table->string('email')->unique();
             $table->date('fec_nac')->nullable();
             $table->timestamp('email_verified_at')->nullable();
@@ -25,6 +25,9 @@ return new class extends Migration
             $table->string('profile_photo_path', 2048)->nullable();
 
             $table->tinyInteger('estado')->nullable()->default(1); // 1 - Habilitado, null - Deshabilitado
+
+            $table->unsignedBigInteger('tdocumento_id');
+            $table->foreign('tdocumento_id')->references('id')->on('tdocumentos');
 
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');

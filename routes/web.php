@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-})->name('intranet');
+    return view('auth.login');
+})->name('index');
 
 Route::middleware([
     'auth:sanctum',

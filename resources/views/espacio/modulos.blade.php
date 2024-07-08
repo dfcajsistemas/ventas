@@ -9,13 +9,13 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/personal.jpg') }}" alt="Personal"
+                        <img src="{{ asset('assets/img/modulos/mantenimiento.png') }}" alt="Personal"
                             class="card-img card-img-left">
                     </div>
                     <div class="col-8">
                         <div class="card-body">
                             <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Personal</h6>
+                            <h6 class="card-title m-0 text-info">Mantenimiento</h6>
                             <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
                                 Ir</a>
                         </div>
@@ -27,13 +27,13 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/legajo.jpg') }}" alt="Personal"
+                        <img src="{{ asset('assets/img/modulos/despacho.png') }}" alt="Despacho"
                             class="card-img card-img-left">
                     </div>
                     <div class="col-8">
                         <div class="card-body">
                             <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Legajo</h6>
+                            <h6 class="card-title m-0 text-info">Despacho</h6>
                             <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
                                 Ir</a>
                         </div>
@@ -45,13 +45,13 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/vacaciones.jpg') }}" alt="Vacaciones"
+                        <img src="{{ asset('assets/img/modulos/caja.png') }}" alt="Caja"
                             class="card-img card-img-left">
                     </div>
                     <div class="col-8">
                         <div class="card-body">
                             <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Vacaciones</h6>
+                            <h6 class="card-title m-0 text-info">Caja</h6>
                             <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
                                 Ir</a>
                         </div>
@@ -63,13 +63,13 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/licencias.jpg') }}" alt="Licencias"
+                        <img src="{{ asset('assets/img/modulos/delivery.png') }}" alt="Delivery"
                             class="card-img card-img-left">
                     </div>
                     <div class="col-8">
                         <div class="card-body">
                             <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Licencias</h6>
+                            <h6 class="card-title m-0 text-info">Delivery</h6>
                             <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
                                 Ir</a>
                         </div>
@@ -81,49 +81,13 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/logistica.jpg') }}" alt="Lógistica"
+                        <img src="{{ asset('assets/img/modulos/reportes.png') }}" alt="Reportes"
                             class="card-img card-img-left">
                     </div>
                     <div class="col-8">
                         <div class="card-body">
                             <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Lógistica</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/bincautados.jpg') }}" alt="B. Incautados"
-                            class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">B. Incautados</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/informatica.jpg') }}" alt="B. Incautados"
-                            class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Informática</h6>
+                            <h6 class="card-title m-0 text-info">Reportes</h6>
                             <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
                                 Ir</a>
                         </div>

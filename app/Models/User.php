@@ -29,6 +29,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tdocumento_id',
+        'ndocumento',
+        'fec_nac',
+        'sucursal_id',
+        'estado',
+        'created_by',
+        'updated_by'
     ];
 
     /**
@@ -64,5 +71,8 @@ class User extends Authenticatable
     //Relacion uno a muchos inversa
     public function sucursal(){
         return $this->belongsTo(Sucursal::class);
+    }
+    public function tdocumento(){
+        return $this->belongsTo(Tdocumento::class);
     }
 }

@@ -26,14 +26,14 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(EmpresaSeeder::class);
         $this->call(SucursalSeeder::class);
-
+        $this->call(TdocumentoSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',
-            'doc_tipo' => '1',
-            'doc_numero' => '11111111',
-            'email' => 'deargerard@hotmail.com',
-            'fec_nac' => '1979-12-07',
+            'tdocumento_id' => '2',
+            'ndocumento' => '44444444',
+            'email' => 'admin@gmail.com',
+            'fec_nac' => '1990-01-01',
             'password' => bcrypt('12345678'),
             'sucursal_id' => 1
         ])->assignRole('accesos admin');

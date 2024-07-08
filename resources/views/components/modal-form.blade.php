@@ -1,6 +1,6 @@
-@props(['mId'=>'modal', 'mTitle' => 'Titulo', 'mMethod' => 'render', 'mSize'=>'md'])
+@props(['mId' => 'modal', 'mTitle' => 'Título', 'mMethod' => 'render', 'mSize' => 'md'])
 @php
-        switch ($mSize ?? '') {
+    switch ($mSize ?? '') {
         case 'sm':
             $mSize = ' modal-sm';
             break;
@@ -18,8 +18,8 @@
             break;
     }
 @endphp
-<div class="modal fade" id="{{$mId}}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog {{$mSize}}" role="document">
+<div wire:ignore.self class="modal fade" id="{{ $mId }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog {{ $mSize = '' ? '' : $mSize }}" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel1">{{ $mTitle }}</h5>
@@ -32,7 +32,31 @@
                 <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
                     Cerrar
                 </button>
-                <button wire:click='{{$mMethod}}()' type="button" class="btn btn-primary">Guardar</button>
+                @if ($mMethod == 'store')
+                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="store">
+                        <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
+                            wire:target="store"></span>
+                        <span class="">Guardar</span>
+                    </button>
+                @elseif($mMethod == 'update')
+                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="update">
+                        <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
+                            wire:target="update"></span>
+                        <span class="">Actualizar</span>
+                    </button>
+                @elseif($mMethod == 'storeForm')
+                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="storeForm">
+                        <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
+                            wire:target="storeForm"></span>
+                        <span class="">Guardar</span>
+                    </button>
+                @elseif($mMethod == 'updateForm')
+                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="updateForm">
+                        <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
+                            wire:target="updateForm"></span>
+                        <span class="">Actualizar</span>
+                    </button>
+                @endif
             </div>
         </div>
     </div>

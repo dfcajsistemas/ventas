@@ -22,8 +22,8 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'doc_tipo' => $this->faker->randomElement([1, 2, 3]),
-            'doc_numero' => $this->faker->unique()->numerify('########'),
+            'tdocumento_id' => $this->faker->randomElement([2, 3, 5]),
+            'ndocumento' => $this->faker->unique()->numerify('########'),
             'fec_nac' => $this->faker->date(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
