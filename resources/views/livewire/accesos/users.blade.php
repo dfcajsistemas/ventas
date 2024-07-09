@@ -50,15 +50,13 @@
                             <x-status :status="$user->estado" />
                         </td>
                         <td>
-                            <button class="btn btn-info btn-icon btn-sm mb-sm-1 mb-md-0" title="Editar"><i
+                            <button class="btn btn-info btn-icon btn-sm mb-sm-1 mb-md-0" title="Editar" wire:click='edit({{$user->id}})'><i
                                     class='tf-icon bx bx-pencil'></i></button>
-                            <button class="btn btn-secondary btn-icon btn-sm" title="Cambiar contraseña"><i
+                            <button class="btn btn-secondary btn-icon btn-sm" title="Cambiar contraseña" wire:click='editPassword({{$user->id}})'><i
                                     class='tf-icon bx bxs-key'></i></button>
                             <button class="btn btn-success btn-icon btn-sm" title="Asignar perfiles"><i
                                     class='tf-icon bx bxs-lock'></i></button>
                                     <button wire:click='estado({{$user->id}})' class="btn btn-warning btn-icon btn-sm" title="Desactivar"><i class='tf-icon bx bxs-toggle-right' ></i></button>
-                            <button class="btn btn-danger btn-icon btn-sm" title="Eliminar"><i
-                                    class='tf-icon bx bx-trash'></i></button>
                         </td>
                     </tr>
                     @empty
@@ -74,7 +72,7 @@
             </div>
         </div>
     </div>
-    <x-modal-form mId="mUser" :mTitle="$mTitle" :mMethod="$mMethod">
+    <x-modal-form mId="mUser" :mTitle="$mTitle" :mMethod="$mMethod" :kb="$kb">
         <div class="row">
             <div class="col mb-3">
                 <x-input wire:model='name' type="text" id="name" placeholder="NOMBRE" />
@@ -109,16 +107,6 @@
                 <x-input-error for="email" />
             </div>
         </div>
-        <div class="row g-2">
-            <div class="col mb-3">
-                <x-input wire:model='password' type="password" id="password" placeholder="CONTRASEÑA" />
-                <x-input-error for="password" />
-            </div>
-            <div class="col mb-3">
-                <x-input wire:model='cpassword' type="password" id="cpassword" placeholder="REPETIR CONTRASEÑA" />
-                <x-input-error for="cpassword" />
-            </div>
-        </div>
         <div class="row">
             <div class="col mb-3">
                 <x-select wire:model='sucursal_id' id="sucursal_id">
@@ -131,10 +119,32 @@
             </div>
         </div>
     </x-modal-form>
+    <x-modal-form mId="mPass" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm" :kb="$kb">
+        <div class="row">
+            <div class="col-12">
+                <h6 class="text-info"><i class='bx bx-user text-muted ml-2'></i> {{ $name }}</h6>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <x-input type="text" id="password" wire:model="password"
+                        wire:keydown.enter="updatePassword()" />
+                    <x-input-error for="password" />
+                </div>
+            </div>
+            <div class="col-12 d-grid">
+                <button type="button" class="btn btn-warning" onclick="gPassword()" title="Generar contraseña"><i
+                        class='tf-icons bx bx-key me-1'></i>Generar</button>
+            </div>
+        </div>
+    </x-modal-form>
     @push('scripts')
     <script>
         document.addEventListener('livewire:initialized', () => {
             const mUser = new bootstrap.Modal('#mUser', {
+                keyboard: false
+            })
+            const mPass = new bootstrap.Modal('#mPass', {
                 keyboard: false
             })
             Livewire.on('sm', (e) => {
@@ -144,7 +154,22 @@
                 mUser.hide()
                 noti(e[0]['m'], e[0]['t'])
             });
+            Livewire.on('sp', (e) => {
+                mPass.show()
+            });
+            Livewire.on('hp', (e) => {
+                mPass.hide()
+                noti(e[0]['m'], e[0]['t'])
+            });
         })
+
+        function gPassword() {
+            var pass = "";
+            for (i = 0; i < 8; i++) {
+                pass += String.fromCharCode((Math.floor((Math.random() * 100)) % 94) + 33);
+            }
+            @this.set('password', pass);
+        }
     </script>
     @endpush
 </div>

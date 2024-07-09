@@ -1,4 +1,4 @@
-@props(['mId' => 'modal', 'mTitle' => 'Título', 'mMethod' => 'render', 'mSize' => 'md'])
+@props(['mId' => 'modal', 'mTitle' => 'Título', 'mMethod' => 'render', 'mSize' => 'md', 'kb' => '1'])
 @php
     switch ($mSize ?? '') {
         case 'sm':
@@ -33,25 +33,25 @@
                     Cerrar
                 </button>
                 @if ($mMethod == 'store')
-                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="store">
+                    <button wire:key='{{$kb}}' type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="store">
                         <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
                             wire:target="store"></span>
                         <span class="">Guardar</span>
                     </button>
                 @elseif($mMethod == 'update')
-                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="update">
+                    <button wire:key='{{$kb}}' type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="update">
                         <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
                             wire:target="update"></span>
                         <span class="">Actualizar</span>
                     </button>
                 @elseif($mMethod == 'storeForm')
-                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="storeForm">
+                    <button wire:key='{{$kb}}' type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="storeForm">
                         <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
                             wire:target="storeForm"></span>
                         <span class="">Guardar</span>
                     </button>
                 @elseif($mMethod == 'updateForm')
-                    <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="updateForm">
+                    <button wire:key='{{$kb}}' type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="updateForm">
                         <span class="spinner-border me-1" role="status" aria-hidden="true" wire:loading
                             wire:target="updateForm"></span>
                         <span class="">Actualizar</span>

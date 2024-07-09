@@ -7,12 +7,13 @@ use App\Models\Tdocumento;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Nette\Utils\Random;
 
 class Users extends Component
 {
     use WithPagination;
 
-    public $name, $tdocumento_id, $ndocumento, $fec_nac, $email, $password, $cpassword, $sucursal_id, $mMethod, $mTitle, $idm;
+    public $name, $tdocumento_id, $ndocumento, $fec_nac, $email, $password, $sucursal_id, $mMethod, $mTitle, $idm, $kb;
     public $tdocumentos, $sucursales;
     public $perPage = '10';
     public $search = '';
@@ -54,7 +55,8 @@ class Users extends Component
     {
         $this->mTitle = 'NUEVO USUARIO';
         $this->mMethod = 'store';
-        $this->reset(['name', 'tdocumento_id', 'ndocumento', 'fec_nac', 'email', 'password', 'cpassword', 'sucursal_id']);
+        $this->kb = rand(1, 99);
+        $this->reset(['name', 'tdocumento_id', 'ndocumento', 'fec_nac', 'email', 'password', 'sucursal_id']);
         $this->resetValidation();
         $this->dispatch('sm');
     }
@@ -67,26 +69,22 @@ class Users extends Component
             'ndocumento' => 'required|unique:users,ndocumento',
             'fec_nac' => 'required|date',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|same:cpassword',
             'sucursal_id' => 'required'
         ],
         [
-            'name.required' => 'El Nombre es obligatorio',
-            'tdocumento_id.required' => 'El Tipo de Documento es obligatorio',
-            'ndocumento.required' => 'El # Documento es obligatorio',
-            'ndocumento.unique' => 'El # Documento existe',
-            'fec_nac.required' => 'La Fec. Nacimiento es obligatoria',
-            'fec_nac.date' => 'El Fec. Nacimiento no es válida',
-            'email.required' => 'El email es obligatorio',
-            'email.email' => 'El email no es válido',
-            'email.unique' => 'El email existe',
-            'password.required' => 'La Contraseña es obligatoria',
-            'password.min' => 'Mínimo 8 caracteres',
-            'password.same' => 'Las contraseñas no coinciden',
-            'sucursal_id.required' => 'La Sucursal es obligatoria'
+            'name.required' => 'Nombre obligatorio',
+            'tdocumento_id.required' => 'Tipo de Documento obligatorio',
+            'ndocumento.required' => '# Documento obligatorio',
+            'ndocumento.unique' => '# Documento existe',
+            'fec_nac.required' => 'Fec. Nacimiento obligatoria',
+            'fec_nac.date' => 'Fec. Nacimiento no válida',
+            'email.required' => 'Email obligatorio',
+            'email.email' => 'Email no válido',
+            'email.unique' => 'Email existe',
+            'sucursal_id.required' => 'Sucursal obligatoria'
         ]);
 
-        //dd($this->ndocumento);
+        $pass=Random::generate(8);
 
         User::create([
             'name' => $this->name,
@@ -94,13 +92,63 @@ class Users extends Component
             'ndocumento' => $this->ndocumento,
             'fec_nac' => $this->fec_nac,
             'email' => $this->email,
-            'password' => bcrypt($this->password),
+            'password' => bcrypt($pass),
             'sucursal_id' => $this->sucursal_id,
             'created_by' => auth()->user()->id,
             'updated_by' => auth()->user()->id
         ]);
 
-        $this->dispatch('hm', ['m' => 'Usuario creado', 't' => 'success']);
+        $this->dispatch('hm', ['m' => '¡Hecho!<br>Usuario creado. Contraseña: '.$pass, 't' => 'success']);
+    }
+
+    public function edit(User $user)
+    {
+        $this->mTitle = 'EDITAR USUARIO';
+        $this->mMethod = 'update';
+        $this->idm = $user->id;
+        $this->name = $user->name;
+        $this->tdocumento_id = $user->tdocumento_id;
+        $this->ndocumento = $user->ndocumento;
+        $this->fec_nac = $user->fec_nac;
+        $this->email = $user->email;
+        $this->sucursal_id = $user->sucursal_id;
+        $this->kb = rand(1, 99);
+        $this->resetValidation();
+        $this->dispatch('sm');
+    }
+
+    public function update(){
+        $this->validate([
+            'name' => 'required',
+            'tdocumento_id' => 'required',
+            'ndocumento' => 'required|unique:users,ndocumento,'.$this->idm,
+            'fec_nac' => 'required|date',
+            'email' => 'required|email|unique:users,email,'.$this->idm,
+            'sucursal_id' => 'required'
+        ],
+        [
+            'name.required' => 'El Nombre es obligatorio',
+            'tdocumento_id.required' => 'Tipo de Documento obligatorio',
+            'ndocumento.required' => '# Documento obligatorio',
+            'ndocumento.unique' => '# Documento existe',
+            'fec_nac.required' => 'Fec. Nacimiento obligatoria',
+            'fec_nac.date' => 'Fec. Nacimiento no válida',
+            'email.required' => 'Email obligatorio',
+            'email.email' => 'Email no válido',
+            'email.unique' => 'Email existe',
+            'sucursal_id.required' => 'Sucursal es obligatoria'
+        ]);
+
+        $user = User::find($this->idm);
+        $user->name = $this->name;
+        $user->tdocumento_id = $this->tdocumento_id;
+        $user->ndocumento = $this->ndocumento;
+        $user->fec_nac = $this->fec_nac;
+        $user->email = $this->email;
+        $user->sucursal_id = $this->sucursal_id;
+        $user->updated_by = auth()->user()->id;
+        $user->save();
+        $this->dispatch('hm', ['m' => '¡Hecho!<br>Usuario actualizado', 't' => 'success']);
     }
 
     public function estado(User $user)
@@ -108,6 +156,34 @@ class Users extends Component
         $user->estado = $user->estado ? 0 : 1;
         $user->save();
         $this->dispatch('hm', ['m' => '¡Hecho!<br>Se cambio el estado de '.$user->name, 't' => 'success']);
+    }
+
+    public function editPassword(User $user)
+    {
+        $this->mTitle = 'CAMBIAR CONTRASEÑA';
+        $this->mMethod = 'updateForm';
+        $this->idm = $user->id;
+        $this->name = $user->name;
+        $this->kb = rand(1, 99);
+        $this->reset(['password']);
+        $this->resetValidation();
+        $this->dispatch('sp');
+    }
+
+    public function updateForm(){
+        $this->validate([
+            'password' => 'required|min:8'
+        ],
+        [
+            'password.required' => 'Contraseña obligatoria',
+            'password.min' => 'Mínimo 8 caracteres'
+        ]);
+
+        $user = User::find($this->idm);
+        $user->password = bcrypt($this->password);
+        $user->updated_by = auth()->user()->id;
+        $user->save();
+        $this->dispatch('hp', ['m' => '¡Hecho!<br>Contraseña cambiada', 't' => 'success']);
     }
 
 

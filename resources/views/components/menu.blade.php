@@ -33,20 +33,20 @@
                     <div class="text-truncate">Dashboard</div>
                 </a>
             </li>
-            <li class="menu-item {{ request()->routeIs('accesos.users') ? 'active' : '' }}">
+            <li class="menu-item {{ request()->routeIs('accesos.users*') ? 'active' : '' }}">
                 <a href="{{ route('accesos.users') }}" class="menu-link">
                     <i class="menu-icon tf-icons fa-solid fa-user-lock"></i>
                     <div class="text-truncate">Usuarios</div>
                 </a>
             </li>
-            <li class="menu-item {{ request()->routeIs('accesos.roles') ? 'active' : '' }}">
-                <a href="#" class="menu-link">
+            <li class="menu-item {{ request()->routeIs('accesos.roles*') ? 'active' : '' }}">
+                <a href="{{route('accesos.roles')}}" class="menu-link">
                     <i class="menu-icon tf-icons fa-solid fa-lock"></i>
                     <div class="text-truncate">Roles</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('accesos.permisos') ? 'active' : '' }}">
-                <a href="#" class="menu-link">
+                <a href="{{route('accesos.permisos')}}" class="menu-link">
                     <i class="menu-icon tf-icons fa-solid fa-key"></i>
                     <div class="text-truncate">Permisos</div>
                 </a>
