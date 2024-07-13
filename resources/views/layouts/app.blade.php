@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $modulo }} {{ $pagina ? '- ' . $pagina : '' }} | {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $title[0] . ' - ' . $title[1] }} | {{ config('app.name', 'Laravel') }}</title>
 
     <meta name="description" content="" />
 
@@ -42,21 +42,6 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
 
-    <style>
-        .overlay {
-            display: flex;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1900;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0,0,0,0.6);
-        }
-    </style>
-
     <!-- Page CSS -->
 
     <!-- Helpers -->
@@ -71,11 +56,6 @@
 </head>
 
 <body>
-    <div class="overlay hide" wire:loading>
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
@@ -99,7 +79,7 @@
                 </div>
 
                 <div class="menu-inner-shadow"></div>
-                <x-menu :modulo="$modulo" />
+                <x-menu :modulo="$title[1]" />
             </aside>
             <!-- / Menu -->
 

@@ -10,12 +10,12 @@ class AppLayout extends Component
     /**
      * Get the view / contents that represents the component.
      */
-    public $modulo, $pagina;
+    public $title=array();
 
     public function __construct($modulo = '', $pagina = '')
     {
-        $this->modulo = $modulo;
-        $this->pagina = $pagina;
+        $this->title[1] = $modulo;
+        $this->title[0] = $pagina;
     }
 
     public function render(): View

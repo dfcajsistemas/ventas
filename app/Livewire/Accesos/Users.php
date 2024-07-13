@@ -5,29 +5,24 @@ namespace App\Livewire\Accesos;
 use App\Models\Sucursal;
 use App\Models\Tdocumento;
 use App\Models\User;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Nette\Utils\Random;
 
+#[Lazy()]
 class Users extends Component
 {
     use WithPagination;
 
     public $name, $tdocumento_id, $ndocumento, $fec_nac, $email, $password, $sucursal_id, $mMethod, $mTitle, $idm, $kb;
     public $tdocumentos, $sucursales;
+    #[Url(except: '10')]
     public $perPage = '10';
+    #[Url(except: '')]
     public $search = '';
-    public $isOpen=0;
-
-    protected $queryString = [
-        'search' => ['except' => ''],
-        'perPage' => ['except' => '10']
-    ];
-
-    public function updatedPerPage()
-    {
-        $this->resetPage();
-    }
 
     public function updatedSearch()
     {
@@ -39,6 +34,7 @@ class Users extends Component
         $this->sucursales = Sucursal::where('estado', 1)->pluck('nombre', 'id');
     }
 
+    #[Title(['Usuarios', 'Accesos'])]
     public function render()
     {
         $users= User::select('id', 'name', 'tdocumento_id', 'ndocumento', 'estado', 'sucursal_id')
@@ -47,15 +43,13 @@ class Users extends Component
                     ->where('estado', 1)
                     ->orderBy('name')
                     ->paginate($this->perPage);
-        return view('livewire.accesos.users', compact('users'))
-                ->layoutData(['modulo'=>'Accesos', 'pagina'=>'Personal']);
+        return view('livewire.accesos.users', compact('users'));
     }
 
     public function create()
     {
         $this->mTitle = 'NUEVO USUARIO';
         $this->mMethod = 'store';
-        $this->kb = rand(1, 99);
         $this->reset(['name', 'tdocumento_id', 'ndocumento', 'fec_nac', 'email', 'password', 'sucursal_id']);
         $this->resetValidation();
         $this->dispatch('sm');
@@ -112,7 +106,6 @@ class Users extends Component
         $this->fec_nac = $user->fec_nac;
         $this->email = $user->email;
         $this->sucursal_id = $user->sucursal_id;
-        $this->kb = rand(1, 99);
         $this->resetValidation();
         $this->dispatch('sm');
     }

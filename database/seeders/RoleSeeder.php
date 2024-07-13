@@ -15,12 +15,16 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $accesos=Role::create(['name' => 'accesos admin']);
+        $mantenimiento=Role::create(['name' => 'mantenimiento admin']);
 
         Permission::create(['name' => 'accesos'])->assignRole($accesos);
-        Permission::create(['name' => 'accesos.user'])->assignRole($accesos);
-        Permission::create(['name' => 'accesos.user.password'])->assignRole($accesos);
-        Permission::create(['name' => 'accesos.user.roles'])->assignRole($accesos);
-        Permission::create(['name' => 'accesos.user.roles.asignar'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users.agregar'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users.editar'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users.estado'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users.password'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users.roles'])->assignRole($accesos);
+        Permission::create(['name' => 'accesos.users.roles.asignar'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.roles'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.roles.agregar'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.roles.editar'])->assignRole($accesos);

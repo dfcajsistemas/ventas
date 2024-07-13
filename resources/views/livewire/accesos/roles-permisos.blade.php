@@ -12,9 +12,12 @@
                             <h4 class="text-info"><i class="fa-solid fa-lock text-muted"></i> {{ $role->name }}</h4>
                         </div>
                         <div class="col-12">
-                            @foreach ($role->permissions->sortBy('name') as $permission)
-                                <span class="badge bg-secondary mb-1">{{ $permission->name }}</span>
-                            @endforeach
+                            <small class="text-muted">Permisos</small><br>
+                            @forelse ($role->permissions->sortBy('name') as $permission)
+                                <span class="badge bg-success mb-1">{{ $permission->name }}</span>
+                            @empty
+                                <span class="badge bg-label-secondary mb-1">Sin permisos asignados</span>
+                            @endforelse
                         </div>
                         <div class="col-12 mt-2">
                             <a href="{{ route('accesos.roles') }}" class="btn btn-outline-primary"><i
@@ -55,14 +58,12 @@
             </div>
         </div>
     </div>
-    @push('scripts')
-        <script>
-            document.addEventListener('livewire:init', () => {
-                Livewire.on('re', (e) => {
-                    noti(e[0]['m'], e[0]['t'])
-                })
-            })
-        </script>
-    @endpush
+    @script
+    <script>
+        Livewire.on('re', (e) => {
+            noti(e[0]['m'], e[0]['t'])
+        })
+    </script>
+    @endscript
 </div>
 

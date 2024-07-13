@@ -2,33 +2,43 @@
 
 namespace App\Livewire\Accesos;
 
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
+#[Lazy()]
 class Roles extends Component
 {
     use WithPagination;
 
-    public $name, $mMethod, $mTitle, $idm, $kb;
+    public $name, $mMethod, $mTitle, $idm;
+    #[Url(except: '10')]
     public $perPage = '10';
+    #[Url(except: '')]
     public $search = '';
 
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    #[Title(['Roles', 'Accesos'])]
     public function render()
     {
-        $roles=Role::where('name', 'LIKE', "%$this->search%")
+        $roles=Role::where('name', 'LIKE', "%".$this->search."%")
                     ->orderBy('name')
                     ->paginate($this->perPage);
-        return view('livewire.accesos.roles', compact('roles'))
-                ->layoutData(['modulo'=>'Accesos', 'pagina'=>'Roles']);;
+        return view('livewire.accesos.roles', compact('roles'));
     }
 
     public function create()
     {
         $this->mTitle = 'NUEVO ROL';
         $this->mMethod = 'store';
-        $this->kb = rand(1, 99);
         $this->reset(['name']);
         $this->resetValidation();
         $this->dispatch('sm');
@@ -54,7 +64,6 @@ class Roles extends Component
     {
         $this->mTitle = 'EDITAR ROL';
         $this->mMethod = 'update';
-        $this->kb = rand(1, 99);
         $rol = Role::find($id);
         $this->idm = $rol->id;
         $this->name = $rol->name;

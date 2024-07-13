@@ -3,7 +3,6 @@
     <div class="card">
         <div class="card-header">
             <div class="row">
-
                 <div class="col-md-9 mb-2 mb-md-0">
                     <input type="search" class="form-control" placeholder="Buscar..."
                         wire:model.live.debounce.300ms="search">
@@ -49,8 +48,8 @@
                                     wire:click="edit({{ $permiso->id }})"><i
                                         class="tf-icons fa-solid fa-pen"></i></button>
                                 @if ($permiso->roles()->count() == 0)
-                                    <button class="btn btn-icon btn-danger btn-sm" title="Eliminar"
-                                        onclick="cdelete({{ $permiso->id }})"><i
+                                    <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
+                                        x-on:click="confirmar({{ $permiso->id }})"><i
                                             class="tf-icons fa-solid fa-trash"></i></button>
                                 @endif
                             </td>
@@ -69,7 +68,7 @@
 
         </div>
     </div>
-    <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm" :kb="$kb">
+    <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
             <div class="col">
                 <x-label class="form-label" for="name">Nombre</x-label>
@@ -78,25 +77,21 @@
             </div>
         </div>
     </x-modal-form>
-    @push('scripts')
-        <script>
-            document.addEventListener('livewire:init', () => {
-                const mPer = new bootstrap.Modal('#mPer', {
-                    keyboard: false
-                });
-                Livewire.on('sm', (e) => {
-                    mPer.show()
-                });
-                Livewire.on('hm', (e) => {
-                    mPer.hide()
-                    noti(e[0]['m'], e[0]['t'])
-                })
-                Livewire.on('rd', (e) => {
-                    noti(e[0]['m'], e[0]['t'])
-                })
-            })
+    @script
+    <script>
+        Livewire.on('sm', (e) => {
+            $("#mPer").modal('show')
+        });
+        Livewire.on('hm', (e) => {
+            $("#mPer").modal('hide')
+            noti(e[0]['m'], e[0]['t'])
+        })
+        Livewire.on('rd', (e) => {
+            noti(e[0]['m'], e[0]['t'])
+        })
 
-            function cdelete(id) {
+        Alpine.data('eliminar', () => ({
+            confirmar(id) {
                 Swal.fire({
                     title: '¿Estás seguro?',
                     text: "¡No podrás revertir esto!",
@@ -113,6 +108,7 @@
                     }
                 })
             }
-        </script>
-    @endpush
+        }))
+    </script>
+    @endscript
 </div>

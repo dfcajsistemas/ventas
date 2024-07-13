@@ -51,8 +51,8 @@
                                     class="btn btn-icon btn-secondary btn-sm" title="Asignar permisos"><i
                                         class="tf-icons fa-solid fa-lock"></i></a>
                                 @if ($role->users()->count() == 0)
-                                    <button class="btn btn-icon btn-danger btn-sm" title="Eliminar"
-                                        onclick="cdelete({{ $role->id }})"><i
+                                    <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
+                                        x-on:click="confirmar({{ $role->id }})"><i
                                             class="tf-icons fa-solid fa-trash"></i></button>
                                 @endif
                             </td>
@@ -71,7 +71,7 @@
 
         </div>
     </div>
-    <x-modal-form mId="mRol" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm" :kb="$kb">
+    <x-modal-form mId="mRol" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
             <div class="col">
                 <x-label class="form-label" for="name">Nombre</x-label>
@@ -80,25 +80,21 @@
             </div>
         </div>
     </x-modal-form>
-    @push('scripts')
-        <script>
-            document.addEventListener('livewire:init', () => {
-                const mRol = new bootstrap.Modal('#mRol', {
-                    keyboard: false
-                });
-                Livewire.on('sm', (e) => {
-                    mRol.show()
-                });
-                Livewire.on('hm', (e) => {
-                    mRol.hide()
-                    noti(e[0]['m'], e[0]['t'])
-                })
-                Livewire.on('rd', (e) => {
-                    noti(e[0]['m'], e[0]['t'])
-                })
-            })
+    @script
+    <script>
+        Livewire.on('sm', (e) => {
+            $("#mRol").modal('show')
+        });
+        Livewire.on('hm', (e) => {
+            $("#mRol").modal('hide')
+            noti(e[0]['m'], e[0]['t'])
+        })
+        Livewire.on('rd', (e) => {
+            noti(e[0]['m'], e[0]['t'])
+        })
 
-            function cdelete(id) {
+        Alpine.data('eliminar', () => ({
+            confirmar(id) {
                 Swal.fire({
                     title: '¿Estás seguro?',
                     text: "¡No podrás revertir esto!",
@@ -115,7 +111,8 @@
                     }
                 })
             }
-        </script>
-    @endpush
+        }))
+    </script>
+    @endscript
 </div>
 
