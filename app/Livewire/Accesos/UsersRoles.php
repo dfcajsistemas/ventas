@@ -17,8 +17,8 @@ class UsersRoles extends Component
 
     #[Url(except: '')]
     public $search = '';
-    #[Url(except: '18')]
-    public $perPage = '18';
+    #[Url(except: '30')]
+    public $perPage = '30';
     public $user;
 
     public function mount(User $user)

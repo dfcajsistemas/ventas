@@ -29,6 +29,7 @@
             </div>
         </div>
         <div class="table-responsive text-noweap">
+            @if($users->count())
             <table class="table table-sm table-hover text-small">
                 <thead>
                     <tr>
@@ -38,11 +39,13 @@
                         <th>Nombre</th>
                         <th>Sucursal</th>
                         <th>Estado</th>
+                        @canany(['accesos.users.editar', 'accesos.users.password', 'accesos.users.roles', 'accesos.users.estado'])
                         <th>Acciones</th>
+                        @endcanany
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($users as $user)
+                    @foreach ($users as $user)
                     <tr wire:key='f{{$user->id}}'>
                         <td>{{ $user->id }}</td>
                         <th>{{ $user->tdocumento->abreviatura}}</th>
@@ -52,6 +55,7 @@
                         <td>
                             <x-status :status="$user->estado" />
                         </td>
+                        @canany(['accesos.users.editar', 'accesos.users.password', 'accesos.users.roles', 'accesos.users.estado'])
                         <td>
                             @can('accesos.users.editar')
                             <button class="btn btn-info btn-icon btn-sm mb-sm-1 mb-md-0" title="Editar"
@@ -71,21 +75,21 @@
                                 title="Desactivar"><i class='tf-icon bx bxs-toggle-right'></i></button>
                             @endcan
                         </td>
+                        @endcanany
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center">No se encontraron resultados</td>
-                    </tr>
-                    @endforelse
-
+                    @endforeach
                 </tbody>
             </table>
             <div class="m-3">
                 {{ $users->links() }}
             </div>
+            @else
+            <x-msg type="info" msg="No se encontraron resultados" />
+            @endif
+
         </div>
     </div>
-
+    @canany(['accesos.users.agregar', 'accesos.users.editar'])
     <x-modal-form mId="mUser" :mTitle="$mTitle" :mMethod="$mMethod">
         <div class="row">
             <div class="col mb-3">
@@ -133,6 +137,7 @@
             </div>
         </div>
     </x-modal-form>
+    @endcanany
     @can('accesos.users.password')
     <x-modal-form mId="mPass" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm" :kb="$kb">
         <div class="row">

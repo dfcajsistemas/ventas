@@ -27,12 +27,14 @@
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text"><i class="fa-solid fa-shield-halved"></i> Accesos</span>
             </li>
+            @can('accesos')
             <li class="menu-item {{ request()->routeIs('accesos') ? 'active' : '' }}">
                 <a href="{{ route('accesos') }}" class="menu-link">
                     <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
                     <div class="text-truncate">Dashboard</div>
                 </a>
             </li>
+            @endcan
             @can('accesos.users')
             <li class="menu-item {{ request()->routeIs('accesos.users*') ? 'active' : '' }}">
                 <a href="{{ route('accesos.users') }}" class="menu-link">

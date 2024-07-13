@@ -26,6 +26,11 @@ class Roles extends Component
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     #[Title(['Roles', 'Accesos'])]
     public function render()
     {

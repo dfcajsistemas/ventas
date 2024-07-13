@@ -26,6 +26,11 @@ class Permisos extends Component
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     #[Title(['Permisos', 'Accesos'])]
     public function render()
     {

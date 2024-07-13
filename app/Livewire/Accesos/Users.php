@@ -29,6 +29,11 @@ class Users extends Component
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function mount(){
         $this->tdocumentos = Tdocumento::where('estado', 1)->pluck('abreviatura', 'id');
         $this->sucursales = Sucursal::where('estado', 1)->pluck('nombre', 'id');
