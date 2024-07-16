@@ -1,7 +1,7 @@
 <div>
     <h4><span class="text-muted fw-light">Accesos /</span> Roles - Permisos</h4>
     <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-12 @can('accesos.roles.permisos.asignar') col-md-4 mb-3 mb-md-0 @endcan">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Rol</h5>
@@ -27,6 +27,7 @@
                 </div>
             </div>
         </div>
+        @can('accesos.roles.permisos.asignar')
         <div class="col-12 col-md-8">
             <div class="card">
                 <div class="card-header">
@@ -57,6 +58,7 @@
                 </div>
             </div>
         </div>
+        @endcan
     </div>
     @script
     <script>

@@ -1,7 +1,7 @@
 <div>
     <h4><span class="text-muted fw-light">Accesos /</span> Users - Roles</h4>
     <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-12 @can('accesos.users.roles.asignar') col-md-4 mb-3 mb-md-0 @endcan">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Usuario</h5>
@@ -28,6 +28,7 @@
                 </div>
             </div>
         </div>
+        @can('accesos.users.roles.asignar')
         <div class="col-12 col-md-8">
             <div class="card">
                 <div class="card-header">
@@ -40,7 +41,7 @@
                                 wire:model.live.debounce.300ms="search">
                         </div>
                         @foreach ($roles as $role)
-                        <div class="col-12 col-md-4 mb-2">
+                        <div class="col-12 col-sm-6 col-md-4 mb-2">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="rol_{{ $role->id }}"
                                     value="{{ $role->id }}" name="roles[]"
@@ -57,6 +58,7 @@
                 </div>
             </div>
         </div>
+        @endcan
     </div>
     @script
     <script>

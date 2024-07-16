@@ -28,8 +28,8 @@
                 </div>
             </div>
         </div>
+        @if($users->count())
         <div class="table-responsive text-noweap">
-            @if($users->count())
             <table class="table table-sm table-hover text-small">
                 <thead>
                     <tr>
@@ -39,7 +39,8 @@
                         <th>Nombre</th>
                         <th>Sucursal</th>
                         <th>Estado</th>
-                        @canany(['accesos.users.editar', 'accesos.users.password', 'accesos.users.roles', 'accesos.users.estado'])
+                        @canany(['accesos.users.editar', 'accesos.users.password', 'accesos.users.roles',
+                        'accesos.users.estado'])
                         <th>Acciones</th>
                         @endcanany
                     </tr>
@@ -55,7 +56,8 @@
                         <td>
                             <x-status :status="$user->estado" />
                         </td>
-                        @canany(['accesos.users.editar', 'accesos.users.password', 'accesos.users.roles', 'accesos.users.estado'])
+                        @canany(['accesos.users.editar', 'accesos.users.password', 'accesos.users.roles',
+                        'accesos.users.estado'])
                         <td>
                             @can('accesos.users.editar')
                             <button class="btn btn-info btn-icon btn-sm mb-sm-1 mb-md-0" title="Editar"
@@ -80,14 +82,15 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="m-3">
-                {{ $users->links() }}
-            </div>
-            @else
-            <x-msg type="info" msg="No se encontraron resultados" />
-            @endif
-
         </div>
+        <div class="m-3">
+            {{ $users->links() }}
+        </div>
+        @else
+        <div class="mx-3 mb-3">
+            <x-msg type="info" msg="No se encontraron resultados" />
+        </div>
+        @endif
     </div>
     @canany(['accesos.users.agregar', 'accesos.users.editar'])
     <x-modal-form mId="mUser" :mTitle="$mTitle" :mMethod="$mMethod">
@@ -152,8 +155,8 @@
                 </div>
             </div>
             <div class="col-12 d-grid">
-                <button x-data="generar" type="button" class="btn btn-warning" x-on:click="gPassword()" title="Generar contraseña"><i
-                        class='tf-icons bx bx-key me-1'></i>Generar</button>
+                <button x-data="generar" type="button" class="btn btn-warning" x-on:click="gPassword()"
+                    title="Generar contraseña"><i class='tf-icons bx bx-key me-1'></i>Generar</button>
             </div>
         </div>
     </x-modal-form>

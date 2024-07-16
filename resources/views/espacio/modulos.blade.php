@@ -1,6 +1,10 @@
 <x-app-layout modulo="Espacio" pagina="Mis módulos">
-    <h4>Mis módulos</h4>
     <div class="row">
+        <div class="col-md-4 px-5 align-content-center">
+            <h5>Bienvenid@ 👋🏻</h5>
+            <h3 class="text-info"><i class="fa-solid fa-user-tie text-muted"></i> {{ Auth()->user()->name }}</h3>
+            <p>Tienes acceso a los siguientes módulos.</p>
+        </div>
         @can('accesos')
         <x-enlace-modulo imagen="assets/img/modulos/accesos.jpg" mod="Accesos" ruta="accesos" />
         @endcan
@@ -45,8 +49,7 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/caja.png') }}" alt="Caja"
-                            class="card-img card-img-left">
+                        <img src="{{ asset('assets/img/modulos/caja.png') }}" alt="Caja" class="card-img card-img-left">
                     </div>
                     <div class="col-8">
                         <div class="card-body">

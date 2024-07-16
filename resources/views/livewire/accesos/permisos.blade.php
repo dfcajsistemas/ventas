@@ -15,16 +15,19 @@
                         <option value="100">100</option>
                     </select>
                 </div>
+                @can('accesos.permisos.agregar')
                 <div class="col-4 col-md-1 d-grid">
                     <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
                             class="tf-icons fa-solid fa-plus"></i></button>
                 </div>
+                @endcan
                 <div class="col-4 col-md-1 d-grid">
                     <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
                             class="tf-icons fa-solid fa-file-excel"></i></button>
                 </div>
             </div>
         </div>
+        @if ($permisos->count())
         <div class="table-responsive text-noweap">
             <table class="table table-sm table-hover text-small">
                 <thead>
@@ -33,41 +36,48 @@
                         <th>Nombre</th>
                         <th>Guardia</th>
                         <th>Roles</th>
+                        @canany(['accesos.permisos.editar', 'accesos.permisos.eliminar'])
                         <th>Acciones</th>
+                        @endcanany
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($permisos as $permiso)
-                        <tr wire:key="{{ $permiso->id }}">
-                            <td>{{ $permiso->id }}</td>
-                            <td>{{ $permiso->name }}</td>
-                            <td>{{ $permiso->guard_name }}</td>
-                            <td>{{ $permiso->roles()->count() }}</td>
-                            <td>
-                                <button class="btn btn-icon btn-info btn-sm" title="Editar"
-                                    wire:click="edit({{ $permiso->id }})"><i
-                                        class="tf-icons fa-solid fa-pen"></i></button>
-                                @if ($permiso->roles()->count() == 0)
-                                    <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
-                                        x-on:click="confirmar({{ $permiso->id }})"><i
-                                            class="tf-icons fa-solid fa-trash"></i></button>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No se encontraron resultados</td>
-                        </tr>
-                    @endforelse
-
+                    @foreach ($permisos as $permiso)
+                    <tr wire:key="{{ $permiso->id }}">
+                        <td>{{ $permiso->id }}</td>
+                        <td>{{ $permiso->name }}</td>
+                        <td>{{ $permiso->guard_name }}</td>
+                        <td>{{ $permiso->roles()->count() }}</td>
+                        @canany(['accesos.permisos.editar', 'accesos.permisos.eliminar'])
+                        <td>
+                            @can('accesos.permisos.editar')
+                            <button class="btn btn-icon btn-info btn-sm" title="Editar"
+                                wire:click="edit({{ $permiso->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
+                            @endcan
+                            @can('accesos.permisos.eliminar')
+                            @if ($permiso->roles()->count() == 0)
+                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
+                                x-on:click="confirmar({{ $permiso->id }})"><i
+                                    class="tf-icons fa-solid fa-trash"></i></button>
+                            @endif
+                            @endcan
+                        </td>
+                        @endcanany
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
-            <div class="m-3">
-                {{ $permisos->links() }}
-            </div>
-
         </div>
+        <div class="m-3">
+            {{ $permisos->links() }}
+        </div>
+        @else
+        <div class="mx-3 mb-3">
+            <x-msg type="info" msg="No se encontraron resultados" />
+        </div>
+        @endif
     </div>
+    @canany(['accesos.permisos.agregar', 'accesos.permisos.editar'])
     <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
             <div class="col">
@@ -77,6 +87,7 @@
             </div>
         </div>
     </x-modal-form>
+    @endcanany
     @script
     <script>
         Livewire.on('sm', (e) => {

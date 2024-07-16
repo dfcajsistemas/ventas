@@ -5,7 +5,7 @@
         <ul class="menu-inner py-1">
             <!-- Apps & Pages -->
             <li class="menu-header small text-uppercase">
-                <span class="menu-header-text"><i class="fa-solid fa-house-user"></i> Mi espacio</span>
+                <span class="menu-header-text"> Mi espacio</span>
             </li>
             <li class="menu-item {{ request()->routeIs('espacio') ? 'active' : '' }}">
                 <a href="{{ route('espacio') }}" class="menu-link">
@@ -25,7 +25,7 @@
         <ul class="menu-inner py-1">
             <!-- Apps & Pages -->
             <li class="menu-header small text-uppercase">
-                <span class="menu-header-text"><i class="fa-solid fa-shield-halved"></i> Accesos</span>
+                <span class="menu-header-text"> Accesos</span>
             </li>
             @can('accesos')
             <li class="menu-item {{ request()->routeIs('accesos') ? 'active' : '' }}">
