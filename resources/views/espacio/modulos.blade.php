@@ -1,10 +1,6 @@
 <x-app-layout modulo="Espacio" pagina="Mis módulos">
     <div class="row">
-        <div class="col-md-4 px-5 align-content-center">
-            <h5>Bienvenid@ 👋🏻</h5>
-            <h3 class="text-info"><i class="fa-solid fa-user-tie text-muted"></i> {{ Auth()->user()->name }}</h3>
-            <p>Tienes acceso a los siguientes módulos.</p>
-        </div>
+        <h4><span class="text-muted fw-light">Mi espacio /</span> Mis módulos</h4>
         @can('accesos')
         <x-enlace-modulo imagen="assets/img/modulos/accesos.jpg" mod="Accesos" ruta="accesos" />
         @endcan
