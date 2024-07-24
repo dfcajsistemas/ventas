@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('igvafectacions', function (Blueprint $table) {
+        Schema::create('autorizacions', function (Blueprint $table) {
             $table->id();
 
-            $table->string('codigo', 2)->unique();
+            $table->string('codigo', 6)->unique();
+            $table->string('observacion');
             $table->string('descripcion');
-            $table->string('cod_tributo', 4);
             $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
 
             $table->unsignedBigInteger('created_by')->nullable()->index();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('igvafectacions');
+        Schema::dropIfExists('autorizacions');
     }
 };

@@ -45,32 +45,24 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/accesos.php'));
 
             Route::middleware('web', 'auth')
-                ->prefix('personal')
-                ->group(base_path('routes/personal.php'));
+                ->prefix('mantenimiento')
+                ->group(base_path('routes/mantenimiento.php'));
 
             Route::middleware('web', 'auth')
-                ->prefix('legajo')
-                ->group(base_path('routes/legajo.php'));
+                ->prefix('despacho')
+                ->group(base_path('routes/despacho.php'));
 
             Route::middleware('web', 'auth')
-                ->prefix('vacaciones')
-                ->group(base_path('routes/vacaciones.php'));
+                ->prefix('caja')
+                ->group(base_path('routes/caja.php'));
 
             Route::middleware('web', 'auth')
-                ->prefix('licencias')
-                ->group(base_path('routes/licencias.php'));
+                ->prefix('delivery')
+                ->group(base_path('routes/delivery.php'));
 
             Route::middleware('web', 'auth')
-                ->prefix('logistica')
-                ->group(base_path('routes/logistica.php'));
-
-            Route::middleware('web', 'auth')
-                ->prefix('bincautados')
-                ->group(base_path('routes/bincautados.php'));
-
-            Route::middleware('web', 'auth')
-                ->prefix('informatica')
-                ->group(base_path('routes/informatica.php'));
+                ->prefix('reportes')
+                ->group(base_path('routes/reportes.php'));
         });
     }
 }

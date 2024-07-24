@@ -5,6 +5,10 @@
         <x-enlace-modulo imagen="assets/img/modulos/accesos.jpg" mod="Accesos" ruta="accesos" />
         @endcan
 
+        @can('mantenimiento')
+        <x-enlace-modulo imagen="assets/img/modulos/mantenimiento.png" mod="Mantenimiento" ruta="mantenimiento" />
+        @endcan
+
         <div class="col-md-4">
             <div class="card mb-3">
                 <div class="row g-0">
