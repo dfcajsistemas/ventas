@@ -14,8 +14,8 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $accesos=Role::create(['name' => 'accesos admin']);
-        $mantenimiento=Role::create(['name' => 'mantenimiento admin']);
+        $accesos = Role::create(['name' => 'accesos admin']);
+        $mantenimiento = Role::create(['name' => 'mantenimiento admin']);
 
         Permission::create(['name' => 'accesos'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.users'])->assignRole($accesos);
@@ -36,5 +36,16 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'accesos.permisos.editar'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.permisos.eliminar'])->assignRole($accesos);
 
+        Permission::create(['name' => 'mantenimiento'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.categorias'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.categorias.agregar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.categorias.editar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.categorias.estado'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.categorias.eliminar'])->syncRoles($mantenimiento);
+
+        Permission::create(['name' => 'mantenimiento.productos'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.productos.agregar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.productos.editar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.productos.estado'])->syncRoles($mantenimiento);
     }
 }

@@ -8,25 +8,6 @@
         @can('mantenimiento')
         <x-enlace-modulo imagen="assets/img/modulos/mantenimiento.png" mod="Mantenimiento" ruta="mantenimiento" />
         @endcan
-
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/mantenimiento.png') }}" alt="Personal"
-                            class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Mantenimiento</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="col-md-4">
             <div class="card mb-3">
                 <div class="row g-0">

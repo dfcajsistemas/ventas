@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EmpresaSeeder::class);
         $this->call(SucursalSeeder::class);
         $this->call(TdocumentoSeeder::class);
+        $this->call(UmedidaSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',
@@ -36,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'fec_nac' => '1990-01-01',
             'password' => bcrypt('12345678'),
             'sucursal_id' => 1
-        ])->assignRole('accesos admin');
+        ])->assignRole('accesos admin', 'mantenimiento admin');
 
         User::factory(50)->create();
     }

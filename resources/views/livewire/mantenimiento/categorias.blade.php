@@ -1,5 +1,5 @@
 <div>
-    <h4><span class="text-muted fw-light">Mantenminto /</span> Prooductos</h4>
+    <h4><span class="text-muted fw-light">Mantenimiento /</span> Categorias</h4>
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -15,7 +15,7 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                @can('mantenimiento.productos.agregar')
+                @can('mantenimiento.categorias.agregar')
                 <div class="col-4 col-md-1 d-grid">
                     <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
                             class="tf-icons fa-solid fa-plus"></i></button>
@@ -27,39 +27,52 @@
                 </div>
             </div>
         </div>
-        @if ($productos->count())
+        @if ($categorias->count())
         <div class="table-responsive text-noweap">
             <table class="table table-sm table-hover text-small">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
-                        <th>Código</th>
+                        <th>Imagen</th>
                         <th>Estado</th>
-                        @canany(['mantenimiento.productos.editar', 'mantenimiento.productos.eliminar'])
+                        @canany(['mantenimiento.categorias.editar', 'mantenimiento.categorias.estado',
+                        'mantenimiento.categorias.eliminar'])
                         <th>Acciones</th>
                         @endcanany
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($productos as $producto)
-                    <tr wire:key="{{ $producto->id }}">
-                        <td>{{ $producto->id }}</td>
-                        <td>{{ $producto->nombre }}</td>
-                        <td>{{ $producto->codigo }}</td>
-                        <td><x-status :status="$producto->estado" /></td>
-                        @canany(['mantenimiento.productos.editar', 'mantenimiento.productos.eliminar'])
+                    @foreach ($categorias as $categoria)
+                    <tr wire:key="{{ $categoria->id }}">
+                        <td>{{ $categoria->id }}</td>
+                        <td>{{ $categoria->nombre }}</td>
                         <td>
-                            @can('mantenimiento.productos.editar')
-                            <button class="btn btn-icon btn-info btn-sm" title="Editar"
-                                wire:click="edit({{ $producto->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
-                            @endcan
-                            @can('mantenimiento.productos.eliminar')
-                            @if ($producto->roles()->count() == 0)
-                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
-                                x-on:click="confirmar({{ $producto->id }})"><i
-                                    class="tf-icons fa-solid fa-trash"></i></button>
+                            @if($categoria->imagen)
+                            <img src="{{asset('storage/'.$categoria->imagen)}}" class="rounded" width="50">
                             @endif
+                        </td>
+                        <td>
+                            <x-status :status="$categoria->estado" />
+                        </td>
+                        @canany(['mantenimiento.categorias.editar', 'mantenimiento.categorias.estado',
+                        'mantenimiento.categorias.eliminar'])
+                        <td>
+                            @can('mantenimiento.categorias.editar')
+                            <button class="btn btn-icon btn-info btn-sm" title="Editar"
+                                wire:click="edit({{ $categoria->id }})"><i
+                                    class="tf-icons fa-solid fa-pen"></i></button>
+                            <button class="btn btn-icon btn-success btn-sm" title="Imagen"
+                                wire:click='aimagen({{$categoria->id}})'><i
+                                    class="tf-icons fa-solid fa-image"></i></button>
+                            <button class="btn btn-icon btn-secondary btn-sm" title="Imagen"
+                                wire:click='state({{$categoria->id}})'><i
+                                    class="tf-icons fa-solid fa-toggle-off"></i></button>
+                            @endcan
+                            @can('mantenimiento.categorias.eliminar')
+                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
+                                x-on:click="confirmar({{ $categoria->id }})"><i
+                                    class="tf-icons fa-solid fa-trash"></i></button>
                             @endcan
                         </td>
                         @endcanany
@@ -69,7 +82,7 @@
             </table>
         </div>
         <div class="m-3">
-            {{ $productos->links() }}
+            {{ $categorias->links() }}
         </div>
         @else
         <div class="mx-3 mb-3">
@@ -77,14 +90,30 @@
         </div>
         @endif
     </div>
-    @canany(['mantenimiento.productos.agregar', 'mantenimiento.productos.editar'])
+    @canany(['mantenimiento.categorias.agregar', 'mantenimiento.categorias.editar'])
     <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
-            <div class="col">
-                <x-label class="form-label" for="name">Nombre</x-label>
-                <x-input class="form-control" type="text" id="name" wire:model="name" />
-                <x-input-error for="name" />
+            <div class="col-12">
+                <x-label class="form-label" for="nombre">Nombre</x-label>
+                <x-input class="form-control" type="text" id="nombre" wire:model="nombre" />
+                <x-input-error for="nombre" />
             </div>
+        </div>
+    </x-modal-form>
+
+    <x-modal-form mId="mImage" :mTitle="$mTitle" :mMethod="$mMethod" mSize="md">
+        <div class="row">
+            <div class="col-12">
+                <x-label class="form-label" for="imagen">Imagen</x-label>
+                <x-input class="form-control" type="file" id="imagen" wire:model="imagen"
+                    accept="image/gif, image/jpg, image/jpeg, image/png" />
+                <x-input-error for="imagen" />
+            </div>
+            @if ($imagen)
+            <div class="col-12 mt-2">
+                <img src="{{$imagen->temporaryUrl()}}" class="img-fluid">
+            </div>
+            @endif
         </div>
     </x-modal-form>
     @endcanany
@@ -98,6 +127,14 @@
             noti(e[0]['m'], e[0]['t'])
         })
         Livewire.on('rd', (e) => {
+            noti(e[0]['m'], e[0]['t'])
+        })
+
+        Livewire.on('smi', (e) => {
+            $("#mImage").modal('show')
+        });
+        Livewire.on('hmi', (e) => {
+            $("#mImage").modal('hide')
             noti(e[0]['m'], e[0]['t'])
         })
 

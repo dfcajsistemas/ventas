@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('umedidas', function (Blueprint $table) {
+        Schema::create('igvporcientos', function (Blueprint $table) {
             $table->id();
 
-            $table->string('descripcion', 50)->unique();
-            $table->string('codigo', 5)->nullable();
+            $table->decimal('porcentaje', 5, 2);
             $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
-
-            $table->unsignedBigInteger('created_by')->nullable()->index();
-            $table->unsignedBigInteger('updated_by')->nullable()->index();
 
             $table->timestamps();
         });
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('umedidas');
+        Schema::dropIfExists('igvporcientos');
     }
 };

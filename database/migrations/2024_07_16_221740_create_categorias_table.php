@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('nombre')->unique();
             $table->string('slug')->unique();
+            $table->string('imagen')->nullable();
             $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
 
             $table->unsignedBigInteger('created_by')->nullable()->index();

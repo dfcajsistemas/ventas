@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('categoria_id')->constrained();
             $table->foreignId('umedida_id')->constrained();
             $table->foreignId('igvafectacion_id')->constrained();
+            $table->foreignId('igvporciento_id')->constrained();
 
             $table->unsignedBigInteger('created_by')->nullable()->index();
             $table->unsignedBigInteger('updated_by')->nullable()->index();

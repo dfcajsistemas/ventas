@@ -75,15 +75,24 @@
         </a>
     </li>
     @endcan
+    @can('mantenimiento.categorias')
+    <li class="menu-item {{ request()->routeIs('mantenimiento.categorias*') ? 'active' : '' }}">
+        <a href="{{ route('mantenimiento.categorias') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-tags"></i>
+            <div class="text-truncate">Categorias</div>
+        </a>
+    </li>
+    @endcan
     @can('mantenimiento.productos')
     <li class="menu-item {{ request()->routeIs('mantenimiento.productos*') ? 'active' : '' }}">
         <a href="{{ route('mantenimiento.productos') }}" class="menu-link">
             <i class="menu-icon tf-icons fa-solid fa-cube"></i>
-            <div class="text-truncate">Prouctos</div>
+            <div class="text-truncate">Productos</div>
         </a>
     </li>
     @endcan
 </ul>
+@break
 @default
 <p>Sin Menú</p>
 @endswitch
