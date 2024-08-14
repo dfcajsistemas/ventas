@@ -8,4 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Empresa extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'ruc',
+        'razon_social',
+        'nombre_comercial',
+        'domicilio_fiscal',
+        'rep_legal',
+        'usuario_sol',
+        'clave_sol',
+        'distrito_id',
+        'created_by',
+        'updated_by'
+    ];
+
+    //relación uno a muchos inversa
+    public function distrito()
+    {
+        return $this->belongsTo(Distrito::class);
+    }
 }

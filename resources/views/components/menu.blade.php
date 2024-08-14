@@ -75,6 +75,22 @@
         </a>
     </li>
     @endcan
+    @can('mantenimiento.empresas')
+    <li class="menu-item {{ request()->routeIs('mantenimiento.empresas*') ? 'active' : '' }}">
+        <a href="{{ route('mantenimiento.empresas') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-building"></i>
+            <div class="text-truncate">Empresa</div>
+        </a>
+    </li>
+    @endcan
+    @can('mantenimiento.sucursals')
+    <li class="menu-item {{ request()->routeIs('mantenimiento.sucursals*') ? 'active' : '' }}">
+        <a href="{{ route('mantenimiento.sucursals') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-store"></i>
+            <div class="text-truncate">Sucursales</div>
+        </a>
+    </li>
+    @endcan
     @can('mantenimiento.categorias')
     <li class="menu-item {{ request()->routeIs('mantenimiento.categorias*') ? 'active' : '' }}">
         <a href="{{ route('mantenimiento.categorias') }}" class="menu-link">

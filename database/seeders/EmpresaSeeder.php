@@ -15,13 +15,13 @@ class EmpresaSeeder extends Seeder
     {
         Empresa::create([
             'ruc' => '20202020202',
-            'razon_social' => 'Empresa de Prueba',
-            'nom_comercial' => 'Empresa Prueba',
-            'dom_fiscal' => 'Av. Prueba 123',
+            'razon_social' => 'Empresa SAC',
+            'nom_comercial' => 'Empresa',
+            'dom_fiscal' => 'Av. Perú 123',
             'rep_legal' => 'Juan Perez',
             'usuario_sol' => 'mbdata',
             'clave_sol' => 'mbdata',
-            'distrito_id' => 561,
+            'distrito_id' => 551,
         ]);
     }
 }

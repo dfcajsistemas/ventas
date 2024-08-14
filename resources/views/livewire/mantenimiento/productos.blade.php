@@ -78,12 +78,62 @@
         @endif
     </div>
     @canany(['mantenimiento.productos.agregar', 'mantenimiento.productos.editar'])
-    <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
+    <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="md">
         <div class="row">
-            <div class="col">
-                <x-label class="form-label" for="name">Nombre</x-label>
-                <x-input class="form-control" type="text" id="name" wire:model="name" />
-                <x-input-error for="name" />
+            <div class="col-12">
+                <x-label for="nombre">Nombre</x-label>
+                <x-input type="text" id="nombre" wire:model="nombre" />
+                <x-input-error for="nombre" />
+            </div>
+            <div class="col-12">
+                <x-label for="descripcion">Descripción</x-label>
+                <x-input type="text" id="descripcion" wire:model="descripcion" />
+                <x-input-error for="descripcion" />
+            </div>
+            <div class="col-12 col-md-6">
+                <x-label for="codigo">Código</x-label>
+                <x-input type="text" id="codigo" wire:model="codigo" />
+                <x-input-error for="codigo" />
+            </div>
+            <div class="col-12 col-md-6">
+                <x-label for="categoria_id">Categoria</x-label>
+                <x-select id="categoria_id" wire:model="categoria_id">
+                    <option value="">Seleccione...</option>
+                    @foreach ($categorias as $id => $categoria)
+                    <option value="{{ $id }}">{{ $categoria}}</option>
+                    @endforeach
+                </x-select>
+                <x-input-error for="categoria_id" />
+            </div>
+            <div class="col-12 col-md-6">
+                <x-label for="umedida_id">U. Medida</x-label>
+                <x-select id="umedida_id" wire:model="umedida_id">
+                    <option value="">Seleccione...</option>
+                    @foreach ($umedidas as $id => $umedida)
+                    <option value="{{ $id }}">{{ $umedida}}</option>
+                    @endforeach
+                </x-select>
+                <x-input-error for="umedida_id" />
+            </div>
+            <div class="col-12 col-md-6">
+                <x-label for="igvafectacion_id">IGV Afectación</x-label>
+                <x-select id="igvafectacion_id" wire:model="igvafectacion_id">
+                    <option value="">Seleccione...</option>
+                    @foreach ($igvafectacions as $id => $igvafectacion)
+                    <option value="{{ $id }}">{{ $igvafectacion}}</option>
+                    @endforeach
+                </x-select>
+                <x-input-error for="igvafectacion_id" />
+            </div>
+            <div class="col-12 col-md-6">
+                <x-label for="igvporciento_id">IGV Porcentaje</x-label>
+                <x-select id="igvporciento_id" wire:model="igvporciento_id">
+                    <option value="">Seleccione...</option>
+                    @foreach ($igvporcientos as $id => $igvporciento)
+                    <option value="{{ $id }}">{{ $igvporciento}}</option>
+                    @endforeach
+                </x-select>
+                <x-input-error for="igvporciento_id" />
             </div>
         </div>
     </x-modal-form>
