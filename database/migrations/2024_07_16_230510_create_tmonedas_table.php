@@ -19,9 +19,6 @@ return new class extends Migration
             $table->string('simbolo', 3);
             $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
 
-            $table->unsignedBigInteger('created_by')->nullable()->index();
-            $table->unsignedBigInteger('updated_by')->nullable()->index();
-
             $table->timestamps();
         });
     }

@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SucursalSeeder::class);
         $this->call(TdocumentoSeeder::class);
         $this->call(UmedidaSeeder::class);
+        $this->call(MaestrosSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',

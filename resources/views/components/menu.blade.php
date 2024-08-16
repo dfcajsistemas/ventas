@@ -107,6 +107,30 @@
         </a>
     </li>
     @endcan
+    @can('mantenimiento.mpagos')
+    <li class="menu-item {{ request()->routeIs('mantenimiento.mpagos*') ? 'active' : '' }}">
+        <a href="{{ route('mantenimiento.mpagos') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-money-bill-wave"></i>
+            <div class="text-truncate">Modo pagos</div>
+        </a>
+    </li>
+    @endcan
+    @can('mantenimiento.series')
+    <li class="menu-item {{ request()->routeIs('mantenimiento.series*') ? 'active' : '' }}">
+        <a href="{{ route('mantenimiento.series') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-file-invoice"></i>
+            <div class="text-truncate">Series</div>
+        </a>
+    </li>
+    @endcan
+    @can('mantenimiento.clientes')
+    <li class="menu-item {{ request()->routeIs('mantenimiento.clientes*') ? 'active' : '' }}">
+        <a href="{{ route('mantenimiento.clientes') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-user-group"></i>
+            <div class="text-truncate">Clientes</div>
+        </a>
+    </li>
+    @endcan
 </ul>
 @break
 @default

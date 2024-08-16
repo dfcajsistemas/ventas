@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('codigo', 2);
             $table->string('descripcion', 80);
             $table->string('abreviatura', 80);
-            $table->tinyInteger('estado')->default(1);
+            $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
 
             $table->timestamps();
         });

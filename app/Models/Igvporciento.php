@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Igvporciento extends Model
 {
     use HasFactory;
+
+    //relaciones uno a muchos
+    public function productos()
+    {
+        return $this->hasMany(Producto::class);
+    }
 }

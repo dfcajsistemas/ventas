@@ -35,10 +35,9 @@
                         <th>Id</th>
                         <th>Nombre</th>
                         <th>Código</th>
+                        <th>Categoria</th>
                         <th>Estado</th>
-                        @canany(['mantenimiento.productos.editar', 'mantenimiento.productos.eliminar'])
                         <th>Acciones</th>
-                        @endcanany
                     </tr>
                 </thead>
                 <tbody>
@@ -47,22 +46,20 @@
                         <td>{{ $producto->id }}</td>
                         <td>{{ $producto->nombre }}</td>
                         <td>{{ $producto->codigo }}</td>
+                        <td>{{ $producto->categoria->nombre }}</td>
                         <td><x-status :status="$producto->estado" /></td>
-                        @canany(['mantenimiento.productos.editar', 'mantenimiento.productos.eliminar'])
                         <td>
                             @can('mantenimiento.productos.editar')
                             <button class="btn btn-icon btn-info btn-sm" title="Editar"
                                 wire:click="edit({{ $producto->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
                             @endcan
-                            @can('mantenimiento.productos.eliminar')
-                            @if ($producto->roles()->count() == 0)
-                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
-                                x-on:click="confirmar({{ $producto->id }})"><i
-                                    class="tf-icons fa-solid fa-trash"></i></button>
-                            @endif
+                            @can('mantenimiento.productos.estado')
+                            <button class="btn btn-icon btn-secondary btn-sm" title="Editar"
+                                wire:click="status({{ $producto->id }})"><i class="tf-icons fa-solid fa-toggle-off"></i></button>
                             @endcan
+                            <button class="btn btn-icon btn-success btn-sm" title="Detalle"
+                                wire:click="details({{ $producto->id }})"><i class="tf-icons fa-solid fa-list"></i></button>
                         </td>
-                        @endcanany
                     </tr>
                     @endforeach
                 </tbody>
@@ -135,9 +132,55 @@
                 </x-select>
                 <x-input-error for="igvporciento_id" />
             </div>
+            <div class="col-12 col-md-6">
+                <div class="form-check pt-4">
+                    <x-checkbox id="icbper" value="1" wire:model="icbper" />
+                    <x-label for="icbper" value="ICBPER" />
+                </div>
+            </div>
         </div>
     </x-modal-form>
     @endcanany
+    <x-modal-view mId="mDetails" :mTitle="$mTitle" mSize="md">
+        <div class="table-responsive">
+            @if($prod)
+            <table class="table table-sm table-hover text-small">
+                <tr>
+                    <td>Nombre</td>
+                    <td class="text-info"><b>{{ $prod->nombre }}</b></td>
+                </tr>
+                <tr>
+                    <td>Descripción</td>
+                    <td>{{ $prod->descripcion }}</td>
+                </tr>
+                <tr>
+                    <td>Código</td>
+                    <td>{{ $prod->codigo }}</td>
+                </tr>
+                <tr>
+                    <td>Categoria</td>
+                    <td>{{ $prod->categoria->nombre }}</td>
+                </tr>
+                <tr>
+                    <td>U. Medida</td>
+                    <td>{{$prod->umedida->descripcion}}</td>
+                </tr>
+                <tr>
+                    <td>IGV Afectación</td>
+                    <td>{{$prod->igvafectacion->descripcion}}</td>
+                </tr>
+                <tr>
+                    <td>IGV Porcentaje</td>
+                    <td>{{$prod->igvporciento->porcentaje}}</td>
+                </tr>
+                <tr>
+                    <td>ICBPER</td>
+                    <td>{{ $prod->icbper ? 'Si' : 'No' }}</td>
+                </tr>
+            </table>
+            @endif
+        </div>
+    </x-modal-view>
     @script
     <script>
         Livewire.on('sm', (e) => {
@@ -150,26 +193,9 @@
         Livewire.on('rd', (e) => {
             noti(e[0]['m'], e[0]['t'])
         })
-
-        Alpine.data('eliminar', () => ({
-            confirmar(id) {
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "¡No podrás revertir esto!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '¡Sí, bórralo!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.dispatch('delete', {
-                            id: id
-                        })
-                    }
-                })
-            }
-        }))
+        Livewire.on('smd', (e) => {
+            $("#mDetails").modal('show')
+        });
     </script>
     @endscript
 </div>

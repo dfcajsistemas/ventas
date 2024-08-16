@@ -78,11 +78,5 @@ class UmedidaSeeder extends Seeder
         Umedida::create(['descripcion' => 'YARDA', 'codigo' => 'YRD']);
         Umedida::create(['descripcion' => 'YARDA CUADRADA', 'codigo' => 'YDK']);
 
-        Igvafectacion::create(['codigo' => '10', 'descripcion' => 'Gravado - Operación Onerosa', 'cod_tributo' => '1000']);
-        Igvafectacion::create(['codigo' => '20', 'descripcion' => 'Exonerado - Operación Onerosa', 'cod_tributo' => '9997']);
-        Igvafectacion::create(['codigo' => '30', 'descripcion' => 'Inafecto - Operación Onerosa', 'cod_tributo' => '9998']);
-
-        Igvporciento::create(['porcentaje' => 18]);
-
        }
 }

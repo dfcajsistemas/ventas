@@ -58,6 +58,23 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'mantenimiento.productos.editar'])->syncRoles($mantenimiento);
         Permission::create(['name' => 'mantenimiento.productos.estado'])->syncRoles($mantenimiento);
 
+        Permission::create(['name' => 'mantenimiento.mpagos'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.mpagos.agregar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.mpagos.editar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.mpagos.estado'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.mpagos.eliminar'])->syncRoles($mantenimiento);
+
+        Permission::create(['name' => 'mantenimiento.clientes'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.clientes.agregar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.clientes.editar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.clientes.estado'])->syncRoles($mantenimiento);
+
+        Permission::create(['name' => 'mantenimiento.series'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.series.agregar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.series.editar'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.series.estado'])->syncRoles($mantenimiento);
+
+
 
 
 

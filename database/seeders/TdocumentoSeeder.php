@@ -13,16 +13,16 @@ class TdocumentoSeeder extends Seeder
      */
     public function run(): void
     {
-        Tdocumento::create(['codigo'=>'0','descripcion'=>'DOC.TRIB.NO.DOM.SIN.RUC','abreviatura'=>'SIN DOC','estado'=>0]);
-        Tdocumento::create(['codigo'=>'1','descripcion'=>'Documento Nacional de Identidad','abreviatura'=>'DNI','estado'=>1]);
-        Tdocumento::create(['codigo'=>'4','descripcion'=>'Carnet de extranjería','abreviatura'=>'CARNET EXT.','estado'=>1]);
-        Tdocumento::create(['codigo'=>'6','descripcion'=>'Registro Unico de Contributentes','abreviatura'=>'RUC','estado'=>1]);
-        Tdocumento::create(['codigo'=>'7','descripcion'=>'Pasaporte','abreviatura'=>'PASAPORTE','estado'=>1]);
-        Tdocumento::create(['codigo'=>'A','descripcion'=>'Cédula Diplomática de identidad','abreviatura'=>'CÉDULA DIP.','estado'=>0]);
-        Tdocumento::create(['codigo'=>'B','descripcion'=>'DOC.IDENT.PAIS.RESIDENCIA-NO.D','abreviatura'=>'DOC.IDENT.PAIS.RESIDENCIA-NO.D','estado'=>0]);
-        Tdocumento::create(['codigo'=>'C','descripcion'=>'Tax Identification Number - TIN – Doc Trib PP.NN','abreviatura'=>'TIN – Doc Trib PP.NN','estado'=>0]);
-        Tdocumento::create(['codigo'=>'D','descripcion'=>'Identification Number - IN – Doc Trib PP. JJ','abreviatura'=>'IN – Doc Trib PP. JJ','estado'=>0]);
-        Tdocumento::create(['codigo'=>'E','descripcion'=>'TAM- Tarjeta Andina de Migración','abreviatura'=>'TAM','estado'=>0]);
+        Tdocumento::create(['codigo'=>'0','descripcion'=>'DOC.TRIB.NO.DOM.SIN.RUC','abreviatura'=>'SIN DOC','estado'=>null]);
+        Tdocumento::create(['codigo'=>'1','descripcion'=>'Documento Nacional de Identidad','abreviatura'=>'DNI']);
+        Tdocumento::create(['codigo'=>'4','descripcion'=>'Carnet de extranjería','abreviatura'=>'CARNET EXT.']);
+        Tdocumento::create(['codigo'=>'6','descripcion'=>'Registro Unico de Contributentes','abreviatura'=>'RUC']);
+        Tdocumento::create(['codigo'=>'7','descripcion'=>'Pasaporte','abreviatura'=>'PASAPORTE']);
+        Tdocumento::create(['codigo'=>'A','descripcion'=>'Cédula Diplomática de identidad','abreviatura'=>'CÉDULA DIP.','estado'=>null]);
+        Tdocumento::create(['codigo'=>'B','descripcion'=>'DOC.IDENT.PAIS.RESIDENCIA-NO.D','abreviatura'=>'DOC.IDENT.PAIS.RESIDENCIA-NO.D','estado'=>null]);
+        Tdocumento::create(['codigo'=>'C','descripcion'=>'Tax Identification Number - TIN – Doc Trib PP.NN','abreviatura'=>'TIN – Doc Trib PP.NN','estado'=>null]);
+        Tdocumento::create(['codigo'=>'D','descripcion'=>'Identification Number - IN – Doc Trib PP. JJ','abreviatura'=>'IN – Doc Trib PP. JJ','estado'=>null]);
+        Tdocumento::create(['codigo'=>'E','descripcion'=>'TAM- Tarjeta Andina de Migración','abreviatura'=>'TAM','estado'=>null]);
 
     }
 }
