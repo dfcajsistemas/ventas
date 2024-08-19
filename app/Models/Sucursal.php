@@ -16,6 +16,10 @@ class Sucursal extends Model
         return $this->hasMany(User::class);
     }
 
+    public function series(){
+        return $this->hasMany(Serie::class);
+    }
+
     //Relacion uno a muchos inversa
     public function distrito(){
         return $this->belongsTo(Distrito::class);

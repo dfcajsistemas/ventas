@@ -59,7 +59,7 @@
                                 wire:click="edit({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
                             @endcan
                             @can('mantenimiento.sucursals.estado')
-                            <button class="btn btn-icon btn-warning btn-sm" title="Estado"
+                            <button class="btn btn-icon btn-secondary btn-sm" title="Estado"
                                 wire:click="estado({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-toggle-on"></i></button>
                             @endcan
                         </td>

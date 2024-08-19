@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Mpago extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['nombre', 'estado', 'created_by', 'updated_by'];
+
+    // Relación uno a muchos
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 }

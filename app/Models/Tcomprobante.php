@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Tcomprobante extends Model
 {
     use HasFactory;
+
+    //Relación uno a muchos
+    public function series()
+    {
+        return $this->hasMany(Serie::class);
+    }
 }

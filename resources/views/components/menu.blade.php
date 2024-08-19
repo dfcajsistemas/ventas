@@ -110,7 +110,7 @@
     @can('mantenimiento.mpagos')
     <li class="menu-item {{ request()->routeIs('mantenimiento.mpagos*') ? 'active' : '' }}">
         <a href="{{ route('mantenimiento.mpagos') }}" class="menu-link">
-            <i class="menu-icon tf-icons fa-solid fa-money-bill-wave"></i>
+            <i class="menu-icon tf-icons fa-solid fa-sack-dollar"></i>
             <div class="text-truncate">Modo pagos</div>
         </a>
     </li>

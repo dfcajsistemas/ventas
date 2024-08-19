@@ -1,5 +1,5 @@
 <div>
-    <h4><span class="text-muted fw-light">Mantenminto /</span> Prooductos</h4>
+    <h4><span class="text-muted fw-light">Mantenimiento /</span> Productos</h4>
     <div class="card">
         <div class="card-header">
             <div class="row">
