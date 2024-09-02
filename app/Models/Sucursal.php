@@ -15,10 +15,13 @@ class Sucursal extends Model
     public function users(){
         return $this->hasMany(User::class);
     }
-
     public function series(){
         return $this->hasMany(Serie::class);
     }
+    public function stocks(){
+        return $this->hasMany(Stock::class);
+    }
+
 
     //Relacion uno a muchos inversa
     public function distrito(){

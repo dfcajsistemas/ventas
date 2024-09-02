@@ -6,7 +6,9 @@ use App\Models\Departamento;
 use App\Models\Distrito;
 use App\Models\Empresa;
 use App\Models\Provincia;
+use App\Models\Serie;
 use App\Models\Sucursal;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -18,7 +20,7 @@ class Sucursals extends Component
 {
     use WithPagination;
 
-    public $nombre, $direccion, $telefono, $cod_sunat, $distrito_id, $provincia_id, $departamento_id, $empresa_id, $mMethod, $mTitle, $idm;
+    public $nombre, $direccion, $telefono, $cod_sunat, $p_venta, $distrito_id, $provincia_id, $departamento_id, $empresa_id, $mMethod, $mTitle, $idm;
     public $departamentos, $provincias, $distritos, $empresa;
     #[Url(except: '10')]
     public $perPage = '10';
@@ -66,7 +68,7 @@ class Sucursals extends Component
     {
         $this->mTitle = 'NUEVA SUCURSAL';
         $this->mMethod = 'store';
-        $this->reset(['nombre', 'direccion', 'telefono', 'cod_sunat', 'distrito_id', 'provincia_id', 'departamento_id']);
+        $this->reset(['nombre', 'direccion', 'telefono', 'cod_sunat', 'p_venta', 'distrito_id', 'provincia_id', 'departamento_id']);
         $this->resetValidation();
         $this->dispatch('sm');
     }
@@ -78,6 +80,7 @@ class Sucursals extends Component
             'direccion' => 'required',
             'telefono' => 'nullable',
             'cod_sunat' => 'required|unique:sucursals,cod_sunat',
+            'p_venta' => 'required|in:1,2,3',
             'distrito_id' => 'required',
             'provincia_id' => 'required',
             'departamento_id' => 'required',
@@ -86,22 +89,35 @@ class Sucursals extends Component
             'nombre.unique' => 'La sucursal ya existe',
             'direccion.required' => 'La dirección es obligatoria',
             'cod_sunat.required' => 'El código sunat es obligatorio',
+            'cod_sunat.unique' => 'El código sunat ya existe',
+            'p_venta.required' => 'Elija el precio de venta a usar',
+            'p_venta.in' => 'El precio de venta elegido no es válido',
             'distrito_id.required' => 'El distrito es obligatorio',
             'provincia_id.required' => 'La provincia es obligatoria',
             'departamento_id.required' => 'El departamento es obligatorio',
         ]);
 
-        Sucursal::create([
-            'nombre' => $this->nombre,
-            'direccion' => $this->direccion,
-            'telefono' => $this->telefono,
-            'cod_sunat' => $this->cod_sunat,
-            'distrito_id' => $this->distrito_id,
-            'empresa_id' => $this->empresa->id,
-            'created_by' => auth()->id(),
-            'updated_by' => auth()->id()
-        ]);
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Sucursal registrada']);
+        DB::beginTransaction();
+        try {
+            $sucursal=Sucursal::create([
+                'nombre' => $this->nombre,
+                'direccion' => $this->direccion,
+                'telefono' => $this->telefono,
+                'cod_sunat' => $this->cod_sunat,
+                'p_venta' => $this->p_venta,
+                'distrito_id' => $this->distrito_id,
+                'empresa_id' => $this->empresa->id,
+                'created_by' => auth()->id(),
+                'updated_by' => auth()->id()
+            ]);
+
+            DB::commit();
+            $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Haz registrado la sucursal.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('hm', ['t'=>'error', 'm'=>$e->getMessage()]);
+        }
+
     }
 
     public function edit(Sucursal $sucursal)
@@ -116,6 +132,7 @@ class Sucursals extends Component
         $this->direccion = $sucursal->direccion;
         $this->telefono = $sucursal->telefono;
         $this->cod_sunat = $sucursal->cod_sunat;
+        $this->p_venta = $sucursal->p_venta;
         $this->distrito_id = $sucursal->distrito_id;
         $this->provincia_id = $sucursal->distrito->provincia_id;
         $this->departamento_id = $sucursal->distrito->provincia->departamento_id;
@@ -131,6 +148,7 @@ class Sucursals extends Component
             'direccion' => 'required',
             'telefono' => 'nullable',
             'cod_sunat' => 'required|unique:sucursals,cod_sunat,'.$this->idm,
+            'p_venta' => 'required|in:1,2,3',
             'distrito_id' => 'required',
             'provincia_id' => 'required',
             'departamento_id' => 'required',
@@ -140,6 +158,8 @@ class Sucursals extends Component
             'direccion.required' => 'La dirección es obligatoria',
             'cod_sunat.required' => 'El código SUNAT es obligatorio',
             'cod_sunat.unique' => 'El código SUNAT ya existe',
+            'p_venta.required' => 'Elija el precio de venta a usar',
+            'p_venta.in' => 'El precio de venta elegido no es válido',
             'distrito_id.required' => 'El distrito es obligatorio',
             'provincia_id.required' => 'La provincia es obligatoria',
             'departamento_id.required' => 'El departamento es obligatorio',
@@ -150,11 +170,12 @@ class Sucursals extends Component
         $sucursal->direccion = $this->direccion;
         $sucursal->telefono = $this->telefono;
         $sucursal->cod_sunat = $this->cod_sunat;
+        $sucursal->p_venta = $this->p_venta;
         $sucursal->distrito_id = $this->distrito_id;
         $sucursal->updated_by = auth()->id();
         $sucursal->save();
 
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Sucursal actualizada']);
+        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Haz editado la sucursal.']);
     }
 
     public function dispro(Sucursal $sucursal)

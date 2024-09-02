@@ -9,7 +9,7 @@ class Serie extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['serie', 'tcomprobante_id', 'sucursal_id', 'created_by', 'updated_by'];
+    protected $fillable = ['serie', 'tcomprobante_id', 'sucursal_id', 'estado', 'created_by', 'updated_by'];
 
     //Relación uno a muchos inversa
     public function tcomprobante()

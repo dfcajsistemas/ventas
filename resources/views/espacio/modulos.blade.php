@@ -8,24 +8,15 @@
         @can('mantenimiento')
         <x-enlace-modulo imagen="assets/img/modulos/mantenimiento.png" mod="Mantenimiento" ruta="mantenimiento" />
         @endcan
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/despacho.png') }}" alt="Despacho"
-                            class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Despacho</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        @can('abastecimiento')
+        <x-enlace-modulo imagen="assets/img/modulos/abastecimiento.png" mod="Abastecimiento" ruta="abastecimiento" />
+        @endcan
+
+        @can('despacho')
+        <x-enlace-modulo imagen="assets/img/modulos/despacho.png" mod="Despacho" ruta="despacho" />
+        @endcan
+
         <div class="col-md-4">
             <div class="card mb-3">
                 <div class="row g-0">

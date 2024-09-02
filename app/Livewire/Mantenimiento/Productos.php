@@ -19,8 +19,7 @@ class Productos extends Component
 {
     use WithPagination;
 
-    public $nombre, $codigo, $descripcion, $icbper, $umedida_id, $categoria_id, $igvafectacion_id, $igvporciento_id, $mMethod, $mTitle, $idm;
-
+    public $nombre, $codigo, $descripcion, $icbper, $p_costo, $p_venta1, $p_venta2, $p_venta3, $umedida_id, $categoria_id, $igvafectacion_id, $igvporciento_id, $mMethod, $mTitle, $idm;
     public $umedidas, $igvafectacions, $categorias, $igvporcientos;
 
     public $prod=[];
@@ -62,18 +61,23 @@ class Productos extends Component
     {
         $this->mTitle = 'NUEVO PRODUCTO';
         $this->mMethod = 'store';
-        $this->reset(['nombre', 'codigo', 'descripcion', 'icbper', 'umedida_id', 'categoria_id', 'igvafectacion_id', 'igvporciento_id']);
+        $this->reset(['nombre', 'codigo', 'descripcion', 'icbper', 'p_costo', 'p_venta1', 'p_venta2', 'p_venta3', 'umedida_id', 'categoria_id', 'igvafectacion_id', 'igvporciento_id']);
         $this->resetValidation();
         $this->dispatch('sm');
     }
 
     public function store()
     {
+        //dd($this->p_venta1);
         $this->validate([
             'nombre' => 'required|unique:productos,nombre',
             'codigo' => 'required|unique:productos,codigo',
             'descripcion' => 'nullable',
             'icbper' => 'nullable',
+            'p_costo' => 'nullable|numeric',
+            'p_venta1' => 'required|numeric',
+            'p_venta2' => 'nullable|numeric',
+            'p_venta3' => 'nullable|numeric',
             'umedida_id' => 'required',
             'categoria_id' => 'required',
             'igvafectacion_id' => 'required',
@@ -83,6 +87,11 @@ class Productos extends Component
             'nombre.unique' => 'El nombre ya existe',
             'codigo.required' => 'Ingrese el código',
             'codigo.unique' => 'El código ya existe',
+            'p_costo.numeric' => 'Ingrese un valor numérico',
+            'p_venta1.required' => 'Ingrese el precio de venta',
+            'p_venta1.numeric' => 'Ingrese un valor numérico',
+            'p_venta2.numeric' => 'Ingrese un valor numérico',
+            'p_venta3.numeric' => 'Ingrese un valor numérico',
             'umedida_id.required' => 'Elija la unidad de medida',
             'categoria_id.required' => 'Elija la categoría',
             'igvafectacion_id.required' => 'Elija afectación de IGV',
@@ -95,6 +104,10 @@ class Productos extends Component
             'codigo' => $this->codigo,
             'descripcion' => $this->descripcion,
             'icbper' => $this->icbper,
+            'p_costo' => $this->p_costo,
+            'p_venta1' => $this->p_venta1,
+            'p_venta2' => $this->p_venta2,
+            'p_venta3' => $this->p_venta3,
             'umedida_id' => $this->umedida_id,
             'categoria_id' => $this->categoria_id,
             'igvafectacion_id' => $this->igvafectacion_id,
@@ -114,6 +127,10 @@ class Productos extends Component
         $this->codigo = $producto->codigo;
         $this->descripcion = $producto->descripcion;
         $this->icbper = $producto->icbper;
+        $this->p_costo = $producto->p_costo;
+        $this->p_venta1 = $producto->p_venta1;
+        $this->p_venta2 = $producto->p_venta2;
+        $this->p_venta3 = $producto->p_venta3;
         $this->umedida_id = $producto->umedida_id;
         $this->categoria_id = $producto->categoria_id;
         $this->igvafectacion_id = $producto->igvafectacion_id;
@@ -130,6 +147,10 @@ class Productos extends Component
             'codigo' => 'required|unique:productos,codigo,'.$this->idm,
             'descripcion' => 'nullable',
             'icbper' => 'nullable',
+            'p_costo' => 'nullable|numeric',
+            'p_venta1' => 'required|numeric',
+            'p_venta2' => 'nullable|numeric',
+            'p_venta3' => 'nullable|numeric',
             'umedida_id' => 'required',
             'categoria_id' => 'required',
             'igvafectacion_id' => 'required',
@@ -139,6 +160,11 @@ class Productos extends Component
             'nombre.unique' => 'El nombre ya existe',
             'codigo.required' => 'Ingrese el código',
             'codigo.unique' => 'El código ya existe',
+            'p_costo.numeric' => 'Ingrese un valor numérico',
+            'p_venta1.required' => 'Ingrese el precio de venta',
+            'p_venta1.numeric' => 'Ingrese un valor numérico',
+            'p_venta2.numeric' => 'Ingrese un valor numérico',
+            'p_venta3.numeric' => 'Ingrese un valor numérico',
             'umedida_id.required' => 'Elija la unidad de medida',
             'categoria_id.required' => 'Elija la categoría',
             'igvafectacion_id.required' => 'Elija afectación de IGV',
@@ -151,6 +177,10 @@ class Productos extends Component
             'codigo' => $this->codigo,
             'descripcion' => $this->descripcion,
             'icbper' => $this->icbper,
+            'p_costo' => $this->p_costo,
+            'p_venta1' => $this->p_venta1,
+            'p_venta2' => $this->p_venta2,
+            'p_venta3' => $this->p_venta3,
             'umedida_id' => $this->umedida_id,
             'categoria_id' => $this->categoria_id,
             'igvafectacion_id' => $this->igvafectacion_id,

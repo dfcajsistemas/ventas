@@ -7,5 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reposicion extends Model
 {
+    protected $fillable = [
+        'cantidad',
+        'lote',
+        'observaciones',
+        'producto_id',
+        'sucursal_id',
+        'created_by',
+    ];
     use HasFactory;
 }

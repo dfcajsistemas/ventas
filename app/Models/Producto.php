@@ -15,6 +15,10 @@ class Producto extends Model
         'codigo',
         'descripcion',
         'icbper',
+        'p_costo',
+        'p_venta1',
+        'p_venta2',
+        'p_venta3',
         'umedida_id',
         'categoria_id',
         'igvafectacion_id',
@@ -23,6 +27,12 @@ class Producto extends Model
         'created_by',
         'updated_by'
     ];
+
+    //relación uno a muchos
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
 
     //Relacion uno a muchos inversa
     public function categoria()

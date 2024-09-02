@@ -54,22 +54,26 @@
                         <td>
                             <x-status :status="$serie->estado" />
                         </td>
-                        @canany(['mantenimiento.series.editar', 'mantenimiento.series.eliminar'])
+                        @canany(['mantenimiento.series.editar', 'mantenimiento.series.estado', 'mantenimiento.series.eliminar'])
                         <td>
+                            @if($serie->correlativo == 0)
                             @can('mantenimiento.series.editar')
                             <button class="btn btn-icon btn-info btn-sm" title="Editar"
                                 wire:click="edit({{ $serie->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
                             @endcan
+                            @endif
                             @can('mantenimiento.series.estado')
                             <button class="btn btn-icon btn-secondary btn-sm" title="Estado"
                                 wire:click="status({{ $serie->id }})"><i
                                     class="tf-icons fa-solid fa-toggle-on"></i></button>
                             @endcan
+                            @if($serie->correlativo == 0)
                             @can('mantenimiento.series.eliminar')
                             <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
                                 x-on:click="confirmar({{ $serie->id }})"><i
                                     class="tf-icons fa-solid fa-trash"></i></button>
                             @endcan
+                            @endif
                         </td>
                         @endcanany
                     </tr>
@@ -90,13 +94,8 @@
     <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
             <div class="col-12">
-                <x-label class="form-label" for="serie">Serie</x-label>
-                <x-input class="form-control" type="text" id="serie" wire:model="serie" />
-                <x-input-error for="serie" />
-            </div>
-            <div class="col-12">
                 <x-label class="form-label" for="tcomprobante_id">T. Comprobante</x-label>
-                <x-select id="tcomprobante_id" wire:model="tcomprobante_id">
+                <x-select id="tcomprobante_id" wire:model.live="tcomprobante_id">
                     <option value="">Seleccione...</option>
                     @foreach ($tcomprobantes as $id => $tcomprobante)
                     <option value="{{ $id }}">{{ $tcomprobante }}</option>
@@ -113,6 +112,15 @@
                     @endforeach
                 </x-select>
                 <x-input-error for="sucursal_id" />
+            </div>
+            <div class="col-3">
+                <x-label class="form-label" for="prefijo">Prefijo</x-label>
+                <x-input class="form-control" type="text" id="prefijo" wire:model="prefijo" readonly />
+            </div>
+            <div class="col-9">
+                <x-label class="form-label" for="serie">Serie</x-label>
+                <x-input class="form-control" type="text" id="serie" wire:model="serie" />
+                <x-input-error for="serie" />
             </div>
         </div>
     </x-modal-form>

@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('descripcion')->nullable();
             $table->string('codigo')->unique()->nullable();
+            $table->decimal('p_costo', 8, 2)->nullable();
+            $table->decimal('p_venta1', 8, 2); //precio venta obligatorio
+            $table->decimal('p_venta2', 8, 2)->nullable();
+            $table->decimal('p_venta3', 8, 2)->nullable();
             $table->tinyInteger('icbper')->default(null)->nullable(); // 1: Sujeto a ICBPER, null: No sujeto a ICBPER
             $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
 

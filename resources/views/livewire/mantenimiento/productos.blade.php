@@ -122,7 +122,7 @@
                 </x-select>
                 <x-input-error for="igvafectacion_id" />
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <x-label for="igvporciento_id">IGV Porcentaje</x-label>
                 <x-select id="igvporciento_id" wire:model="igvporciento_id">
                     <option value="">Seleccione...</option>
@@ -132,7 +132,27 @@
                 </x-select>
                 <x-input-error for="igvporciento_id" />
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
+                <x-label for="p_costo">Precio Costo</x-label>
+                <x-input type="number" id="p_costo" wire:model="p_costo" />
+                <x-input-error for="p_costo" />
+            </div>
+            <div class="col-12 col-md-4">
+                <x-label for="p_venta1">Precio Venta 1</x-label>
+                <x-input type="number" id="p_venta1" wire:model="p_venta1" />
+                <x-input-error for="p_venta1" />
+            </div>
+            <div class="col-12 col-md-4">
+                <x-label for="p_venta2">Precio Venta 2</x-label>
+                <x-input type="number" id="p_venta2" wire:model="p_venta2" />
+                <x-input-error for="p_venta2" />
+            </div>
+            <div class="col-12 col-md-4">
+                <x-label for="p_venta3">Precio Venta 3</x-label>
+                <x-input type="number" id="p_venta3" wire:model="p_venta3" />
+                <x-input-error for="p_venta3" />
+            </div>
+            <div class="col-12 col-md-4">
                 <div class="form-check pt-4">
                     <x-checkbox id="icbper" value="1" wire:model="icbper" />
                     <x-label for="icbper" value="ICBPER" />
@@ -146,35 +166,50 @@
             @if($prod)
             <table class="table table-sm table-hover text-small">
                 <tr>
-                    <td>Nombre</td>
-                    <td class="text-info"><b>{{ $prod->nombre }}</b></td>
+                    <th colspan="2"><small>Nombre</small><h5 class="text-info">{{ $prod->nombre }}</h5></th>
                 </tr>
                 <tr>
-                    <td>Descripción</td>
+                    <th>Descripción</th>
                     <td>{{ $prod->descripcion }}</td>
                 </tr>
                 <tr>
-                    <td>Código</td>
+                    <th>Código</th>
                     <td>{{ $prod->codigo }}</td>
                 </tr>
                 <tr>
-                    <td>Categoria</td>
+                    <th>Categoria</th>
                     <td>{{ $prod->categoria->nombre }}</td>
                 </tr>
                 <tr>
-                    <td>U. Medida</td>
+                    <th>U. Medida</th>
                     <td>{{$prod->umedida->descripcion}}</td>
                 </tr>
                 <tr>
-                    <td>IGV Afectación</td>
+                    <th>P. Costo</th>
+                    <td>{{$prod->p_costo}}</td>
+                </tr>
+                <tr>
+                    <th>P. Venta 1</th>
+                    <td>{{$prod->p_venta1}}</td>
+                </tr>
+                <tr>
+                    <th>P. Venta 2</th>
+                    <td>{{$prod->p_venta2}}</td>
+                </tr>
+                <tr>
+                    <th>P. Venta 3</th>
+                    <td>{{$prod->p_venta3}}</td>
+                </tr>
+                <tr>
+                    <th>IGV Afectación</th>
                     <td>{{$prod->igvafectacion->descripcion}}</td>
                 </tr>
                 <tr>
-                    <td>IGV Porcentaje</td>
+                    <th>IGV Porcentaje</th>
                     <td>{{$prod->igvporciento->porcentaje}}</td>
                 </tr>
                 <tr>
-                    <td>ICBPER</td>
+                    <th>ICBPER</th>
                     <td>{{ $prod->icbper ? 'Si' : 'No' }}</td>
                 </tr>
             </table>

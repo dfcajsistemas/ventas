@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('tcomprobantes', function (Blueprint $table) {
             $table->id();
 
-            $table->string('codigo', 2)->unique();
+            $table->string('codigo', 2);
             $table->string('descripcion');
+            $table->string('prefijo', 2)->nullable();
             $table->tinyInteger('estado')->default(1)->nullable(); // 1: Activo, null: Inactivo
 
             $table->timestamps();

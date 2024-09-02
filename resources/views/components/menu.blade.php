@@ -133,6 +133,52 @@
     @endcan
 </ul>
 @break
+@case('Abastecimiento')
+<ul class="menu-inner py-1">
+    <li class="menu-header small text-uppercase">
+        <span class="menu-header-text"> Abastecimiento</span>
+    </li>
+    @can('abastecimiento')
+    <li class="menu-item {{ request()->routeIs('abastecimiento') ? 'active' : '' }}">
+        <a href="{{ route('abastecimiento') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
+            <div class="text-truncate">Dashboard</div>
+        </a>
+    </li>
+    @endcan
+    @can('abastecimiento.productos')
+    <li class="menu-item {{ request()->routeIs('abastecimiento.productos*') ? 'active' : '' }}">
+        <a href="{{ route('abastecimiento.productos') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-boxes-packing"></i>
+            <div class="text-truncate">Productos</div>
+        </a>
+    </li>
+    @endcan
+</ul>
+@break
+@case('Despacho')
+<ul class="menu-inner py-1">
+    <li class="menu-header small text-uppercase">
+        <span class="menu-header-text"> Despacho</span>
+    </li>
+    @can('despacho')
+    <li class="menu-item {{ request()->routeIs('despacho') ? 'active' : '' }}">
+        <a href="{{ route('despacho') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
+            <div class="text-truncate">Dashboard</div>
+        </a>
+    </li>
+    @endcan
+    @can('despacho.despachar')
+    <li class="menu-item {{ request()->routeIs('despacho.despachar*') ? 'active' : '' }}">
+        <a href="{{ route('despacho.despachar') }}" class="menu-link">
+            <i class="menu-icon tf-icons fa-solid fa-basket-shopping"></i>
+            <div class="text-truncate">Despachar</div>
+        </a>
+    </li>
+    @endcan
+</ul>
+@break
 @default
 <p>Sin Menú</p>
 @endswitch

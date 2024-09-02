@@ -6,6 +6,7 @@ use App\Models\Serie;
 use App\Models\Sucursal;
 use App\Models\Tcomprobante;
 use Livewire\Attributes\Lazy;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -16,7 +17,7 @@ class Series extends Component
 {
     use WithPagination;
 
-    public $serie, $tcomprobante_id, $sucursal_id, $mMethod, $mTitle, $idm;
+    public $serie, $tcomprobante_id, $prefijo, $correlativo, $sucursal_id, $mMethod, $mTitle, $idm;
 
     public $tcomprobantes, $sucursals;
 
@@ -41,6 +42,11 @@ class Series extends Component
         $this->sucursals = Sucursal::where('estado', 1)->pluck('nombre', 'id');
     }
 
+    public function updatedTcomprobanteId($value)
+    {
+        $this->prefijo = Tcomprobante::find($value)->prefijo;
+    }
+
     #[Title(['Series', 'Mantenimiento'])]
     public function render()
     {
@@ -62,25 +68,28 @@ class Series extends Component
     public function store()
     {
         $this->validate([
-            'serie' => 'required|unique:series,serie',
+            'serie' => 'required|min:3|max:3',
             'tcomprobante_id' => 'required',
-            'sucursal_id' => 'required',
+            'sucursal_id' => 'required'
         ], [
             'serie.required' => 'Ingrese la serie',
-            'serie.unique' => 'La serie ya existe',
-            'tcomprobante_id.required' => 'Seleccione el tipo de comprobante',
-            'sucursal_id.required' => 'Seleccione la sucursal',
+            'serie.min' => 'Ingrese 3 caracteres',
+            'serie.max' => 'Ingrese 3 caracteres',
+            'tcomprobante_id.required' => 'Elije el tipo de comprobante',
+            'sucursal_id.required' => 'Elije la sucursal'
         ]);
 
-        if (strlen($this->serie) != 4) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La serie debe tener 4 caracteres']);
+        if (Serie::where('tcomprobante_id', $this->tcomprobante_id)->where('sucursal_id', $this->sucursal_id)->where('estado', 1)->exists()) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La sucursal ya tiene una serie activa para este tipo de comprobante.']);
             return;
-        } elseif (Serie::where('tcomprobante_id', $this->tcomprobante_id)->where('sucursal_id', $this->sucursal_id)->exists()) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La sucursal ya tiene una serie registrada para este tipo de comprobante.']);
+        } elseif(Serie::where('serie', $this->prefijo.$this->serie)->exists()) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La serie ingresada ya existe.']);
             return;
-        } else {
+        }
+
+        else {
             Serie::create([
-                'serie' => $this->serie,
+                'serie' => $this->prefijo.$this->serie,
                 'tcomprobante_id' => $this->tcomprobante_id,
                 'sucursal_id' => $this->sucursal_id,
                 'created_by' => auth()->id(),
@@ -96,7 +105,8 @@ class Series extends Component
         $this->mMethod = 'update';
         $this->mTitle = 'Editar Serie';
         $this->resetValidation();
-        $this->serie = $serie->serie;
+        $this->serie = substr($serie->serie, 1, 3);
+        $this->prefijo = substr($serie->serie, 0, 1);
         $this->tcomprobante_id = $serie->tcomprobante_id;
         $this->sucursal_id = $serie->sucursal_id;
         $this->idm = $serie->id;
@@ -106,31 +116,69 @@ class Series extends Component
     public function update()
     {
         $this->validate([
-            'serie' => 'required|unique:series,serie,' . $this->idm,
+            'serie' => 'required|min:3|max:3',
             'tcomprobante_id' => 'required',
             'sucursal_id' => 'required',
         ], [
             'serie.required' => 'Ingrese la serie',
+            'serie.min' => 'Ingrese 3 caracteres',
+            'serie.max' => 'Ingrese 3 caracteres',
             'serie.unique' => 'La serie ya existe',
-            'tcomprobante_id.required' => 'Seleccione el tipo de comprobante',
-            'sucursal_id.required' => 'Seleccione la sucursal',
+            'tcomprobante_id.required' => 'Elija el tipo de comprobante',
+            'sucursal_id.required' => 'Elija la sucursal',
         ]);
 
-        if (strlen($this->serie) != 4) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La serie debe tener 4 caracteres']);
-            return;
-        } elseif (Serie::where('tcomprobante_id', $this->tcomprobante_id)->where('sucursal_id', $this->sucursal_id)->where('id', '!=', $this->idm)->exists()) {
+        if (Serie::where('tcomprobante_id', $this->tcomprobante_id)->where('sucursal_id', $this->sucursal_id)->where('id', '!=', $this->idm)->exists()) {
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La sucursal ya tiene una serie registrada para este tipo de comprobante.']);
+            return;
+        }elseif(Serie::where('serie', $this->prefijo.$this->serie)->where('id', '!=', $this->idm)->exists()){
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La serie ingresada ya existe.']);
             return;
         } else {
             Serie::find($this->idm)->update([
-                'serie' => $this->serie,
+                'serie' => $this->prefijo.$this->serie,
                 'tcomprobante_id' => $this->tcomprobante_id,
                 'sucursal_id' => $this->sucursal_id,
                 'updated_by' => auth()->id(),
             ]);
 
             $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Serie actualizada.']);
+        }
+    }
+
+    public function status(Serie $serie)
+    {
+        if(!$serie->estado){
+            if(Serie::where('tcomprobante_id', $serie->tcomprobante_id)->where('sucursal_id', $serie->sucursal_id)->where('estado', 1)->exists()){
+                $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La sucursal ya tiene una serie activa para este tipo de comprobante.']);
+                return;
+            }else{
+                $serie->update([
+                    'estado' => 1,
+                    'updated_by' => auth()->id()
+                ]);
+                $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Serie activada']);
+                return;
+            }
+        }else{
+            $serie->update([
+                'estado' => null,
+                'updated_by' => auth()->id()
+            ]);
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Serie desactivada']);
+            return;
+        }
+    }
+    #[On('delete')]
+    public function destroy(Serie $serie)
+    {
+        //dd($serie);
+        if($serie->correlativo > 0){
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se puede eliminar, ya se emitió comprobantes con la serie.']);
+            return;
+        }else{
+            $serie->delete();
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Serie eliminada']);
         }
     }
 }

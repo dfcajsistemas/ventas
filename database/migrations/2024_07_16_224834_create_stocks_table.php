@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
 
-            $table->decimal('stock', 10, 2);
+            $table->decimal('stock', 10, 2)->default(0);
             $table->decimal('stock_minimo', 10, 2);
-            $table->decimal('precio_venta', 10, 2);
-            $table->decimal('precio_costo', 10, 2);
 
             $table->foreignId('producto_id')->constrained();
             $table->foreignId('sucursal_id')->constrained();

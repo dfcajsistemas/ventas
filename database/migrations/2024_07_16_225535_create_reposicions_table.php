@@ -15,16 +15,13 @@ return new class extends Migration
             $table->id();
 
             $table->decimal('cantidad', 10, 2);
-            $table->decimal('precio_costo', 10, 2);
-            $table->decimal('precio_venta', 10, 2);
             $table->string('lote',20);
-            $table->date('fecha');
+            $table->string('observaciones')->nullable();
 
             $table->foreignId('producto_id')->constrained();
             $table->foreignId('sucursal_id')->constrained();
 
             $table->unsignedBigInteger('created_by')->nullable()->index();
-            $table->unsignedBigInteger('updated_by')->nullable()->index();
 
             $table->timestamps();
         });

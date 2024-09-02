@@ -13,4 +13,7 @@ class Tdocumento extends Model
     public function users(){
         return $this->hasMany(User::class);
     }
+    public function clientes(){
+        return $this->hasMany(Cliente::class);
+    }
 }

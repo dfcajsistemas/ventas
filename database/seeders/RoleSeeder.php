@@ -14,8 +14,10 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $accesos = Role::create(['name' => 'accesos admin']);
-        $mantenimiento = Role::create(['name' => 'mantenimiento admin']);
+        $accesos = Role::create(['name' => 'Accesos admin']);
+        $mantenimiento = Role::create(['name' => 'Mantenimiento admin']);
+        $abastecimiento = Role::create(['name' => 'Abastecimiento admin']);
+        $despacho = Role::create(['name' => 'Despacho admin']);
 
         Permission::create(['name' => 'accesos'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.users'])->assignRole($accesos);
@@ -73,10 +75,17 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'mantenimiento.series.agregar'])->syncRoles($mantenimiento);
         Permission::create(['name' => 'mantenimiento.series.editar'])->syncRoles($mantenimiento);
         Permission::create(['name' => 'mantenimiento.series.estado'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.series.eliminar'])->syncRoles($mantenimiento);
 
+        Permission::create(['name' => 'abastecimiento'])->syncRoles($abastecimiento);
+        Permission::create(['name' => 'abastecimiento.productos'])->syncRoles($abastecimiento);
+        Permission::create(['name' => 'abastecimiento.productos.stock'])->syncRoles($abastecimiento);
+        Permission::create(['name' => 'abastecimiento.productos.reposiciones'])->syncRoles($abastecimiento);
+        Permission::create(['name' => 'abastecimiento.productos.reposiciones.agregar'])->syncRoles($abastecimiento);
+        Permission::create(['name' => 'abastecimiento.productos.reposiciones.eliminar'])->syncRoles($abastecimiento);
 
-
-
+        Permission::create(['name' => 'despacho'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.despachar'])->syncRoles($despacho);
 
     }
 }

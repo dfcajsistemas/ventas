@@ -37,6 +37,7 @@
                         <th>Dirección</th>
                         <th>Ubicación</th>
                         <th>Cod SUNAT</th>
+                        <th>P. Venta</th>
                         <th>Estado</th>
                         @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
                         <th>Acciones</th>
@@ -51,6 +52,7 @@
                         <td>{{ $sucursal->direccion }}</td>
                         <td>{{ $sucursal->distrito->nombre }}</td>
                         <td>{{ $sucursal->cod_sunat }}</td>
+                        <td>{{ $sucursal->p_venta }}</td>
                         <td><x-status :status="$sucursal->estado" /></td>
                         @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
                         <td>
@@ -91,15 +93,24 @@
                 <x-input type="text" id="direccion" wire:model="direccion" />
                 <x-input-error for="direccion" />
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <x-label for="telefono" value="Teléfono" />
                 <x-input type="text" id="telefono" wire:model="telefono" />
                 <x-input-error for="telefono" />
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <x-label for="cod_sunat" value="Cod. SUNAT" />
                 <x-input type="text" id="cod_sunat" wire:model="cod_sunat" />
                 <x-input-error for="cod_sunat" />
+            </div>
+            <div class="col-12 col-md-4">
+                <x-label for="p_venta" value="P. Venta a usar" />
+                <x-select id="p_venta" wire:model.live="p_venta">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </x-select>
+                <x-input-error for="p_venta" />
             </div>
             <div class="col-12 col-md-4">
                 <x-label for="departamento_id" value="Departamento" />
@@ -117,7 +128,7 @@
                     <option value="">Seleccione provincia</option>
                     @if ($provincias)
                     @foreach ($provincias as $prov)
-                    <option value="{{$prov->id}}" {{$prov->id==$provincia_id ? 'selected' : ''}}>{{$prov->nombre}}</option>
+                    <option value="{{$prov->id}}" {{$prov->id==$provincia_id ? 'selected' : ''}} wire:key='p_{{$prov->id}}'>{{$prov->nombre}}</option>
                     @endforeach
                     @endif
                 </x-select>
@@ -129,7 +140,7 @@
                     <option value="">Seleccione distrito</option>
                     @if ($distritos)
                     @foreach ($distritos as $dist)
-                    <option value="{{$dist->id}}" {{$dist->id==$distrito_id ? 'selected' : ''}}>{{$dist->nombre}}</option>
+                    <option value="{{$dist->id}}" {{$dist->id==$distrito_id ? 'selected' : ''}} wire:key='d_{{$dist->id}}'>{{$dist->nombre}}</option>
                     @endforeach
                     @endif
                 </x-select>
