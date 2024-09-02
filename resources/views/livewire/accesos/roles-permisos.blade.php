@@ -28,44 +28,43 @@
             </div>
         </div>
         @can('accesos.roles.permisos.asignar')
-        <div class="col-12 col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Asignar permisos</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 mb-4">
-                            <input type="search" class="form-control" placeholder="Buscar permisos..."
-                                wire:model.live.debounce.300ms="search">
-                        </div>
-                        @foreach ($permisos as $permiso)
-                            <div class="col-12 col-md-4 mb-2">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="per_{{ $permiso->id }}"
-                                        value="{{ $permiso->id }}" name="permisos[]"
-                                        wire:click="syncPermiso({{ $role->hasPermissionTo($permiso->id) ? 1 : 0 }}, '{{ $permiso->name }}')"
-                                        {{ $role->hasPermissionTo($permiso->id) ? 'checked' : '' }}>
-                                    <x-label for="per_{{ $permiso->id }}"
-                                        class="form-check-label">{{ $permiso->name }}</x-label>
-                                </div>
+            <div class="col-12 col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Asignar permisos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <input type="search" class="form-control" placeholder="Buscar permisos..."
+                                    wire:model.live.debounce.300ms="search">
                             </div>
-                        @endforeach
-                        <div class="col-12">
-                            {{ $permisos->links() }}
+                            @foreach ($permisos as $permiso)
+                                <div class="col-12 col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="per_{{ $permiso->id }}"
+                                            value="{{ $permiso->id }}" name="permisos[]"
+                                            wire:click="syncPermiso({{ $role->hasPermissionTo($permiso->id) ? 1 : 0 }}, '{{ $permiso->name }}')"
+                                            {{ $role->hasPermissionTo($permiso->id) ? 'checked' : '' }}>
+                                        <x-label for="per_{{ $permiso->id }}"
+                                            class="form-check-label">{{ $permiso->name }}</x-label>
+                                    </div>
+                                </div>
+                            @endforeach
+                            <div class="col-12">
+                                {{ $permisos->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         @endcan
     </div>
     @script
-    <script>
-        Livewire.on('re', (e) => {
-            noti(e[0]['m'], e[0]['t'])
-        })
-    </script>
+        <script>
+            Livewire.on('re', (e) => {
+                noti(e[0]['m'], e[0]['t'])
+            })
+        </script>
     @endscript
 </div>
-

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
 
-            $table->string('serie', 4);
-            $table->unsignedBigInteger('correlativo');
+            $table->string('serie', 4)->nullable();
+            $table->unsignedBigInteger('correlativo')->nullable();
             $table->tinyInteger('fpago')->nullable();   // null: Contado, 1: Crédito
-            $table->timestamp('femision');
+            $table->timestamp('femision')->nullable();
             $table->timestamp('fvencimiento')->nullable();
             $table->decimal('op_grabbadas', 14, 6)->nullable();
             $table->decimal('op_exoneradas', 14, 6)->nullable();
@@ -36,15 +36,14 @@ return new class extends Migration
             $table->string('cod_sunat', 20)->nullable();
             $table->string('msj_sunat')->nullable();
             $table->tinyInteger('est_comprobante')->nullable(); // null: sin comprobante, 1: emitido, 2: enviado, 3: aceptado, 4: observado, 5: rechazado
-            $table->tinyInteger('est_venta')->nullable(); // null: solicitado, 1: despachado, 2: entregado
+            $table->tinyInteger('est_venta')->nullable(); // 1: solicitado, 2: delivery, 3: entregado
             $table->tinyInteger('est_pago')->nullable(); // null: pagada, 1: pendiente
 
             $table->foreignId('cliente_id')->constrained();
             $table->foreignId('tmoneda_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('sucursal_id')->constrained();
-            $table->foreignId('tcomprobante_id')->constrained()->nullable();
-
+            $table->foreignId('tcomprobante_id')->nullable()->constrained();
 
             $table->timestamps();
         });

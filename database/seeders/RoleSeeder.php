@@ -85,7 +85,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'abastecimiento.productos.reposiciones.eliminar'])->syncRoles($abastecimiento);
 
         Permission::create(['name' => 'despacho'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.despachar'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.elegir'])->syncRoles($despacho);
 
     }
 }

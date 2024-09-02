@@ -16,13 +16,13 @@ class SucursalSeeder extends Seeder
     public function run(): void
     {
         $sucursal=Sucursal::create([
-            'nombre' => 'Principal',
+            'nombre' => 'Sede Principal',
             'direccion' => 'Av. Prueba 123',
             'telefono' => '123456789',
             'cod_sunat' => '0001',
             'p_venta' => 1,
             'empresa_id' => 1,
-            'distrito_id' => 561,
+            'distrito_id' => 551,
         ]);
 
     }
