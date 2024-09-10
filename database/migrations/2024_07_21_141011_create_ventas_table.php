@@ -45,6 +45,8 @@ return new class extends Migration
             $table->foreignId('sucursal_id')->constrained();
             $table->foreignId('tcomprobante_id')->nullable()->constrained();
 
+            $table->unsignedBigInteger('updated_by')->nullable()->index();
+
             $table->timestamps();
         });
     }

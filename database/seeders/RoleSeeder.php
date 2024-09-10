@@ -18,6 +18,8 @@ class RoleSeeder extends Seeder
         $mantenimiento = Role::create(['name' => 'Mantenimiento admin']);
         $abastecimiento = Role::create(['name' => 'Abastecimiento admin']);
         $despacho = Role::create(['name' => 'Despacho admin']);
+        $caja = Role::create(['name' => 'Caja admin']);
+        $delivery = Role::create(['name' => 'Delivery admin']);
 
         Permission::create(['name' => 'accesos'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.users'])->assignRole($accesos);
@@ -86,7 +88,17 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'despacho'])->syncRoles($despacho);
         Permission::create(['name' => 'despacho.pedidos'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.elegir'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.canasta'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.eliminar'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.canasta.agregar'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.canasta.cantidad'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.canasta.eliminar'])->syncRoles($despacho);
+
+        Permission::create(['name' => 'caja'])->assignRole($caja);
+        Permission::create(['name' => 'caja.cajas'])->assignRole($caja);
+
+        Permission::create(['name' => 'delivery'])->assignRole($delivery);
+        Permission::create(['name' => 'delivery.pedidos'])->assignRole($delivery);
 
     }
 }

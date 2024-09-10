@@ -10,7 +10,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Lazy()]
-class Despachar extends Component
+class Elegir extends Component
 {
     use WithPagination;
 
@@ -26,7 +26,7 @@ class Despachar extends Component
         $this->sucursal = auth()->user()->sucursal;
     }
 
-    #[Title(['Despachar', 'Despacho'])]
+    #[Title(['Elegir', 'Despacho'])]
     public function render()
     {
         $productos = Producto::join('stocks', 'productos.id', '=', 'stocks.producto_id')
@@ -35,7 +35,7 @@ class Despachar extends Component
             ->where('stocks.sucursal_id', $this->sucursal->id)
             ->where('stocks.stock', '>', 0)
             ->paginate($this->perPage);
-        return view('livewire.despacho.despachar', compact('productos'));
+        return view('livewire.despacho.elegir', compact('productos'));
     }
 
     public function add(Producto $producto)

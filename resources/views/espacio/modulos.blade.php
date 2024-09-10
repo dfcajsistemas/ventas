@@ -17,58 +17,16 @@
         <x-enlace-modulo imagen="assets/img/modulos/despacho.png" mod="Despacho" ruta="despacho" />
         @endcan
 
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/caja.png') }}" alt="Caja" class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Caja</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/delivery.png') }}" alt="Delivery"
-                            class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Delivery</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="row g-0">
-                    <div class="col-4">
-                        <img src="{{ asset('assets/img/modulos/reportes.png') }}" alt="Reportes"
-                            class="card-img card-img-left">
-                    </div>
-                    <div class="col-8">
-                        <div class="card-body">
-                            <small class="text-muted">Módulo</small>
-                            <h6 class="card-title m-0 text-info">Reportes</h6>
-                            <a href="#" class="text-success"><i class="fa-solid fa-circle-chevron-right"></i>
-                                Ir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @can('caja')
+        <x-enlace-modulo imagen="assets/img/modulos/caja.png" mod="Caja" ruta="caja" />
+        @endcan
+
+        @can('delivery')
+        <x-enlace-modulo imagen="assets/img/modulos/delivery.png" mod="Delivery" ruta="delivery" />
+        @endcan
+
+        @can('reportes')
+        <x-enlace-modulo imagen="assets/img/modulos/reportes.png" mod="Reportes" ruta="reportes" />
+        @endcan
     </div>
 </x-app-layout>

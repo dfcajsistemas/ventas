@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cliente;
 use App\Models\Igvafectacion;
 use App\Models\Igvporciento;
 use App\Models\Mpago;
@@ -41,5 +42,7 @@ class MaestrosSeeder extends Seeder
         Tcomprobante::create(['codigo'=>'08', 'descripcion'=>'Nota de débito - Factura', 'prefijo'=>'F', 'estado'=>null]);
         Tcomprobante::create(['codigo'=>'08', 'descripcion'=>'Nota de débito - Boleta', 'prefijo'=>'B', 'estado'=>null]);
         Tcomprobante::create(['codigo'=>'09', 'descripcion'=>'Guía de remisión remitente', 'prefijo'=>'T', 'estado'=>null]);
+
+        Cliente::create(['razon_social'=>'Sin Documento', 'tdocumento_id'=>'1', 'ndocumento'=>'0']);
     }
 }

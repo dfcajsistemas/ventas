@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/toastr/toastr.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
-
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
     <!-- Page CSS -->
 
     <!-- Helpers -->
@@ -266,7 +266,7 @@
     <script src="{{ asset('assets/vendor/libs/toastr/toastr.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
-
+    <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
@@ -287,10 +287,12 @@
         @if (session('success'))
             noti('{{ session('success') }}');
         @endif
+
+
+
     </script>
 
     <!-- Page JS -->
-    @stack('scripts')
 
 </body>
 </html>

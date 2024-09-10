@@ -52,4 +52,10 @@ class Producto extends Model
         return $this->belongsTo(Igvporciento::class);
     }
 
+    //relación muchos a muchos
+    public function ventas()
+    {
+        return $this->belongsToMany(Venta::class)->withPivot('cantidad','precio','igv','icbper', 'descuento', 'total');
+    }
+
 }

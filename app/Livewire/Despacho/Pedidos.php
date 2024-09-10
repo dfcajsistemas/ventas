@@ -19,16 +19,37 @@ class Pedidos extends Component
     #[Url(except: '10')]
     public $perPage = 10;
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
     #[Title(['Pedidos', 'Despacho'])]
     public function render()
     {
         $pedidos=Venta::join('clientes','ventas.cliente_id','=','clientes.id')
-            ->select('ventas.id','ventas.created_at','ventas.est_venta','clientes.nombre as cliente')
+            ->select('ventas.id','ventas.created_at','ventas.est_venta','clientes.razon_social as cliente')
             ->where('ventas.est_venta',1)
             ->where('ventas.sucursal_id',auth()->user()->sucursal->id)
-            ->where('clientes.nombre','LIKE',"%$this->search%")
+            ->where('clientes.razon_social','LIKE',"%".$this->search."%")
             ->orderBy('ventas.id','desc')
             ->paginate($this->perPage);
         return view('livewire.despacho.pedidos', compact('pedidos'));
+    }
+
+    public function create(){
+        $venta=Venta::create([
+            'user_id'=>auth()->id(),
+            'sucursal_id'=>auth()->user()->sucursal->id,
+            'tmoneda_id'=>1,
+            'cliente_id'=>1
+        ]);
+
+        return redirect()->route('despacho.pedidos.canasta',$venta);
     }
 }

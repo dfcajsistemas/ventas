@@ -176,8 +176,77 @@
             @can('despacho.pedidos')
                 <li class="menu-item {{ request()->routeIs('despacho.pedidos*') ? 'active' : '' }}">
                     <a href="{{ route('despacho.pedidos') }}" class="menu-link">
-                        <i class="menu-icon tf-icons fa-solid fa-cart-shopping"></i>
+                        <i class="menu-icon tf-icons fa-solid fa-basket-shopping"></i>
                         <div class="text-truncate">Pedidos</div>
+                    </a>
+                </li>
+            @endcan
+        </ul>
+    @break
+    @case('Caja')
+        <ul class="menu-inner py-1">
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text"> Caja</span>
+            </li>
+            @can('caja')
+                <li class="menu-item {{ request()->routeIs('caja') ? 'active' : '' }}">
+                    <a href="{{ route('caja') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
+                        <div class="text-truncate">Dashboard</div>
+                    </a>
+                </li>
+            @endcan
+            @can('caja.cajas')
+                <li class="menu-item {{ request()->routeIs('caja.cajas*') ? 'active' : '' }}">
+                    <a href="{{ route('caja.cajas') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-cash-register"></i>
+                        <div class="text-truncate">cajas</div>
+                    </a>
+                </li>
+            @endcan
+        </ul>
+    @break
+    @case('Delivery')
+        <ul class="menu-inner py-1">
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text"> Delivery</span>
+            </li>
+            @can('delivery')
+                <li class="menu-item {{ request()->routeIs('delivery') ? 'active' : '' }}">
+                    <a href="{{ route('delivery') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
+                        <div class="text-truncate">Dashboard</div>
+                    </a>
+                </li>
+            @endcan
+            @can('delivery.pedidos')
+                <li class="menu-item {{ request()->routeIs('delivery.pedidos*') ? 'active' : '' }}">
+                    <a href="{{ route('delivery.pedidos') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-truck-fast"></i>
+                        <div class="text-truncate">Pedidos</div>
+                    </a>
+                </li>
+            @endcan
+        </ul>
+    @break
+    @case('Reportes')
+        <ul class="menu-inner py-1">
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text"> Reportes</span>
+            </li>
+            @can('reportes')
+                <li class="menu-item {{ request()->routeIs('reportes') ? 'active' : '' }}">
+                    <a href="{{ route('reportes') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
+                        <div class="text-truncate">Dashboard</div>
+                    </a>
+                </li>
+            @endcan
+            @can('reportes.ventas')
+                <li class="menu-item {{ request()->routeIs('reportes.ventas*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.ventas') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-money-bill-1-wave"></i>
+                        <div class="text-truncate">ventas</div>
                     </a>
                 </li>
             @endcan

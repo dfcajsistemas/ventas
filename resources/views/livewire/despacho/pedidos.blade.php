@@ -1,10 +1,10 @@
 <div>
-    <h4><span class="text-muted fw-light">Accesos /</span> pedidos</h4>
+    <h4><span class="text-muted fw-light">despacho /</span> pedidos</h4>
     <div class="card">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-9 mb-2 mb-md-0">
-                    <input type="search" class="form-control" placeholder="Buscar..."
+                    <input type="search" class="form-control" placeholder="Buscar cliente..."
                         wire:model.live.debounce.300ms="search">
                 </div>
                 <div class="col-4 col-md-1">
@@ -15,11 +15,10 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                @can('accesos.pedidos.agregar')
-                    <div class="col-4 col-md-1 d-grid">
-                        <a href="{{ route('despacho.pedidos.elegir') }}" class="btn btn-primary" title="Nuevo"><i
-                                class="tf-icons fa-solid fa-plus"></i></a>
-                    </div>
+                @can('despacho.pedidos.canasta')
+                <div class="col-4 col-md-1 d-grid">
+                    <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i class="tf-icons fa-solid fa-basket-shopping"></i></button>
+                </div>
                 @endcan
                 <div class="col-4 col-md-1 d-grid">
                     <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
@@ -27,71 +26,53 @@
                 </div>
             </div>
         </div>
+
         @if ($pedidos->count())
-            <div class="table-responsive text-noweap">
-                <table class="table table-sm table-hover text-small">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Guardia</th>
-                            <th>Roles</th>
-                            @canany(['accesos.pedidos.editar', 'accesos.pedidos.eliminar'])
-                                <th>Acciones</th>
-                            @endcanany
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($pedidos as $permiso)
-                            <tr wire:key="{{ $permiso->id }}">
-                                <td>{{ $permiso->id }}</td>
-                                <td>{{ $permiso->name }}</td>
-                                <td>{{ $permiso->guard_name }}</td>
-                                <td>{{ $permiso->roles()->count() }}</td>
-                                @canany(['accesos.pedidos.editar', 'accesos.pedidos.eliminar'])
-                                    <td>
-                                        @can('accesos.pedidos.editar')
-                                            <button class="btn btn-icon btn-info btn-sm" title="Editar"
-                                                wire:click="edit({{ $permiso->id }})"><i
-                                                    class="tf-icons fa-solid fa-pen"></i></button>
-                                        @endcan
-                                        @can('accesos.pedidos.eliminar')
-                                            @if ($permiso->roles()->count() == 0)
-                                                <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm"
-                                                    title="Eliminar" x-on:click="confirmar({{ $permiso->id }})"><i
-                                                        class="tf-icons fa-solid fa-trash"></i></button>
-                                            @endif
-                                        @endcan
-                                    </td>
-                                @endcanany
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="m-3">
-                {{ $pedidos->links() }}
-            </div>
+        <div class="table-responsive text-noweap">
+            <table class="table table-sm table-hover text-small">
+                <thead>
+                    <tr>
+                        <th>N° Pedido</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($pedidos as $pedido)
+                    <tr wire:key="{{ $pedido->id }}">
+                        <td>{{ $pedido->id }}</td>
+                        <td>{{ $pedido->cliente }}</td>
+                        <td>{{ $pedido->created_at }}</td>
+                        <td>{{ $pedido->est_venta }}</td>
+                        <td>
+                            @can('despacho.pedidos.canasta')
+                            <a href="{{route('despacho.pedidos.canasta', $pedido->id)}}" class="btn btn-icon btn-info btn-sm"><i class="tf-icons fa-solid fa-basket-shopping"></i></a>
+                            @endcan
+                            @can('despacho.pedidos.eliminar')
+                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
+                                x-on:click="confirmar({{ $pedido->id }})"><i
+                                    class="tf-icons fa-solid fa-trash"></i></button>
+                            @endcan
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="m-3">
+            {{ $pedidos->links() }}
+        </div>
         @else
-            <div class="mx-3 mb-3">
-                <x-msg type="info" msg="No se encontraron resultados" />
-            </div>
+        <div class="mx-3 mb-3">
+            <x-msg type="info" msg="No se encontraron resultados" />
+        </div>
         @endif
     </div>
-    @canany(['accesos.pedidos.agregar', 'accesos.pedidos.editar'])
-        <x-modal-form mId="mPer" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
-            <div class="row">
-                <div class="col">
-                    <x-label class="form-label" for="name">Nombre</x-label>
-                    <x-input class="form-control" type="text" id="name" wire:model="name" />
-                    <x-input-error for="name" />
-                </div>
-            </div>
-        </x-modal-form>
-    @endcanany
     @script
-        <script>
-            Livewire.on('sm', (e) => {
+    <script>
+        Livewire.on('sm', (e) => {
                 $("#mPer").modal('show')
             });
             Livewire.on('hm', (e) => {
@@ -121,6 +102,6 @@
                     })
                 }
             }))
-        </script>
+    </script>
     @endscript
 </div>
