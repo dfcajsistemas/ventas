@@ -12,6 +12,12 @@ class Venta extends Model
 
     use HasFactory;
 
+    //relación uno a muchos inversa
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
+
     //relación uno a muchos
     public function productos()
     {

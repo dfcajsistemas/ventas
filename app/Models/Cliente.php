@@ -28,4 +28,10 @@ class Cliente extends Model
     {
         return $this->belongsTo(Tdocumento::class);
     }
+
+    // Relación uno a muchos
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
 }

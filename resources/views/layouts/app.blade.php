@@ -65,9 +65,13 @@
                 <div class="app-brand demo">
                     <a href="{{ route('espacio') }}" class="app-brand-link">
                         <span class="app-brand-logo demo">
-                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.28 63.71">
-                                <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38" ry="8.38" transform="translate(22.57 -20.53) rotate(30)" fill="#696cff" fill-opacity="0.8" stroke-width="0"/>
-                                <rect x="11.75" y="-3.15" width="23" height="70" rx="11.5" ry="11.5" transform="translate(-12.81 15.89) rotate(-30)" fill="#696cff" stroke-width="0"/>
+                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 71.28 63.71">
+                                <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38" ry="8.38"
+                                    transform="translate(22.57 -20.53) rotate(30)" fill="#696cff" fill-opacity="0.8"
+                                    stroke-width="0" />
+                                <rect x="11.75" y="-3.15" width="23" height="70" rx="11.5" ry="11.5"
+                                    transform="translate(-12.81 15.89) rotate(-30)" fill="#696cff" stroke-width="0" />
                             </svg>
                         </span>
                         <span class="app-brand-text demo menu-text fw-bold ms-2">VenSis</span>
@@ -276,6 +280,8 @@
 
     @livewireScripts
 
+    @stack('scripts')
+
     <script>
         function noti(msg, tipo = 'success') {
             toastr.options.progressBar = true;
@@ -287,12 +293,10 @@
         @if (session('success'))
             noti('{{ session('success') }}');
         @endif
-
-
-
     </script>
 
     <!-- Page JS -->
 
 </body>
+
 </html>
