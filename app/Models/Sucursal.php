@@ -21,6 +21,9 @@ class Sucursal extends Model
     public function stocks(){
         return $this->hasMany(Stock::class);
     }
+    public function cajas(){
+        return $this->hasMany(Caja::class);
+    }
 
 
     //Relacion uno a muchos inversa

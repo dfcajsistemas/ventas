@@ -43,6 +43,6 @@ class MaestrosSeeder extends Seeder
         Tcomprobante::create(['codigo'=>'08', 'descripcion'=>'Nota de débito - Boleta', 'prefijo'=>'B', 'estado'=>null]);
         Tcomprobante::create(['codigo'=>'09', 'descripcion'=>'Guía de remisión remitente', 'prefijo'=>'T', 'estado'=>null]);
 
-        Cliente::create(['razon_social'=>'Sin Documento', 'tdocumento_id'=>'1', 'ndocumento'=>'0']);
+        Cliente::create(['razon_social'=>'SIN DOCUMENTO', 'tdocumento_id'=>'1', 'ndocumento'=>'0']);
     }
 }

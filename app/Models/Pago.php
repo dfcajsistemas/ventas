@@ -14,4 +14,8 @@ class Pago extends Model
     {
         return $this->belongsTo(Mpago::class);
     }
+    public function caja()
+    {
+        return $this->belongsTo(Caja::class);
+    }
 }

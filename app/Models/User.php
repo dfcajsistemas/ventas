@@ -68,6 +68,11 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    //Relacion uno a muchos
+    public function cajas(){
+        return $this->hasMany(Caja::class);
+    }
+
     //Relacion uno a muchos inversa
     public function sucursal(){
         return $this->belongsTo(Sucursal::class);
