@@ -43,7 +43,7 @@
                     @foreach ($pedidos as $pedido)
                     <tr wire:key="{{ $pedido->id }}">
                         <td>{{ $pedido->id }}</td>
-                        <td>{{ $pedido->cliente }}</td>
+                        <td>{{ $pedido->razon_social }}</td>
                         <td>{{ $pedido->created_at }}</td>
                         <td>{{ $pedido->est_venta }}</td>
                         <td>

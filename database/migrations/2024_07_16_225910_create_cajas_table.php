@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('cierre')->nullable();
 
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('sucursal_id')->constrained();
 
             $table->timestamps();
         });

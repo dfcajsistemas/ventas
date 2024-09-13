@@ -56,6 +56,8 @@
                         <td><x-status :status="$sucursal->estado" /></td>
                         @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
                         <td>
+                            <button class="btn btn-icon btn-warning btn-sm" title="Descuento"
+                                wire:click="descuento({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-percent"></i></button>
                             @can('mantenimiento.sucursals.editar')
                             <button class="btn btn-icon btn-info btn-sm" title="Editar"
                                 wire:click="edit({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>

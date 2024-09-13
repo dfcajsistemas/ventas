@@ -32,12 +32,10 @@ class Pedidos extends Component
     #[Title(['Pedidos', 'Despacho'])]
     public function render()
     {
-        $pedidos=Venta::join('clientes','ventas.cliente_id','=','clientes.id')
-            ->select('ventas.id','ventas.created_at','ventas.est_venta','clientes.razon_social as cliente')
-            ->where('ventas.est_venta',1)
-            ->where('ventas.sucursal_id',auth()->user()->sucursal->id)
-            ->where('clientes.razon_social','LIKE',"%".$this->search."%")
-            ->orderBy('ventas.id','desc')
+        $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
+            ->select('ventas.*', 'clientes.razon_social')
+            ->where('ventas.sucursal_id', auth()->user()->sucursal->id)
+            ->where('clientes.razon_social', 'like', '%' . $this->search . '%')
             ->paginate($this->perPage);
         return view('livewire.despacho.pedidos', compact('pedidos'));
     }

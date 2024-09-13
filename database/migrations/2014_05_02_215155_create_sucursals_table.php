@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('telefono', 15)->nullable();
             $table->string('cod_sunat', 6)->nullable();
             $table->tinyInteger('p_venta')->default(1); //Existen 3 precios de venta
+            $table->tinyInteger('p_descuento')->nullable();
+            $table->date('v_descuento')->nullable();
 
             $table->tinyInteger('estado')->default(1)->nullable(); //1 activo, null inactivo
 

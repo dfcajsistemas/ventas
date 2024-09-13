@@ -19,8 +19,8 @@ class Venta extends Model
     }
 
     //relación uno a muchos
-    public function productos()
+    public function dventas()
     {
-        return $this->belongsToMany(Producto::class)->withPivot('cantidad','precio','igv','icbper', 'descuento', 'total');
+        return $this->hasMany(Dventa::class);
     }
 }

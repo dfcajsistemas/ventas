@@ -14,7 +14,6 @@ class CanastaController extends Controller
     public function canasta(Venta $venta)
     {
         $sucursal = auth()->user()->sucursal;
-        $venta->load('productos');
         return view('despacho.canasta', compact('venta', 'sucursal'));
     }
 

@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'fec_nac' => '1990-01-01',
             'password' => bcrypt('12345678'),
             'sucursal_id' => 1
-        ])->assignRole('Accesos admin', 'Mantenimiento admin', 'Abastecimiento admin', 'Despacho admin');
+        ])->assignRole('Accesos admin', 'Mantenimiento admin', 'Abastecimiento admin', 'Despacho admin', 'Caja admin', 'Delivery admin');
 
         User::factory(50)->create();
     }
