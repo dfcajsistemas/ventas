@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('cod_sunat', 20)->nullable();
             $table->string('msj_sunat')->nullable();
             $table->tinyInteger('est_comprobante')->nullable(); // null: sin comprobante, 1: emitido, 2: enviado, 3: aceptado, 4: observado, 5: rechazado
-            $table->tinyInteger('est_venta')->nullable(); // 1: solicitado, 2: delivery, 3: entregado
+            $table->tinyInteger('est_venta')->nullable(); // 1: solicitado, 2:preparado, 3: delivery, 4: entregado
             $table->tinyInteger('est_pago')->nullable(); // null: pagada, 1: pendiente
 
             $table->foreignId('cliente_id')->constrained();

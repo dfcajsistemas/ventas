@@ -23,4 +23,12 @@ class Venta extends Model
     {
         return $this->hasMany(Dventa::class);
     }
+    public function cuotas()
+    {
+        return $this->hasMany(Cuota::class);
+    }
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 }

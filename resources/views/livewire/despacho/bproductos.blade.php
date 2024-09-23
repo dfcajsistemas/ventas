@@ -20,7 +20,7 @@
 
     <div class="card mt-4">
         @if ($productos->count())
-        <div class="table-responsive pb-4">
+        <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -29,7 +29,7 @@
                         <th class="text-center">Agregar</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-border-bottom-0">
                     @foreach ($productos as $producto)
                     <tr>
                         <td>{{$producto->nombre}}</td>

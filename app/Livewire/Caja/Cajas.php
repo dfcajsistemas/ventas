@@ -15,7 +15,7 @@ class Cajas extends Component
 {
     use WithPagination;
 
-    public $mMethod, $mTitle;
+    public $mMethod, $mTitle, $sucursal;
 
     #[Url(except: '')]
     public $search = '';
@@ -31,12 +31,17 @@ class Cajas extends Component
         $this->resetPage();
     }
 
+    public function mount(){
+        $this->sucursal = auth()->user()->sucursal;
+    }
+
     #[Title(['Cajas', 'Caja'])]
     public function render()
     {
         $cajas = Caja::join('users', 'cajas.user_id', '=', 'users.id')
             ->where(function ($query) {
-                $query->where('users.name', 'like', "%$this->search%");
+                $query->where('users.name', 'like', "%$this->search%")
+                    ->where('cajas.sucursal_id', $this->sucursal->id);
             })
             ->select('cajas.id', 'cajas.apertura', 'cajas.cierre','users.name')
             ->paginate($this->perPage);

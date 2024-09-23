@@ -1,5 +1,6 @@
 <div>
-    <h4><span class="text-muted fw-light">Caja /</span> Cajas</h4>
+    <h4><span class="text-muted fw-light">Caja /</span> Cajas <span class="text-warning">(Sucursal:
+        {{ $sucursal->nombre }})</span></h4>
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -44,8 +45,8 @@
                             <tr wire:key="{{ $caja->id }}">
                                 <td>{{ $caja->id }}</td>
                                 <td>{{ $caja->name }}</td>
-                                <td>{{ $caja->apertura }}</td>
-                                <td>{{ $caja->cierre }}</td>
+                                <td>{{ date('d/m/Y', strtotime($caja->apertura)) }}</td>
+                                <td>{{ $caja->cierre ? date('d/m/Y', strtotime($caja->cierre)) : '' }}</td>
                                 <td>
                                     <a href="{{ route('caja.cajas.ver', $caja->id) }}"
                                         class="btn btn-icon btn-warning btn-sm"><i

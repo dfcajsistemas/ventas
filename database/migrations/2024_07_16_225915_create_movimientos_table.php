@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
 
-            $table->string('tipo', 1); // E: Entrada, S: Salida
-            $table->string('descripcion');
-            $table->date('fecha');
+            $table->tinyInteger('tipo'); // 1: Ingreso, 2: Egreso
+            $table->string('concepto');
             $table->decimal('monto', 10, 2);
 
             $table->foreignId('caja_id')->constrained();

@@ -100,6 +100,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'caja.cajas.eliminar'])->assignRole($caja);
         Permission::create(['name' => 'caja.cajas.ver'])->assignRole($caja);
         Permission::create(['name' => 'caja.cajas.ver.cobrar'])->assignRole($caja);
+        Permission::create(['name' => 'caja.cajas.ver.cobrar.precio'])->assignRole($caja);
         Permission::create(['name' => 'caja.cajas.ver.movimiento'])->assignRole($caja);
 
         Permission::create(['name' => 'delivery'])->assignRole($delivery);

@@ -20,7 +20,7 @@ class Sucursals extends Component
 {
     use WithPagination;
 
-    public $nombre, $direccion, $telefono, $cod_sunat, $p_venta, $distrito_id, $provincia_id, $departamento_id, $empresa_id, $mMethod, $mTitle, $idm;
+    public $nombre, $direccion, $telefono, $cod_sunat, $p_venta, $distrito_id, $provincia_id, $departamento_id, $empresa_id, $mMethod, $mTitle, $idm, $descuento;
     public $departamentos, $provincias, $distritos, $empresa;
     #[Url(except: '10')]
     public $perPage = '10';
@@ -191,6 +191,37 @@ class Sucursals extends Component
         $sucursal->save();
 
         $this->dispatch('re', ['t'=>'success', 'm'=>'¡Hecho!<br>Se cambio el estado de la sucursal']);
+    }
+
+    public function edescuento(Sucursal $sucursal)
+    {
+        $this->mTitle = 'EDITAR DESCUENTO';
+        $this->mMethod = 'udescuento';
+        $this->resetValidation();
+
+        $this->idm = $sucursal->id;
+        $this->descuento = $sucursal->descuento;
+
+        $this->dispatch('smd');
+    }
+
+    public function udescuento()
+    {
+        $this->validate([
+            'descuento' => 'required|numeric|min:0|max:100'
+        ], [
+            'descuento.required' => 'El descuento es obligatorio',
+            'descuento.numeric' => 'El descuento debe ser un número',
+            'descuento.min' => 'No se permite negativo',
+            'descuento.max' => 'No se permite mayor a 100',
+        ]);
+
+        $sucursal = Sucursal::find($this->idm);
+        $sucursal->descuento = $this->descuento ? $this->descuento : null;
+        $sucursal->updated_by = auth()->id();
+        $sucursal->save();
+
+        $this->dispatch('hmd', ['t'=>'success', 'm'=>'¡Hecho!<br>Haz editado el descuento de la sucursal.']);
     }
 
 }

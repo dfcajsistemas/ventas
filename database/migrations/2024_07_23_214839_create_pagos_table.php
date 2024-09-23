@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
 
             $table->decimal('monto', 10, 2);
-            $table->timestamp('fecha');
+            $table->string('observación')->nullable();
+            $table->string('estado')->default(1)->nullable(); // null anulado, 1 pagado
 
             $table->foreignId('venta_id')->constrained();
             $table->foreignId('caja_id')->constrained();
             $table->foreignId('mpago_id')->constrained();
+
+            $table->unsignedBigInteger('created_by')->nullable()->index();
 
             $table->timestamps();
         });

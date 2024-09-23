@@ -38,6 +38,7 @@
                         <th>Ubicación</th>
                         <th>Cod SUNAT</th>
                         <th>P. Venta</th>
+                        <th>Desc.</th>
                         <th>Estado</th>
                         @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
                         <th>Acciones</th>
@@ -53,11 +54,12 @@
                         <td>{{ $sucursal->distrito->nombre }}</td>
                         <td>{{ $sucursal->cod_sunat }}</td>
                         <td>{{ $sucursal->p_venta }}</td>
+                        <td>{{ $sucursal->descuento ? $sucursal->descuento.'%' : '' }}</td>
                         <td><x-status :status="$sucursal->estado" /></td>
                         @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
                         <td>
                             <button class="btn btn-icon btn-warning btn-sm" title="Descuento"
-                                wire:click="descuento({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-percent"></i></button>
+                                wire:click="edescuento({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-percent"></i></button>
                             @can('mantenimiento.sucursals.editar')
                             <button class="btn btn-icon btn-info btn-sm" title="Editar"
                                 wire:click="edit({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
@@ -151,6 +153,15 @@
         </div>
     </x-modal-form>
     @endcanany
+    <x-modal-form mId="mDes" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
+        <div class="row">
+            <div class="col">
+                <x-label for="descuento">Descuento (0-100%)</x-label>
+                <x-input type="number" id="descuento" wire:model="descuento" />
+                <x-input-error for="descuento" />
+            </div>
+        </div>
+    </x-modal-form>
     @script
     <script>
         Livewire.on('sm', (e) => {
@@ -161,6 +172,14 @@
             noti(e[0]['m'], e[0]['t'])
         })
         Livewire.on('re', (e) => {
+            noti(e[0]['m'], e[0]['t'])
+        })
+
+        Livewire.on('smd', (e) => {
+            $("#mDes").modal('show')
+        });
+        Livewire.on('hmd', (e) => {
+            $("#mDes").modal('hide')
             noti(e[0]['m'], e[0]['t'])
         })
     </script>

@@ -1,4 +1,4 @@
-<div class="table-responsive pb-4">
+<div class="table-responsive">
     @if($productos->count())
     <table class="table table-hover">
         <thead>
@@ -10,7 +10,7 @@
                 <th class="text-end">Acciones</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-border-bottom-0">
             @php
             $t=0;
             @endphp

@@ -65,6 +65,5 @@ class Bproductos extends Component
             ]);
             $this->dispatch('rep', ['t' => 'success', 'm' => '¡Hecho!<br>Producto agregado a la canasta']);
         }
-
     }
 }
