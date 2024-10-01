@@ -9,6 +9,8 @@ class Movimiento extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['tipo', 'concepto', 'monto', 'caja_id'];
+
     //relación uno a muchos inversa
     public function caja()
     {

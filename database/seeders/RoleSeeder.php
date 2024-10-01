@@ -20,6 +20,7 @@ class RoleSeeder extends Seeder
         $despacho = Role::create(['name' => 'Despacho admin']);
         $caja = Role::create(['name' => 'Caja admin']);
         $delivery = Role::create(['name' => 'Delivery admin']);
+        $reportes = Role::create(['name' => 'Reportes admin']);
 
         Permission::create(['name' => 'accesos'])->assignRole($accesos);
         Permission::create(['name' => 'accesos.users'])->assignRole($accesos);
@@ -105,6 +106,5 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'delivery'])->assignRole($delivery);
         Permission::create(['name' => 'delivery.pedidos'])->assignRole($delivery);
-
     }
 }

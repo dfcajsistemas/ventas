@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->timestamp('apertura');
             $table->timestamp('cierre')->nullable();
+            $table->tinyInteger('pendiente')->nullable(); // 1: pendiente, null: sin pendientes
 
             $table->foreignId('user_id')->constrained();
             $table->foreignId('sucursal_id')->constrained();

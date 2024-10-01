@@ -24,7 +24,9 @@
                             </td>
                             <td class="text-end">
 
-                                <button class="btn btn-icon btn-outline-info" title="Agregar movimiento"><i class="tf-icons fa-solid fa-arrow-right-arrow-left"></i></button>
+                                <button class="btn btn-icon btn-outline-info" title="Agregar movimiento"
+                                    wire:click='amovimiento'><i
+                                        class="tf-icons fa-solid fa-arrow-right-arrow-left"></i></button>
 
                                 @if(!$caja->cierre)
                                 <button class="btn btn-icon btn-outline-danger" title="Cerrar caja"><i
@@ -108,7 +110,9 @@
                                 <td>{{$movimiento->concepto}}</td>
                                 <td>{{$movimiento->monto}}</td>
                                 <td>
-                                    <button class="btn btn-icon btn-outline-danger btn-sm" title="Eliminar"><i
+                                    <button x-data="eliminar" class="btn btn-icon btn-outline-danger btn-sm"
+                                        title="Eliminar"
+                                        x-on:click='confirmar({{$movimiento->id}}, "{{$movimiento->concepto}}")'><i
                                             class="tf-icons fa-solid fa-trash-can"></i></button>
                                 </td>
                             </tr>
@@ -152,9 +156,7 @@
                                 <th>Id</th>
                                 <th>Cliente</th>
                                 <th>Fecha</th>
-
                                 <th>Cobrar</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -240,4 +242,64 @@
             </div>
         </div>
     </div>
+    @can('caja.cajas.ver.movimiento')
+    <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="md">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <x-label for="tipo">Tipo</x-label>
+                <x-select class="form-select" id="tipo" wire:model="tipo">
+                    <option value="">Seleccione...</option>
+                    @foreach (tipoMovimiento() as $tk=>$tm)
+                    <option value="{{$tk}}">{{$tm}}</option>
+                    @endforeach
+                </x-select>
+                <x-input-error for="tipo" />
+            </div>
+            <div class="col-12 col-md-6">
+                <x-label for="monto">Monto</x-label>
+                <x-input type="number" id="monto" wire:model="monto" />
+                <x-input-error for="monto" />
+            </div>
+            <div class="col-12">
+                <x-label for="concepto">Concepto</x-label>
+                <x-input type="text" id="concepto" wire:model="concepto" />
+                <x-input-error for="concepto" />
+            </div>
+        </div>
+    </x-modal-form>
+    @endcan
+    @script
+    <script>
+        Livewire.on('sm', (e) => {
+                $("#mModelo").modal('show')
+            });
+            Livewire.on('hm', (e) => {
+                $("#mModelo").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+            Livewire.on('re', (e) => {
+                noti(e[0]['m'], e[0]['t'])
+            })
+
+            Alpine.data('eliminar', () => ({
+                confirmar(id, con) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        html: "¡Eliminarás!<br><b>" + con + "</b>",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Sí, bórralo!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Livewire.dispatch('delete', {
+                                movimiento: id
+                            })
+                        }
+                    })
+                }
+            }))
+    </script>
+    @endscript
 </div>

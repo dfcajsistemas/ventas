@@ -50,8 +50,8 @@
                                 @endif
                                 @endif
                                 @if($venta->fpago==1)
-                                <button class="btn btn-icon btn-warning" wire:click='acontado' title="Venta al contado"><i
-                                        class="fa-solid fa-money-bills"></i>
+                                <button class="btn btn-icon btn-warning" wire:click='acontado'
+                                    title="Venta al contado"><i class="fa-solid fa-money-bills"></i>
                                 </button>
                                 @endif
                                 @endif
@@ -204,11 +204,6 @@
     <x-modal-form mId="mCob" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
             <div class="col-12">
-                <x-label for="monto">Monto</x-label>
-                <x-input type="number" id="monto" wire:model="monto" />
-                <x-input-error for="monto" />
-            </div>
-            <div class="col-12">
                 <x-label for="mpago">Modo de pago</x-label>
                 <x-select id="mpago" wire:model.live="mpago">
                     <option value="">Seleccione...</option>
@@ -217,6 +212,11 @@
                     @endforeach
                 </x-select>
                 <x-input-error for="mpago" />
+            </div>
+            <div class="col-12">
+                <x-label for="monto">Monto</x-label>
+                <x-input type="number" id="monto" wire:model="monto" />
+                <x-input-error for="monto" />
             </div>
             @if($mpago==1)
             <div class="col-12">
@@ -255,6 +255,11 @@
             </div>
         </div>
     </x-modal-form>
+    <x-modal-view mId="mPdf" :mTitle="$mTitle" mSize="md">
+
+        <iframe src="{{$rComp}}" width="100%" height="600"></iframe>
+
+    </x-modal-view>
     @script
     <script>
         Livewire.on('smp', (e) => {
@@ -311,6 +316,14 @@
                 })
             }
         }))
+
+        Livewire.on('vu', (e) => {
+            Swal.fire("Vuelto: " + e);
+        })
+
+        Livewire.on('vcomp', (e) => {
+            $("#mPdf").modal('show')
+        })
     </script>
     @endscript
 </div>

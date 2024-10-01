@@ -65,8 +65,7 @@
                 <div class="app-brand demo">
                     <a href="{{ route('espacio') }}" class="app-brand-link">
                         <span class="app-brand-logo demo">
-                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 71.28 63.71">
+                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.28 63.71">
                                 <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38" ry="8.38"
                                     transform="translate(22.57 -20.53) rotate(30)" fill="#696cff" fill-opacity="0.8"
                                     stroke-width="0" />
@@ -160,9 +159,9 @@
                                                     <small class="text-muted">Bienvenido</small>
                                                     <span class="fw-medium d-block">
                                                         @if (Auth::check())
-                                                            {{ Auth::user()->name }}
+                                                        {{ Auth::user()->name }}
                                                         @else
-                                                            No identificado
+                                                        No identificado
                                                         @endif
                                                     </span>
                                                 </div>
@@ -182,16 +181,16 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     @if (Auth::check())
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                <i class="bx bx-power-off me-2"></i>
-                                                <span class="align-middle">Log Out</span>
-                                            </a>
-                                        </li>
-                                        <form method="POST" id="logout-form" action="{{ route('logout') }}">
-                                            @csrf
-                                        </form>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">Log Out</span>
+                                        </a>
+                                    </li>
+                                    <form method="POST" id="logout-form" action="{{ route('logout') }}">
+                                        @csrf
+                                    </form>
                                     @endif
                                 </ul>
                             </li>
@@ -227,16 +226,13 @@
                                 <script>
                                     document.write(new Date().getFullYear());
                                 </script>
-                                , ❤️ <b>Informática</b> | Administración | Distrito Fiscal de Cajamarca
+                                , ❤️ <b>SisVen</b>
                             </div>
                             <div class="d-none d-lg-inline-block">
-                                <a href="/" target="_blank" class="footer-link me-4"><i
-                                        class="fa-solid fa-globe"></i> Intranet Local</a>
-                                <a href="http://intranet.mpfn.gob.pe/" target="_blank" class="footer-link me-4"><i
-                                        class="fa-solid fa-globe"></i> Intranet Nacional</a>
                                 <a href="https://www.gmail.com/" target="_blank"
-                                    class="footer-link d-none d-sm-inline-block"><i class="fa-solid fa-envelope"></i>
-                                    Correo</a>
+                                    class="footer-link d-none d-sm-inline-block">
+                                    <i class="fa-solid fa-file-lines"></i>
+                                    Manuales</a>
                             </div>
                         </div>
                     </footer>

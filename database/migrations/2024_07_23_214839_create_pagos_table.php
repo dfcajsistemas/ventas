@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->decimal('monto', 10, 2);
-            $table->string('observación')->nullable();
+            $table->string('observacion')->nullable();
             $table->string('estado')->default(1)->nullable(); // null anulado, 1 pagado
 
             $table->foreignId('venta_id')->constrained();

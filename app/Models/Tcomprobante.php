@@ -14,4 +14,8 @@ class Tcomprobante extends Model
     {
         return $this->hasMany(Serie::class);
     }
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
 }

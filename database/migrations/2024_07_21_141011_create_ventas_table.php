@@ -19,9 +19,9 @@ return new class extends Migration
             $table->tinyInteger('fpago')->nullable();   // null: Contado, 1: Crédito
             $table->timestamp('femision')->nullable();
             $table->timestamp('fvencimiento')->nullable();
-            $table->decimal('op_grabbadas', 14, 6)->nullable();
-            $table->decimal('op_exoneradas', 14, 6)->nullable();
-            $table->decimal('op_inafectas', 14, 6)->nullable();
+            $table->decimal('op_grabada', 14, 6)->nullable();
+            $table->decimal('op_exonerada', 14, 6)->nullable();
+            $table->decimal('op_inafecta', 14, 6)->nullable();
             $table->decimal('igv', 14, 6)->nullable();
             $table->decimal('icbper', 14, 6)->nullable();
             $table->decimal('descuento', 14, 6)->nullable();
