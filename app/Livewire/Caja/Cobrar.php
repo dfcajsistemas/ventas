@@ -149,16 +149,24 @@ class Cobrar extends Component
 
     public function acredito()
     {
+        $this->venta->update([
+            'fpago' => $this->venta->fpago ? null : 1,
+            'updated_by' => auth()->user()->id
+        ]);
+        $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Se cambio la forma de pago.']);
+    }
+
+    public function acuota()
+    {
         $this->mTitle = 'Cuotas';
-        $this->mMethod = 'gcredito';
+        $this->mMethod = 'gcuota';
         $this->reset(['fvence', 'mcuota']);
-        $this->dispatch('smcre');
+        $this->dispatch('smcuo');
         $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
         $mc = Cuota::where('venta_id', $this->venta->id)->sum('monto');
         $this->mcuota = $mt - $mc;
     }
-
-    public function gcredito()
+    public function gcuota()
     {
         $this->validate([
             'fvence' => 'required|date',
@@ -177,6 +185,14 @@ class Cobrar extends Component
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto de la cuota es mayor al total de la venta']);
             return;
         }
+
+        $cuota = Cuota::where('venta_id', $this->venta->id)->orderBy('id', 'desc')->first();
+        if ($cuota) {
+            if ($cuota->fvence > $this->fvence) {
+                $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La fecha de vencimiento debe ser mayor a la última cuota']);
+                return;
+            }
+        }
         try {
             DB::beginTransaction();
             Cuota::create([
@@ -192,12 +208,13 @@ class Cobrar extends Component
                 ]);
             }
             DB::commit();
-            $this->dispatch('hmcre', ['t' => 'success', 'm' => '¡Hecho!<br>Cuota registrada correctamente']);
+            $this->dispatch('hmcuo', ['t' => 'success', 'm' => '¡Hecho!<br>Cuota registrada correctamente']);
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo registrar la cuota. ' . $e->getMessage()]);
+            $this->dispatch('hmcuo', ['t' => 'error', 'm' => '¡Error!<br>No se pudo registrar la cuota. ' . $e->getMessage()]);
         }
     }
+
     public function acontado()
     {
         if ($this->venta->pagos()->count() > 0) {
@@ -295,5 +312,16 @@ class Cobrar extends Component
         // Guardar el PDF en un archivo temporal
         $pdfPath = storage_path('app/public/comprobantes/comprobante_' . $this->venta->id . '.pdf');
         $pdf->save($pdfPath);
+    }
+
+    #[On('deletec')]
+    public function destroyCuota(Cuota $cuota)
+    {
+        if (Pago::where('cuota_id', $cuota->id)->count() > 0) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La cuota tiene pagos registrados']);
+            return;
+        }
+        $cuota->delete();
+        $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Cuota eliminada correctamente']);
     }
 }
