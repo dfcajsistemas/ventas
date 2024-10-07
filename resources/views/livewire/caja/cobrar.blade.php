@@ -9,7 +9,7 @@
                 <div class="table-responsive">
                     <table class="table table-border-bottom-0">
                         <tr>
-                            <td class="text-center"><small># Venta</small><br><b>{{$venta->id}}</b></td>
+                            <td><small># Venta</small><br><b class="text-primary">{{$venta->id}}</b></td>
                             <td>
                                 <small>Pago</small><br><span
                                     class="text-danger">{{($venta->est_pago==1)?'Pendiente':'Pagado'}}</span>
@@ -32,29 +32,26 @@
                                 <a href="{{route('caja.cajas.ver', $caja->id)}}"
                                     class="btn btn-icon btn-outline-secondary" title="Regresar a caja"><i
                                         class="fa-solid fa-arrow-left"></i></a>
-                                @if ($venta->est_pago==1)
+                                @if ($venta->est_pago==1 && $venta->fpago==null)
+                                @can('caja.cajas.ver.cobrar.pago')
                                 <button class="btn btn-icon btn-success" wire:click='ncobrar' title="Cobrar">
                                     <i class="fa-solid fa-sack-dollar"></i>
                                 </button>
+                                @endcan
                                 @endif
                                 @if($venta->est_pago==null || $venta->fpago==1)
                                 <button class="btn btn-icon btn-info" wire:click='emitir'><i class="fa-solid fa-receipt"
                                         title="Emitir comprobante"></i>
                                 </button>
                                 @endif
-                                @if($venta->pagos()->count()==0)
-                                @if ($venta->est_pago==1)
-                                @if($venta->fpago==null)
-                                <button class="btn btn-icon btn-warning" wire:click='acredito'
-                                    title="Venta al  crédito"><i class="fa-solid fa-money-bills"></i></button>
-                                @endif
-                                @endif
-                                @if($venta->fpago==1)
-                                <button class="btn btn-icon btn-warning" wire:click='acontado'
-                                    title="Venta al contado"><i class="fa-solid fa-money-bills"></i>
-                                </button>
-                                @endif
-                                @endif
+
+                                @can('caja.cajas.ver.cobrar.credito')
+                                @if($mpa)
+                                <button class="btn btn-icon btn-warning" wire:click='acredito' title="Cuota"><i
+                                        class="fa-solid fa-money-bills"></i></button>
+
+                                @endcan
+
                             </td>
                         </tr>
 
@@ -64,7 +61,7 @@
             <div class="card mb-4">
                 <div class="table-responsive text-nowrap">
                     @if($productos->count())
-                    <table class="table table-hover">
+                    <table class="table table-hover" style="font-size: 0.9em;">
                         <thead>
                             <tr>
                                 <th>Producto</th>
@@ -172,17 +169,26 @@
                     <table class="table table-hover border-top">
                         <thead>
                             <tr>
-                                <th>Número</th>
+                                <th>#</th>
                                 <th>F. Vence</th>
                                 <th class="text-end">Monto</th>
+                                <th class="text-end">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @foreach ($venta->cuotas as $cuota)
                             <tr>
-                                <td>{{$cuota->numero}}</td>
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{date('d/m/Y', strtotime($cuota->fvence))}}</td>
                                 <td class="text-end">{{$cuota->monto}}</td>
+                                <td class="text-end">
+                                    <button class="btn btn-icon btn-outline-info btn-sm"
+                                        wire:click='ecuota({{$cuota->id}})' title="Editar cuota"><i
+                                            class="tf-icons fa-solid fa-pencil"></i></button>
+                                    <button class="btn btn-icon btn-outline-danger btn-sm" x-data="eliminarc"
+                                        x-on:click="confirmar({{$cuota->id}}, '{{$cuota->monto.' del '.date('d/m/Y', strtotime($cuota->fvence))}}')"
+                                        title="Eliminar cuota"><i class="tf-icons fa-solid fa-trash"></i></button>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -235,9 +241,14 @@
     <x-modal-form mId="mCre" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
             <div class="col-12">
-                <x-label for="cuotas"># Cuotas</x-label>
-                <x-input type="number" id="cuotas" wire:model="cuotas" />
-                <x-input-error for="cuotas" />
+                <x-label for="fvence">F. Vencimiento</x-label>
+                <x-input type="date" id="fvence" wire:model="fvence" />
+                <x-input-error for="fvence" />
+            </div>
+            <div class="col-12">
+                <x-label for="mcuota">Monto Cuota</x-label>
+                <x-input type="number" id="mcuota" wire:model="mcuota" />
+                <x-input-error for="mcuota" />
             </div>
         </div>
     </x-modal-form>
@@ -311,6 +322,26 @@
                     if (result.isConfirmed) {
                         Livewire.dispatch('delete', {
                             pago: id
+                        })
+                    }
+                })
+            }
+        }))
+
+        Alpine.data('eliminarc', () => ({
+            confirmar(id, nom) {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    html: "¡Eliminarás!<p><strong>Cuota de " + nom + "</strong></p>",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '¡Sí, bórralo!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Livewire.dispatch('delete', {
+                            cuota: id
                         })
                     }
                 })

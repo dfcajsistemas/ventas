@@ -2,14 +2,14 @@
     <h4><span class="text-muted fw-light">Abastecimiento /</span> Reposiciones <span class="text-warning">(Sucursal:
             {{$sucursal->nombre}})</span></h4>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="text-info">{{$producto->nombre}}</h5>
                 </div>
-                <div class="table-responsive pb-4">
+                <div class="table-responsive">
                     <table class="table table-sm table-hover text-small border-top">
-                        <tbody>
+                        <tbody class="table-border-bottom-0">
                             <tr>
                                 <th>DESCRIPCIÓN</th>
                                 <td>{{$producto->descripcion}}</td>
@@ -63,12 +63,14 @@
                 </div>
             </div>
             <div class="card">
-                <div class="table-responsive py-4">
-                    <table class="table table-sm table-hover text-small border-top">
-                        <tbody>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover text-small">
+                        <tbody class="table-border-bottom-0">
                             <tr>
                                 <th>STOCK</th>
-                                <td><b class="text-danger">{{$stock->stock}}</b></td>
+                                <td><b
+                                        class="text-{{($stock->stock > $stock->stock_minimo) ? 'info' : 'danger'}}">{{$stock->stock}}</b>
+                                </td>
                             </tr>
                             <tr>
                                 <th>STOCK MÍNIMO</th>
@@ -78,8 +80,10 @@
                     </table>
                 </div>
             </div>
+            <a href="{{route('abastecimiento.productos')}}" class="btn btn-success mt-4"><i
+                    class='bx bx-left-arrow-alt e-2'></i>Productos</a>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <div class="row">

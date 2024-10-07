@@ -4,6 +4,7 @@ namespace App\Livewire\Despacho;
 
 use App\Models\Dventa;
 use App\Models\Venta;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -31,9 +32,11 @@ class Cproductos extends Component
         $this->mMethod = 'gcantidad';
         $this->idm = $id;
         $this->cantidad = Dventa::find($id)->cantidad;
+        $this->resetValidation();
         $this->dispatch('smca');
     }
-    public function gcantidad(){
+    public function gcantidad()
+    {
         $this->validate([
             'cantidad' => 'required|numeric|min:1',
         ], [
@@ -42,22 +45,56 @@ class Cproductos extends Component
             'cantidad.min' => 'La cantidad debe ser mayor a 0',
         ]);
         $dventa = Dventa::find($this->idm);
-        $p= $dventa->precio;
-        $t= $p * $this->cantidad;
-        $igv= $t * 0.18;
-        $dventa->update([
-            'cantidad' => $this->cantidad,
-            'total' => $t,
-            'igv' => $igv,
-            'updated_by' => auth()->user()->id
-        ]);
-        $this->dispatch('hmca', ['t' => 'success', 'm' => '¡Hecho!<br>Cantidad actualizada correctamente']);
+
+        $stock = $dventa->producto->stocks->where('sucursal_id', auth()->user()->sucursal->id)->first();
+        $nc = $this->cantidad - $dventa->cantidad;
+        if ($stock->stock < $nc) {
+            $this->dispatch('hmca', ['t' => 'error', 'm' => '¡Error!<br>Stock insuficiente']);
+            return;
+        }
+
+        $p = $dventa->precio;
+        $t = $p * $this->cantidad;
+        $igv = $t * 0.18;
+
+        try {
+            DB::beginTransaction();
+            $stock->update([
+                'stock' => $stock->stock - $nc,
+                'updated_by' => auth()->user()->id
+            ]);
+
+            $dventa->update([
+                'cantidad' => $this->cantidad,
+                'total' => $t,
+                'igv' => $igv,
+                'updated_by' => auth()->user()->id
+            ]);
+            DB::commit();
+            $this->dispatch('hmca', ['t' => 'success', 'm' => '¡Hecho!<br>Cantidad actualizada correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('hmca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
+        }
     }
 
     #[On('delete')]
     public function delete(Dventa $dventa)
     {
-        $dventa->delete();
-        $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Producto eliminado de la canasta']);
+        $stock = $dventa->producto->stocks->where('sucursal_id', auth()->user()->sucursal->id)->first();
+
+        try {
+            DB::beginTransaction();
+            $stock->update([
+                'stock' => $stock->stock + $dventa->cantidad,
+                'updated_by' => auth()->user()->id
+            ]);
+            $dventa->delete();
+            DB::commit();
+            $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Producto eliminado de la canasta']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('reca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
+        }
     }
 }

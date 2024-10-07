@@ -9,7 +9,7 @@ class Caja extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['apertura', 'cierre', 'user_id', 'sucursal_id'];
+    protected $fillable = ['apertura', 'cierre', 'monto_cierre', 'user_id', 'sucursal_id'];
 
     //relación uno a muchos inversa
     public function user()

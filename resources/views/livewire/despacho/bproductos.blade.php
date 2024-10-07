@@ -32,9 +32,11 @@
                 <tbody class="table-border-bottom-0">
                     @foreach ($productos as $producto)
                     <tr>
-                        <td>{{$producto->nombre}}</td>
+                        <td style="font-size: 0.9em;">{{$producto->nombre}}<small>({{$producto->stock}})</small></td>
                         <td>{{$producto->p_venta}}</td>
-                        <td class="text-center"><button class="btn btn-icon btn-warning btn-sm" wire:click='add({{$producto->id}})' title="Agregar producto"><i class="tf-icons fa-solid fa-basket-shopping"></i></button></td>
+                        <td class="text-center"><button class="btn btn-icon btn-warning btn-sm"
+                                wire:click='add({{$producto->id}})' title="Agregar producto"><i
+                                    class="tf-icons fa-solid fa-basket-shopping"></i></button></td>
                     </tr>
                     @endforeach
                 </tbody>

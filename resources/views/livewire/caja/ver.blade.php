@@ -23,15 +23,23 @@
                                 @endif
                             </td>
                             <td class="text-end">
-
+                                @can('caja.cajas.ver.movimiento')
+                                @if($caja->user_id==auth()->user()->id)
                                 <button class="btn btn-icon btn-outline-info" title="Agregar movimiento"
                                     wire:click='amovimiento'><i
                                         class="tf-icons fa-solid fa-arrow-right-arrow-left"></i></button>
+                                @endif
+                                @endcan
 
                                 @if(!$caja->cierre)
+                                @can('caja.cajas.ver.cerrar')
+                                @if($caja->user_id==auth()->user()->id)
                                 <button class="btn btn-icon btn-outline-danger" title="Cerrar caja"><i
                                         class="tf-icons fa-solid fa-lock"></i></button>
                                 @endif
+                                @endcan
+                                @endif
+
                             </td>
                         </tr>
 
@@ -131,6 +139,7 @@
             </div>
         </div>
         <div class="col-md-5">
+            @can('caja.cajas.ver.cobrar')
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="row">
@@ -186,6 +195,7 @@
                 </div>
                 @endif
             </div>
+            @endcan
             <div class="card mb-4">
                 <h5 class="card-header text-info">Resumen pagos</h5>
                 @php

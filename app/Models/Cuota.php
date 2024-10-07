@@ -9,7 +9,13 @@ class Cuota extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['numero', 'monto', 'fvence', 'estado', 'venta_id'];
+    protected $fillable = ['monto', 'fvence', 'estado', 'venta_id', 'created_by', 'updated_by'];
+
+    //relación uno a muchos
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 
     //relación uno a muchos inversa
     public function venta()

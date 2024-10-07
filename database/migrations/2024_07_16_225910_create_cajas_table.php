@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->timestamp('apertura');
             $table->timestamp('cierre')->nullable();
+            $table->decimal('monto_cierre', 8, 2);
             $table->tinyInteger('pendiente')->nullable(); // 1: pendiente, null: sin pendientes
 
             $table->foreignId('user_id')->constrained();

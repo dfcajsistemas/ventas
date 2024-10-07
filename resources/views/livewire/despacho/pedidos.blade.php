@@ -43,27 +43,11 @@
                 </thead>
                 <tbody>
                     @foreach ($pedidos as $pedido)
-                    @php
-                    switch ($pedido->est_venta) {
-                    case '1':
-                    $est='Solicitado';
-                    break;
-                    case '2':
-                    $est='Enviado';
-                    break;
-                    case '3':
-                    $est='Entregado';
-                    break;
-                    default:
-                    $est='';
-                    break;
-                    }
-                    @endphp
                     <tr wire:key="{{ $pedido->id }}">
                         <td>{{ $pedido->id }}</td>
                         <td>{{ $pedido->razon_social }}</td>
                         <td>{{ $pedido->created_at }}</td>
-                        <td>{{ $est }}</td>
+                        <td>{{ estadoVenta($pedido->est_venta) }}</td>
                         <td>
                             @can('despacho.pedidos.canasta')
                             <a href="{{route('despacho.pedidos.canasta', $pedido->id)}}"

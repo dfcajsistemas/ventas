@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('venta_id')->constrained();
             $table->foreignId('caja_id')->constrained();
             $table->foreignId('mpago_id')->constrained();
+            $table->foreignId('cuota_id')->nullable()->constrained();
 
             $table->unsignedBigInteger('created_by')->nullable()->index();
 

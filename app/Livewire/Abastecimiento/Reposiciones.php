@@ -26,7 +26,7 @@ class Reposiciones extends Component
     #[Url(except: '')]
     public $search = '';
     #[Url(except: '10')]
-    public $perPage = 10;
+    public $perPage = '10';
 
     public function mount(Producto $producto)
     {
@@ -100,7 +100,7 @@ class Reposiciones extends Component
     #[On('delete')]
     public function destroy(Reposicion $reposicion)
     {
-        $ns=$this->stock->stock - $reposicion->cantidad;
+        $ns = $this->stock->stock - $reposicion->cantidad;
         if ($ns < 0) {
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Stock no puede ser negativo, verifique']);
             return;

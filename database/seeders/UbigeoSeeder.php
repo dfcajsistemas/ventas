@@ -839,7 +839,7 @@ class UbigeoSeeder extends Seeder
         Distrito::create(['nombre' => 'CUPISNIQUE', 'ubigeo' => '060503', 'provincia_id' => $p0605->id]);
         Distrito::create(['nombre' => 'GUZMANGO', 'ubigeo' => '060504', 'provincia_id' => $p0605->id]);
         Distrito::create(['nombre' => 'SAN BENITO', 'ubigeo' => '060505', 'provincia_id' => $p0605->id]);
-        Distrito::create(['nombre' => 'SANTA CRUZ DE TOLED', 'ubigeo' => '060506', 'provincia_id' => $p0605->id]);
+        Distrito::create(['nombre' => 'SANTA CRUZ DE TOLEDO', 'ubigeo' => '060506', 'provincia_id' => $p0605->id]);
         Distrito::create(['nombre' => 'TANTARICA', 'ubigeo' => '060507', 'provincia_id' => $p0605->id]);
         Distrito::create(['nombre' => 'YONAN', 'ubigeo' => '060508', 'provincia_id' => $p0605->id]);
         Distrito::create(['nombre' => 'CUTERVO', 'ubigeo' => '060601', 'provincia_id' => $p0606->id]);
@@ -1442,7 +1442,7 @@ class UbigeoSeeder extends Seeder
         Distrito::create(['nombre' => 'SITABAMBA', 'ubigeo' => '131008', 'provincia_id' => $p1310->id]);
         Distrito::create(['nombre' => 'CASCAS', 'ubigeo' => '131101', 'provincia_id' => $p1311->id]);
         Distrito::create(['nombre' => 'LUCMA', 'ubigeo' => '131102', 'provincia_id' => $p1311->id]);
-        Distrito::create(['nombre' => 'COMPIN', 'ubigeo' => '131103', 'provincia_id' => $p1311->id]);
+        Distrito::create(['nombre' => 'MARMOT', 'ubigeo' => '131103', 'provincia_id' => $p1311->id]);
         Distrito::create(['nombre' => 'SAYAPULLO', 'ubigeo' => '131104', 'provincia_id' => $p1311->id]);
         Distrito::create(['nombre' => 'VIRU', 'ubigeo' => '131201', 'provincia_id' => $p1312->id]);
         Distrito::create(['nombre' => 'CHAO', 'ubigeo' => '131202', 'provincia_id' => $p1312->id]);

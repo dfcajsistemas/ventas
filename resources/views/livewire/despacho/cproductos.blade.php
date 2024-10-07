@@ -18,15 +18,17 @@
             @php
             $t+=$producto->total;
             @endphp
-            <tr>
+            <tr style="font-size: 0.9em;">
                 <td>{{$producto->nombre}}</td>
                 <td class="text-end">{{$producto->cantidad}}</td>
                 <td class="text-end">{{$producto->precio}}</td>
                 <td class="text-end">{{ number_format($producto->total, 2) }}</td>
                 <td class="text-end">
 
-                    <button class="btn btn-icon btn-outline-info btn-sm" wire:click='ecantidad({{$producto->id}})' title="Editar cantidad"><i class="tf-icons fa-solid fa-hashtag"></i></button>
-                    <button class="btn btn-icon btn-outline-danger btn-sm" x-data="eliminar" x-on:click="confirmar({{ $producto->id }}, '{{$producto->nombre}}')" title="Eliminar"><i
+                    <button class="btn btn-icon btn-outline-info btn-sm" wire:click='ecantidad({{$producto->id}})'
+                        title="Editar cantidad"><i class="tf-icons fa-solid fa-hashtag"></i></button>
+                    <button class="btn btn-icon btn-outline-danger btn-sm" x-data="eliminar"
+                        x-on:click="confirmar({{ $producto->id }}, '{{$producto->nombre}}')" title="Eliminar"><i
                             class="tf-icons fa-solid fa-trash-can"></i></button>
                 </td>
             </tr>

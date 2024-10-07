@@ -23,8 +23,8 @@ use Livewire\Attributes\On;
 class Cobrar extends Component
 {
     public $mTitle, $mMethod, $idm, $precio, $monto, $mpago, $mrecibido, $observacion, $tcomprobante, $rComp;
-    public $caja, $venta, $sucursal, $mpagos, $tcomprobantes, $mtotal, $mpagado;
-    public $cuotas;
+    public $caja, $venta, $sucursal, $mpagos, $tcomprobantes, $mtotal, $mpagado, $mcuotas;
+    public $fvence, $mcuota;
 
     public function mount(Caja $caja, Venta $venta)
     {
@@ -40,10 +40,15 @@ class Cobrar extends Component
     #[Title(['Cobrar Venta', 'Caja'])]
     public function render()
     {
+        //monto total de la venta
         $this->mtotal = Dventa::where('venta_id', $this->venta->id)->sum('total');
+        //monto pagado de la venta
         $this->mpagado = Pago::where('venta_id', $this->venta->id)->sum('monto');
-
+        //monto de cuotas de la venta
+        $this->mcuotas = Cuota::where('venta_id', $this->venta->id)->sum('monto');
+        //obtener los pagos de la venta
         $pagos = Pago::where('venta_id', $this->venta->id)->get();
+        //obtener los productos de la venta
         $productos = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
             ->select('dventas.id', 'productos.nombre', 'dventas.cantidad', 'dventas.precio', 'dventas.igv', 'dventas.total')
             ->where('dventas.venta_id', $this->venta->id)
@@ -92,7 +97,7 @@ class Cobrar extends Component
         $this->mTitle = 'Cobrar';
         $this->mMethod = 'gcobrar';
         $this->reset(['mpago', 'mrecibido', 'observacion']);
-        $this->monto = $mt - $mp;
+        $this->monto = $this->mtotal - $mp;
         $this->dispatch('smc');
     }
 
@@ -144,37 +149,54 @@ class Cobrar extends Component
 
     public function acredito()
     {
-        $this->mTitle = 'A Crédito';
+        $this->mTitle = 'Cuotas';
         $this->mMethod = 'gcredito';
-        $this->reset(['cuotas']);
+        $this->reset(['fvence', 'mcuota']);
         $this->dispatch('smcre');
+        $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
+        $mc = Cuota::where('venta_id', $this->venta->id)->sum('monto');
+        $this->mcuota = $mt - $mc;
     }
 
     public function gcredito()
     {
         $this->validate([
-            'cuotas' => 'required|numeric|min:1',
+            'fvence' => 'required|date',
+            'mcuota' => 'required|numeric|min:1',
         ], [
-            'cuotas.required' => 'Ingrese el número de cuotas',
-            'cuotas.numeric' => 'El número de cuotas debe ser un número',
-            'cuotas.min' => 'El número de cuotas debe ser mayor a 0',
-        ]);
-        $this->venta->update([
-            'fpago' => 1,
-            'updated_by' => auth()->user()->id
+            'fvence.required' => 'Ingrese la fecha de vencimiento',
+            'fvence.date' => 'Fecha de vencimiento no válida',
+            'mcuota.required' => 'Ingrese el monto de la cuota',
+            'mcuota.numeric' => 'El monto de la cuota debe ser un número',
+            'mcuota.min' => 'El monto de la cuota debe ser mayor a 0',
         ]);
 
-        for ($i = 1; $i <= $this->cuotas; $i++) {
-            $cuota = round($this->mtotal / $this->cuotas, 2);
+        $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
+        $mc = Cuota::where('venta_id', $this->venta->id)->sum('monto');
+        if (($mc + $this->mcuota) > $mt) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto de la cuota es mayor al total de la venta']);
+            return;
+        }
+        try {
+            DB::beginTransaction();
             Cuota::create([
                 'venta_id' => $this->venta->id,
-                'numero' => $i,
-                'monto' => $cuota,
-                'fvence' => date('Y-m-d', strtotime('+' . $i . ' month'))
+                'monto' => $this->mcuota,
+                'fvence' => $this->fvence,
+                'created_by' => auth()->user()->id
             ]);
+            if ($this->venta->fpago == null) {
+                $this->venta->update([
+                    'fpago' => 1,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
+            DB::commit();
+            $this->dispatch('hmcre', ['t' => 'success', 'm' => '¡Hecho!<br>Cuota registrada correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo registrar la cuota. ' . $e->getMessage()]);
         }
-
-        $this->dispatch('hmcre', ['t' => 'success', 'm' => '¡Hecho!<br>Venta a crédito registrada correctamente']);
     }
     public function acontado()
     {
