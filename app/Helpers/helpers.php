@@ -36,3 +36,16 @@ if (!function_exists('tipoMovimiento')) {
         }
     }
 }
+
+if (!function_exists('estadoCuota')) {
+    function estadoCuota($e = null)
+    {
+        if ($e == null) {
+            return '<span class="badge bg-label-success"> Pagado </span>';
+        } elseif ($e == 1) {
+            return '<span class="badge bg-label-warning"> Pendiente </span>';
+        } else {
+            return '<span class="badge bg-label-danger"> Error </span>';
+        }
+    }
+}

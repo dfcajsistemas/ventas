@@ -57,6 +57,7 @@ class Cobrar extends Component
         return view('livewire.caja.cobrar', compact('pagos', 'productos'));
     }
 
+    //editar precio de un producto
     public function eprecio(Dventa $dventa)
     {
         $this->mTitle = 'Editar Precio';
@@ -65,7 +66,7 @@ class Cobrar extends Component
         $this->precio = $dventa->precio;
         $this->dispatch('smp');
     }
-
+    //guardar precio de un producto
     public function gprecio()
     {
         $this->validate([
@@ -77,7 +78,11 @@ class Cobrar extends Component
         ]);
         $dventa = Dventa::find($this->idm);
         $t = $this->precio * $dventa->cantidad;
-        $igv = $t * 0.18;
+        if ($dventa->producto->igvafectacion_id == 1) {
+            $igv = $t * 0.18;
+        } else {
+            $igv = 0;
+        }
         $dventa->update([
             'precio' => $this->precio,
             'total' => $t,
@@ -86,29 +91,19 @@ class Cobrar extends Component
         ]);
         $this->dispatch('hmp', ['t' => 'success', 'm' => '¡Hecho!<br>Precio cambiado correctamente']);
     }
-
-    public function ncobrar()
+    //agregar pago contado
+    public function apagoContado()
     {
-        //calcular el monto total
-        $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
-        //calcular el monto pagado
-        $mp = Pago::where('venta_id', $this->venta->id)->sum('monto');
-
-        $this->mTitle = 'Cobrar';
-        $this->mMethod = 'gcobrar';
+        $this->mTitle = 'Registrar Pago';
+        $this->mMethod = 'gpagoContado';
         $this->reset(['mpago', 'mrecibido', 'observacion']);
-        $this->monto = $this->mtotal - $mp;
+        $this->monto = $this->mtotal - $this->mpagado;
         $this->dispatch('smc');
     }
-
-    public function gcobrar()
+    //guardar pago contado
+    public function gpagoContado()
     {
-        //calcular el monto total
-        $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
-        //calcular el monto pagado
-        $mp = Pago::where('venta_id', $this->venta->id)->sum('monto');
-
-        if (($mp + $this->monto) > $mt) {
+        if (($this->mpagado + $this->monto) > $this->mtotal) {
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto a pagar es mayor al total de la venta']);
             return;
         }
@@ -134,11 +129,16 @@ class Cobrar extends Component
             'observacion' => $this->observacion,
             'created_by' => auth()->user()->id
         ]);
-        if (($mp + $this->monto) == $mt) {
+        if (($this->mpagado + $this->monto) == $this->mtotal) {
             $this->venta->update([
                 'est_pago' => null,
                 'updated_by' => auth()->user()->id
             ]);
+        }
+        if ($this->venta->pagos->count() == 1) {
+            $afigv = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
+                ->select('dventas.id', 'dventas.cantidad', 'dventas.precio', 'dventas.igv', 'dventas.total')
+                ->where('dventas.venta_id', $this->venta->id);
         }
         if ($this->mpago == 1) {
             $cambio = $this->mrecibido - $this->monto;
@@ -215,21 +215,6 @@ class Cobrar extends Component
         }
     }
 
-    public function acontado()
-    {
-        if ($this->venta->pagos()->count() > 0) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La venta tiene pagos registrados']);
-            return;
-        }
-        $this->venta->update([
-            'fpago' => null,
-            'updated_by' => auth()->user()->id
-        ]);
-        //eliminar las cuotas de la venta
-        Cuota::where('venta_id', $this->venta->id)->delete();
-        $this->dispatch('hmcre', ['t' => 'success', 'm' => '¡Hecho!<br>Se cambio la venta a contado']);
-    }
-
     #[On('delete')]
     public function destroyPago(Pago $pago)
     {
@@ -240,6 +225,14 @@ class Cobrar extends Component
                 'est_pago' => 1,
                 'updated_by' => auth()->user()->id
             ]);
+
+            if ($pago->cuota_id) {
+                $cuota = Cuota::find($pago->cuota_id);
+                $cuota->update([
+                    'estado' => 1,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
             DB::commit();
             $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Pago eliminado correctamente']);
         } catch (\Exception $e) {
@@ -317,11 +310,70 @@ class Cobrar extends Component
     #[On('deletec')]
     public function destroyCuota(Cuota $cuota)
     {
-        if (Pago::where('cuota_id', $cuota->id)->count() > 0) {
+        if ($cuota->pagos()->count() > 0) {
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La cuota tiene pagos registrados']);
             return;
         }
         $cuota->delete();
         $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Cuota eliminada correctamente']);
+    }
+
+    public function apagoCuota(Cuota $cuota)
+    {
+        $this->mTitle = 'Pago cuota';
+        $this->mMethod = 'gpagoCuota';
+        $this->monto = $cuota->monto - $cuota->pagos()->sum('monto');
+        $this->idm = $cuota->id;
+        $this->reset(['mpago', 'mrecibido', 'observacion']);
+        $this->dispatch('smc');
+    }
+
+    public function gpagoCuota()
+    {
+        $cu = Cuota::where('estado', 1)->where('venta_id', $this->venta->id)->orderBy('id')->first();
+        if ($this->idm != $cu->id) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La cuota no es la próxima a pagar']);
+            return;
+        }
+        $this->validate([
+            'monto' => 'required|numeric|min:1',
+            'mpago' => 'required',
+            'mrecibido' => 'nullable|numeric|min:1|required_if:mpago,1',
+        ], [
+            'monto.required' => 'Ingrese el monto',
+            'monto.numeric' => 'El monto debe ser un número',
+            'monto.min' => 'El monto debe ser mayor a 0',
+            'mpago.required' => 'Seleccione el medio de pago',
+            'mrecibido.required_if' => 'Ingrese el monto recibido',
+            'mrecibido.numeric' => 'El monto recibido debe ser mayor a 0',
+            'mrecibido.min' => 'El monto recibido es inválido',
+        ]);
+
+        $pago = Pago::create([
+            'cuota_id' => $this->idm,
+            'mpago_id' => $this->mpago,
+            'caja_id' => $this->caja->id,
+            'venta_id' => $this->venta->id,
+            'monto' => $this->monto,
+            'observacion' => $this->observacion,
+            'created_by' => auth()->user()->id
+        ]);
+        if ($cu->pagos()->sum('monto') == $cu->monto) {
+            $cu->update([
+                'estado' => null,
+                'updated_by' => auth()->user()->id
+            ]);
+        }
+        if ($this->venta->pagos->sum('monto') == $this->mtotal) {
+            $this->venta->update([
+                'est_pago' => null,
+                'updated_by' => auth()->user()->id
+            ]);
+        }
+        if ($this->mpago == 1) {
+            $cambio = $this->mrecibido - $this->monto;
+            $this->dispatch('vu', $cambio);
+        }
+        $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Pago de cuota realizado correctamente']);
     }
 }

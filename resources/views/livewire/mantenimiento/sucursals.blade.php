@@ -16,10 +16,10 @@
                     </select>
                 </div>
                 @can('mantenimiento.sucursals.agregar')
-                <div class="col-4 col-md-1 d-grid">
-                    <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
-                            class="tf-icons fa-solid fa-plus"></i></button>
-                </div>
+                    <div class="col-4 col-md-1 d-grid">
+                        <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
+                                class="tf-icons fa-solid fa-plus"></i></button>
+                    </div>
                 @endcan
                 <div class="col-4 col-md-1 d-grid">
                     <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
@@ -28,130 +28,135 @@
             </div>
         </div>
         @if ($sucursals->count())
-        <div class="table-responsive text-noweap">
-            <table class="table table-sm table-hover text-small">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Dirección</th>
-                        <th>Ubicación</th>
-                        <th>Cod SUNAT</th>
-                        <th>P. Venta</th>
-                        <th>Desc.</th>
-                        <th>Estado</th>
-                        @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
-                        <th>Acciones</th>
-                        @endcanany
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($sucursals as $sucursal)
-                    <tr wire:key="{{ $sucursal->id }}">
-                        <td>{{ $sucursal->id }}</td>
-                        <td>{{ $sucursal->nombre }}</td>
-                        <td>{{ $sucursal->direccion }}</td>
-                        <td>{{ $sucursal->distrito->nombre }}</td>
-                        <td>{{ $sucursal->cod_sunat }}</td>
-                        <td>{{ $sucursal->p_venta }}</td>
-                        <td>{{ $sucursal->descuento ? $sucursal->descuento.'%' : '' }}</td>
-                        <td><x-status :status="$sucursal->estado" /></td>
-                        @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
-                        <td>
-                            <button class="btn btn-icon btn-warning btn-sm" title="Descuento"
-                                wire:click="edescuento({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-percent"></i></button>
-                            @can('mantenimiento.sucursals.editar')
-                            <button class="btn btn-icon btn-info btn-sm" title="Editar"
-                                wire:click="edit({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-pen"></i></button>
-                            @endcan
-                            @can('mantenimiento.sucursals.estado')
-                            <button class="btn btn-icon btn-secondary btn-sm" title="Estado"
-                                wire:click="estado({{ $sucursal->id }})"><i class="tf-icons fa-solid fa-toggle-on"></i></button>
-                            @endcan
-                        </td>
-                        @endcanany
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="m-3">
-            {{ $sucursals->links() }}
-        </div>
+            <div class="table-responsive text-noweap">
+                <table class="table table-sm table-hover text-small">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                            <th>Ubicación</th>
+                            <th>Cod SUNAT</th>
+                            <th>P. Venta</th>
+                            <th>Desc.</th>
+                            <th>Estado</th>
+                            @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
+                                <th>Acciones</th>
+                            @endcanany
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($sucursals as $sucursal)
+                            <tr wire:key="{{ $sucursal->id }}">
+                                <td>{{ $sucursal->id }}</td>
+                                <td>{{ $sucursal->nombre }}</td>
+                                <td>{{ $sucursal->direccion }}</td>
+                                <td>{{ $sucursal->distrito->nombre }}</td>
+                                <td>{{ $sucursal->cod_sunat }}</td>
+                                <td>{{ $sucursal->p_venta }}</td>
+                                <td>{{ $sucursal->descuento ? $sucursal->descuento . '%' : '' }}</td>
+                                <td><x-status :status="$sucursal->estado" /></td>
+                                @canany(['mantenimiento.sucursals.editar', 'mantenimiento.sucursals.estado'])
+                                    <td>
+                                        <button class="btn btn-icon btn-warning btn-sm" title="Descuento"
+                                            wire:click="edescuento({{ $sucursal->id }})"><i
+                                                class="tf-icons fa-solid fa-percent"></i></button>
+                                        @can('mantenimiento.sucursals.editar')
+                                            <button class="btn btn-icon btn-info btn-sm" title="Editar"
+                                                wire:click="edit({{ $sucursal->id }})"><i
+                                                    class="tf-icons fa-solid fa-pen"></i></button>
+                                        @endcan
+                                        @can('mantenimiento.sucursals.estado')
+                                            <button class="btn btn-icon btn-secondary btn-sm" title="Estado"
+                                                wire:click="estado({{ $sucursal->id }})"><i
+                                                    class="tf-icons fa-solid fa-toggle-on"></i></button>
+                                        @endcan
+                                    </td>
+                                @endcanany
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="m-3">
+                {{ $sucursals->links() }}
+            </div>
         @else
-        <div class="mx-3 mb-3">
-            <x-msg type="info" msg="No se encontraron resultados" />
-        </div>
+            <div class="mx-3 mb-3">
+                <x-msg type="info" msg="No se encontraron resultados" />
+            </div>
         @endif
     </div>
     @canany(['mantenimiento.sucursals.agregar', 'mantenimiento.sucursals.editar'])
-    <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="lg">
-        <div class="row">
-            <div class="col-12">
-                <x-label for="nombre" value="Nombre" />
-                <x-input type="text" id="nombre" wire:model="nombre" />
-                <x-input-error for="nombre" />
+        <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="lg">
+            <div class="row">
+                <div class="col-12">
+                    <x-label for="nombre" value="Nombre" />
+                    <x-input type="text" id="nombre" wire:model="nombre" />
+                    <x-input-error for="nombre" />
+                </div>
+                <div class="col-12">
+                    <x-label for="direccion" value="Dirección" />
+                    <x-input type="text" id="direccion" wire:model="direccion" />
+                    <x-input-error for="direccion" />
+                </div>
+                <div class="col-12 col-md-4">
+                    <x-label for="telefono" value="Teléfono" />
+                    <x-input type="text" id="telefono" wire:model="telefono" />
+                    <x-input-error for="telefono" />
+                </div>
+                <div class="col-12 col-md-4">
+                    <x-label for="cod_sunat" value="Cod. SUNAT" />
+                    <x-input type="text" id="cod_sunat" wire:model="cod_sunat" />
+                    <x-input-error for="cod_sunat" />
+                </div>
+                <div class="col-12 col-md-4">
+                    <x-label for="p_venta" value="P. Venta a usar" />
+                    <x-select id="p_venta" wire:model.live="p_venta">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </x-select>
+                    <x-input-error for="p_venta" />
+                </div>
+                <div class="col-12 col-md-4">
+                    <x-label for="departamento_id" value="Departamento" />
+                    <x-select id="departamento_id" wire:model.live="departamento_id">
+                        <option value="">Seleccione Departamento</option>
+                        @foreach ($departamentos as $departamento)
+                            <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="departamento_id" />
+                </div>
+                <div class="col-12 col-md-4">
+                    <x-label for="provincia_id" value="Provincia" />
+                    <x-select id="provincia_id" wire:model.live="provincia_id">
+                        <option value="">Seleccione provincia</option>
+                        @if ($provincias)
+                            @foreach ($provincias as $prov)
+                                <option value="{{ $prov->id }}" {{ $prov->id == $provincia_id ? 'selected' : '' }}
+                                    wire:key='p_{{ $prov->id }}'>{{ $prov->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    <x-input-error for="provincia_id" />
+                </div>
+                <div class="col-12 col-md-4">
+                    <x-label for="distrito_id" value="Distrito" />
+                    <x-select id="distrito_id" wire:model="distrito_id">
+                        <option value="">Seleccione distrito</option>
+                        @if ($distritos)
+                            @foreach ($distritos as $dist)
+                                <option value="{{ $dist->id }}" {{ $dist->id == $distrito_id ? 'selected' : '' }}
+                                    wire:key='d_{{ $dist->id }}'>{{ $dist->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    <x-input-error for="distrito_id" />
+                </div>
             </div>
-            <div class="col-12">
-                <x-label for="direccion" value="Dirección" />
-                <x-input type="text" id="direccion" wire:model="direccion" />
-                <x-input-error for="direccion" />
-            </div>
-            <div class="col-12 col-md-4">
-                <x-label for="telefono" value="Teléfono" />
-                <x-input type="text" id="telefono" wire:model="telefono" />
-                <x-input-error for="telefono" />
-            </div>
-            <div class="col-12 col-md-4">
-                <x-label for="cod_sunat" value="Cod. SUNAT" />
-                <x-input type="text" id="cod_sunat" wire:model="cod_sunat" />
-                <x-input-error for="cod_sunat" />
-            </div>
-            <div class="col-12 col-md-4">
-                <x-label for="p_venta" value="P. Venta a usar" />
-                <x-select id="p_venta" wire:model.live="p_venta">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </x-select>
-                <x-input-error for="p_venta" />
-            </div>
-            <div class="col-12 col-md-4">
-                <x-label for="departamento_id" value="Departamento" />
-                <x-select id="departamento_id" wire:model.live="departamento_id">
-                    <option value="">Seleccione Departamento</option>
-                    @foreach ($departamentos as $departamento)
-                    <option value="{{$departamento->id}}">{{$departamento->nombre}}</option>
-                    @endforeach
-                </x-select>
-                <x-input-error for="departamento_id" />
-            </div>
-            <div class="col-12 col-md-4">
-                <x-label for="provincia_id" value="Provincia" />
-                <x-select id="provincia_id" wire:model.live="provincia_id">
-                    <option value="">Seleccione provincia</option>
-                    @if ($provincias)
-                    @foreach ($provincias as $prov)
-                    <option value="{{$prov->id}}" {{$prov->id==$provincia_id ? 'selected' : ''}} wire:key='p_{{$prov->id}}'>{{$prov->nombre}}</option>
-                    @endforeach
-                    @endif
-                </x-select>
-                <x-input-error for="provincia_id" />
-            </div>
-            <div class="col-12 col-md-4">
-                <x-label for="distrito_id" value="Distrito" />
-                <x-select id="distrito_id" wire:model="distrito_id">
-                    <option value="">Seleccione distrito</option>
-                    @if ($distritos)
-                    @foreach ($distritos as $dist)
-                    <option value="{{$dist->id}}" {{$dist->id==$distrito_id ? 'selected' : ''}} wire:key='d_{{$dist->id}}'>{{$dist->nombre}}</option>
-                    @endforeach
-                    @endif
-                </x-select>
-                <x-input-error for="distrito_id" />
-            </div>
-        </div>
-    </x-modal-form>
+        </x-modal-form>
     @endcanany
     <x-modal-form mId="mDes" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
@@ -163,26 +168,25 @@
         </div>
     </x-modal-form>
     @script
-    <script>
-        Livewire.on('sm', (e) => {
-            $("#mModelo").modal('show')
-        });
-        Livewire.on('hm', (e) => {
-            $("#mModelo").modal('hide')
-            noti(e[0]['m'], e[0]['t'])
-        })
-        Livewire.on('re', (e) => {
-            noti(e[0]['m'], e[0]['t'])
-        })
+        <script>
+            Livewire.on('sm', (e) => {
+                $("#mModelo").modal('show')
+            });
+            Livewire.on('hm', (e) => {
+                $("#mModelo").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+            Livewire.on('re', (e) => {
+                noti(e[0]['m'], e[0]['t'])
+            })
 
-        Livewire.on('smd', (e) => {
-            $("#mDes").modal('show')
-        });
-        Livewire.on('hmd', (e) => {
-            $("#mDes").modal('hide')
-            noti(e[0]['m'], e[0]['t'])
-        })
-    </script>
+            Livewire.on('smd', (e) => {
+                $("#mDes").modal('show')
+            });
+            Livewire.on('hmd', (e) => {
+                $("#mDes").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+        </script>
     @endscript
 </div>
-

@@ -4,7 +4,7 @@
             {{ $sucursal->nombre }})</span>
     </h4>
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-6">
             <div class="card mb-4">
                 <div class="table-responsive">
                     <table class="table table-border-bottom-0">
@@ -32,13 +32,6 @@
                                 <a href="{{ route('caja.cajas.ver', $caja->id) }}"
                                     class="btn btn-icon btn-outline-secondary" title="Regresar a caja"><i
                                         class="fa-solid fa-arrow-left"></i></a>
-                                @if ($venta->est_pago == 1 && $venta->fpago == null)
-                                    @can('caja.cajas.ver.cobrar.pago')
-                                        <button class="btn btn-icon btn-success" wire:click='ncobrar' title="Cobrar">
-                                            <i class="fa-solid fa-sack-dollar"></i>
-                                        </button>
-                                    @endcan
-                                @endif
                                 @if ($venta->est_pago == null || ($venta->fpago == 1 && $mcuotas == $mtotal))
                                     <button class="btn btn-icon btn-info" wire:click='emitir'><i
                                             class="fa-solid fa-receipt" title="Emitir comprobante"></i>
@@ -65,7 +58,7 @@
             <div class="card mb-4">
                 <div class="table-responsive text-nowrap">
                     @if ($productos->count())
-                        <table class="table table-hover" style="font-size: 0.9em;">
+                        <table class="table table-hover" style="font-size: 0.8em;">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
@@ -73,7 +66,9 @@
                                     <th class="text-end">Precio</th>
                                     <th class="text-end">Total</th>
                                     @can('caja.cajas.ver.cobrar.precio')
-                                        <th class="text-end">C. Precio</th>
+                                        @if ($venta->pagos()->count() == 0)
+                                            <th class="text-end">C. Precio</th>
+                                        @endif
                                     @endcan
                                 </tr>
                             </thead>
@@ -91,24 +86,29 @@
                                         <td class="text-end">{{ $producto->precio }}</td>
                                         <td class="text-end">{{ number_format($producto->total, 2) }}</td>
                                         @can('caja.cajas.ver.cobrar.precio')
-                                            <td class="text-end">
-                                                <button class="btn btn-icon btn-outline-info btn-sm"
-                                                    wire:click='eprecio({{ $producto->id }})' title="Cambiar precio"><i
-                                                        class="tf-icons fa-solid fa-dollar-sign"></i></button>
-                                            </td>
+                                            @if ($venta->pagos()->count() == 0)
+                                                <td class="text-end">
+                                                    <button class="btn btn-icon btn-outline-info btn-sm"
+                                                        wire:click='eprecio({{ $producto->id }})' title="Cambiar precio"><i
+                                                            class="tf-icons fa-solid fa-dollar-sign"></i></button>
+                                                </td>
+                                            @endif
                                         @endcan
                                     </tr>
                                 @endforeach
-                                <thead class="table-border-bottom-0">
-                                    <tr>
-                                        <th colspan="3" class="fw-bold">Total</th>
-                                        <th class="fw-bold text-end">{{ number_format($t, 2) }}</th>
-                                        @can('caja.cajas.ver.cobrar.precio')
-                                            <th></th>
-                                        @endcan
-                                    </tr>
-                                </thead>
                             </tbody>
+                            <thead class="table-border-bottom-0">
+                                <tr>
+                                    <th colspan="3" class="fw-bold">Total</th>
+                                    <th class="fw-bold text-end">{{ number_format($t, 2) }}</th>
+                                    @can('caja.cajas.ver.cobrar.precio')
+                                        @if ($venta->pagos()->count() == 0)
+                                            <th></th>
+                                        @endif
+                                    @endcan
+                                </tr>
+                            </thead>
+
                         </table>
                     @else
                         <div class="m-3">
@@ -118,22 +118,33 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
-            <div class="card mb-4">
-                <h5 class="card-header">Pagos</h5>
+        <div class="col-md-6">
+            <div class="card card-action mb-4">
+                <div class="card-header align-items-center flex-wrap gap-3 py-4">
+                    <h5 class="card-action-title mb-0">Pagos</h5>
+                    <div class="card-action-element">
+                        @if ($venta->est_pago == 1 && $venta->fpago == null)
+                            @can('caja.cajas.ver.cobrar.pago')
+                                <button class="btn btn-icon btn-primary btn-sm" wire:click='apagoContado()'
+                                    title="Agregar pago"><i class="fa-solid fa-hand-holding-dollar"></i></button>
+                            @endcan
+                        @endif
+                    </div>
+                </div>
                 @if ($pagos->count())
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover border-top" style="font-size: 0.8em;">
                             <thead>
                                 <tr>
                                     <th>M. Pago</th>
                                     <th>Fecha</th>
+                                    <th>Cuota</th>
                                     <th class="text-end">observación</th>
                                     <th class="text-end">Monto</th>
                                     <th>Eliminar</th>
                                 </tr>
                             </thead>
-                            <tbody class="table-border-bottom-0">
+                            <tbody>
                                 @php
                                     $t = 0;
                                 @endphp
@@ -144,23 +155,28 @@
                                     <tr>
                                         <td>{{ $pago->mpago->nombre }}</td>
                                         <td>{{ date('d/m/Y', strtotime($pago->created_at)) }}</td>
+                                        <td>{{ $pago->cuota_id }}</td>
                                         <td>{{ $pago->observacion }}</td>
                                         <td class="text-end">{{ number_format($pago->monto, 2) }}</td>
                                         <td>
-                                            <button class="btn btn-icon btn-outline-danger btn-sm"
-                                                x-data="eliminar"
-                                                x-on:click="confirmar({{ $pago->id }}, '{{ $pago->monto }}')"
-                                                title="Eliminar pago"><i
-                                                    class="tf-icons fa-solid fa-trash"></i></button>
+                                            @if ($loop->last)
+                                                <button class="btn btn-icon btn-outline-danger btn-sm"
+                                                    x-data="eliminar"
+                                                    x-on:click="confirmar({{ $pago->id }}, '{{ $pago->monto }}')"
+                                                    title="Eliminar pago"><i
+                                                        class="tf-icons fa-solid fa-trash"></i></button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
-                                <tr class="table-secondary text-lg">
-                                    <td colspan="3">Total</td>
-                                    <td class="text-end">{{ number_format($t, 2) }}</td>
-                                    <td></td>
-                                </tr>
                             </tbody>
+                            <thead class="table-border-bottom-0">
+                                <tr>
+                                    <th colspan="4" class="fw-bold">Total</th>
+                                    <th class="text-end fw-bold">{{ number_format($t, 2) }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
                         </table>
                     </div>
                 @else
@@ -183,50 +199,48 @@
 
                     @if ($venta->cuotas->count())
                         <div class="table-responsive">
-                            <table class="table table-hover border-top">
+                            <table class="table table-hover border-top" style="font-size: 0.8em;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>F. Vence</th>
                                         <th class="text-end">Monto</th>
+                                        <th>Estado</th>
                                         <th class="text-end">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $tc = 0;
-                                        $tpe = 0;
                                         $pcc = 0;
                                     @endphp
                                     @foreach ($venta->cuotas as $cuota)
-                                        {{ $pcc }}
                                         @php
                                             $tc += $cuota->monto;
                                             if ($cuota->estado == 1) {
-                                                $tpe += $cuota->monto;
-                                                if ($pcc == 0) {
-                                                    $pcc = 1;
-                                                }
+                                                $pcc += 1;
                                             }
                                         @endphp
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ date('d/m/Y', strtotime($cuota->fvence)) }}</td>
                                             <td class="text-end">{{ $cuota->monto }}</td>
+                                            <td>{!! estadoCuota($cuota->estado) !!}</td>
                                             <td class="text-end">
-                                                {{ $pcc }}
-                                                @if ($pcc)
+                                                @if ($pcc == 1)
                                                     <button class="btn btn-icon btn-outline-info btn-sm"
-                                                        wire:click='cobrar({{ $cuota->id }})'
+                                                        wire:click='apagoCuota({{ $cuota->id }})'
                                                         title="Cobrar cuota"><i
-                                                            class="fa-solid fa-dollar-sign"></i></button>
+                                                            class="fa-solid fa-hand-holding-dollar"></i></button>
                                                 @endif
                                                 @if ($loop->last)
-                                                    <button class="btn btn-icon btn-outline-danger btn-sm"
-                                                        x-data="eliminarc"
-                                                        x-on:click="confirmar({{ $cuota->id }}, '{{ $cuota->monto . ' del ' . date('d/m/Y', strtotime($cuota->fvence)) }}')"
-                                                        title="Eliminar cuota"><i
-                                                            class="tf-icons fa-solid fa-trash"></i></button>
+                                                    @if ($cuota->pagos()->count() == 0)
+                                                        <button class="btn btn-icon btn-outline-danger btn-sm"
+                                                            x-data="eliminarc"
+                                                            x-on:click="confirmar({{ $cuota->id }}, '{{ $cuota->monto . ' del ' . date('d/m/Y', strtotime($cuota->fvence)) }}')"
+                                                            title="Eliminar cuota"><i
+                                                                class="tf-icons fa-solid fa-trash"></i></button>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -234,12 +248,12 @@
                                 </tbody>
                                 <thead class="table-border-bottom-0">
                                     <tr>
-                                        <th colspan="3">Total cuotas</th>
+                                        <th colspan="4">Total cuotas</th>
                                         <th class="text-end">{{ $tc }}</th>
                                     </tr>
                                     <tr>
-                                        <th colspan="3">Total pendiente</th>
-                                        <th class="text-end">{{ $tpe }}</th>
+                                        <th colspan="4">Total pendiente</th>
+                                        <th class="text-end">{{ $tc - $t }}</th>
                                     </tr>
                                 </thead>
                             </table>

@@ -55,7 +55,11 @@ class Cproductos extends Component
 
         $p = $dventa->precio;
         $t = $p * $this->cantidad;
-        $igv = $t * 0.18;
+        if ($dventa->producto->igvafectacion_id == 1) {
+            $igv = $t * 0.18;
+        } else {
+            $igv = 0;
+        }
 
         try {
             DB::beginTransaction();

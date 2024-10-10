@@ -9,28 +9,34 @@ class Sucursal extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'direccion', 'telefono', 'cod_sunat', 'estado', 'created_by', 'updated_by', 'distrito_id', 'empresa_id'];
+    protected $fillable = ['nombre', 'direccion', 'telefono', 'cod_sunat', 'p_venta', 'estado', 'created_by', 'updated_by', 'distrito_id', 'empresa_id'];
 
     //Relacion de uno a muchos
-    public function users(){
+    public function users()
+    {
         return $this->hasMany(User::class);
     }
-    public function series(){
+    public function series()
+    {
         return $this->hasMany(Serie::class);
     }
-    public function stocks(){
+    public function stocks()
+    {
         return $this->hasMany(Stock::class);
     }
-    public function cajas(){
+    public function cajas()
+    {
         return $this->hasMany(Caja::class);
     }
 
 
     //Relacion uno a muchos inversa
-    public function distrito(){
+    public function distrito()
+    {
         return $this->belongsTo(Distrito::class);
     }
-    public function empresa(){
+    public function empresa()
+    {
         return $this->belongsTo(Empresa::class);
     }
 }

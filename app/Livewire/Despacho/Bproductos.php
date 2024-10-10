@@ -8,9 +8,12 @@ use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Bproductos extends Component
 {
+    use WithPagination;
+
     public $sucursal, $venta;
     #[Url(except: '')]
     public $search = '';
@@ -53,7 +56,11 @@ class Bproductos extends Component
             $c = $dventa->cantidad + 1;
             $p = $producto->{'p_venta' . $this->sucursal->p_venta};
             $t = $p * $c;
-            $igv = $t * 0.18;
+            if ($producto->igvafectacion_id == 1) {
+                $igv = $t * 0.18;
+            } else {
+                $igv = 0;
+            }
 
             try {
                 DB::beginTransaction();
@@ -90,7 +97,7 @@ class Bproductos extends Component
                     'producto_id' => $producto->id,
                     'cantidad' => 1,
                     'precio' => $p,
-                    'igv' => $p * 0.18,
+                    'igv' => (($producto->igvafectacion_id == 1) ? ($p * 0.18) : 0),
                     'total' => $p,
                     'created_by' => auth()->user()->id,
                 ]);

@@ -15,6 +15,7 @@ class Pago extends Model
         'mpago_id',
         'caja_id',
         'venta_id',
+        'cuota_id',
         'creted_by'
     ];
 
