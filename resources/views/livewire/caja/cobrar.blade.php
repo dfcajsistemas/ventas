@@ -11,8 +11,8 @@
                         <tr>
                             <td><small># Venta</small><br><b class="text-primary">{{ $venta->id }}</b></td>
                             <td>
-                                <small>Pago</small><br><span
-                                    class="text-danger">{{ $venta->est_pago == 1 ? 'Pendiente' : 'Pagado' }}</span>
+                                <small>Pago</small><br>
+                                {!! estadoPago($venta->est_pago) !!}
                             </td>
                             <td colspan="2"><small>Cliente</small><br><span
                                     class="text-info">{{ $venta->cliente->razon_social }}</span></td>
@@ -225,7 +225,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ date('d/m/Y', strtotime($cuota->fvence)) }}</td>
                                             <td class="text-end">{{ $cuota->monto }}</td>
-                                            <td>{!! estadoCuota($cuota->estado) !!}</td>
+                                            <td>{!! estadoPago($cuota->estado) !!}</td>
                                             <td class="text-end">
                                                 @if ($pcc == 1)
                                                     <button class="btn btn-icon btn-outline-info btn-sm"
@@ -248,12 +248,12 @@
                                 </tbody>
                                 <thead class="table-border-bottom-0">
                                     <tr>
-                                        <th colspan="4">Total cuotas</th>
-                                        <th class="text-end">{{ $tc }}</th>
+                                        <th colspan="4" class="fw-bold">Total cuotas</th>
+                                        <th class="text-end fw-bold">{{ $tc }}</th>
                                     </tr>
                                     <tr>
-                                        <th colspan="4">Total pendiente</th>
-                                        <th class="text-end">{{ $tc - $t }}</th>
+                                        <th colspan="4" class="fw-bold">Total pendiente</th>
+                                        <th class="text-end fw-bold">{{ $tc - $t }}</th>
                                     </tr>
                                 </thead>
                             </table>

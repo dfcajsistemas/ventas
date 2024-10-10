@@ -37,8 +37,8 @@ if (!function_exists('tipoMovimiento')) {
     }
 }
 
-if (!function_exists('estadoCuota')) {
-    function estadoCuota($e = null)
+if (!function_exists('estadoPago')) {
+    function estadoPago($e = null)
     {
         if ($e == null) {
             return '<span class="badge bg-label-success"> Pagado </span>';

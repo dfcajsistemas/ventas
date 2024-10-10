@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
+use PhpParser\Node\Stmt\TryCatch;
 
 #[Lazy()]
 class Cobrar extends Component
@@ -104,7 +105,7 @@ class Cobrar extends Component
     public function gpagoContado()
     {
         if (($this->mpagado + $this->monto) > $this->mtotal) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto a pagar es mayor al total de la venta']);
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto total a pagar es mayor al total de la venta']);
             return;
         }
         $this->validate([
@@ -121,30 +122,59 @@ class Cobrar extends Component
             'mrecibido.min' => 'El monto recibido debe ser mayor al monto a pagar',
         ]);
 
-        $pago = Pago::create([
-            'venta_id' => $this->venta->id,
-            'mpago_id' => $this->mpago,
-            'caja_id' => $this->caja->id,
-            'monto' => $this->monto,
-            'observacion' => $this->observacion,
-            'created_by' => auth()->user()->id
-        ]);
-        if (($this->mpagado + $this->monto) == $this->mtotal) {
-            $this->venta->update([
-                'est_pago' => null,
-                'updated_by' => auth()->user()->id
+        try {
+            DB::beginTransaction();
+            Pago::create([
+                'venta_id' => $this->venta->id,
+                'mpago_id' => $this->mpago,
+                'caja_id' => $this->caja->id,
+                'monto' => $this->monto,
+                'observacion' => $this->observacion,
+                'created_by' => auth()->user()->id
             ]);
+            if (($this->mpagado + $this->monto) == $this->mtotal) {
+                $this->venta->update([
+                    'est_pago' => null,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
+            if ($this->venta->pagos->count() == 1) {
+                $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
+                    ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
+                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo')
+                    ->where('dventas.venta_id', $this->venta->id)
+                    ->get();
+                $g = 0;
+                $e = 0;
+                $i = 0;
+                foreach ($afectaciones as $afectacion) {
+                    if ($afectacion->codigo == '10') {
+                        $g += $afectacion->total;
+                    } elseif ($afectacion->codigo == '20') {
+                        $e += $afectacion->total;
+                    } elseif ($afectacion->codigo == '30') {
+                        $i += $afectacion->total;
+                    }
+                }
+                $this->venta->update([
+                    'op_grabada' => $g,
+                    'op_exonerada' => $e,
+                    'op_inafecta' => $i,
+                    'igv' => $g * 0.18,
+                    'total' => $g + $e + $i,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
+            DB::commit();
+            if ($this->mpago == 1) {
+                $cambio = $this->mrecibido - $this->monto;
+                $this->dispatch('vu', $cambio);
+            }
+            $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Venta cobrada correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo registrar el pago. ' . $e->getMessage()]);
         }
-        if ($this->venta->pagos->count() == 1) {
-            $afigv = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
-                ->select('dventas.id', 'dventas.cantidad', 'dventas.precio', 'dventas.igv', 'dventas.total')
-                ->where('dventas.venta_id', $this->venta->id);
-        }
-        if ($this->mpago == 1) {
-            $cambio = $this->mrecibido - $this->monto;
-            $this->dispatch('vu', $cambio);
-        }
-        $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Venta cobrada correctamente']);
     }
 
     public function acredito()
@@ -349,31 +379,65 @@ class Cobrar extends Component
             'mrecibido.min' => 'El monto recibido es inválido',
         ]);
 
-        $pago = Pago::create([
-            'cuota_id' => $this->idm,
-            'mpago_id' => $this->mpago,
-            'caja_id' => $this->caja->id,
-            'venta_id' => $this->venta->id,
-            'monto' => $this->monto,
-            'observacion' => $this->observacion,
-            'created_by' => auth()->user()->id
-        ]);
-        if ($cu->pagos()->sum('monto') == $cu->monto) {
-            $cu->update([
-                'estado' => null,
-                'updated_by' => auth()->user()->id
+        try {
+            DB::beginTransaction();
+            $pago = Pago::create([
+                'cuota_id' => $this->idm,
+                'mpago_id' => $this->mpago,
+                'caja_id' => $this->caja->id,
+                'venta_id' => $this->venta->id,
+                'monto' => $this->monto,
+                'observacion' => $this->observacion,
+                'created_by' => auth()->user()->id
             ]);
+            if ($cu->pagos()->sum('monto') == $cu->monto) {
+                $cu->update([
+                    'estado' => null,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
+            if ($this->venta->pagos->sum('monto') == $this->mtotal) {
+                $this->venta->update([
+                    'est_pago' => null,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
+            if ($this->venta->pagos->count() == 1) {
+                $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
+                    ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
+                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo')
+                    ->where('dventas.venta_id', $this->venta->id)
+                    ->get();
+                $g = 0;
+                $e = 0;
+                $i = 0;
+                foreach ($afectaciones as $afectacion) {
+                    if ($afectacion->codigo == '10') {
+                        $g += $afectacion->total;
+                    } elseif ($afectacion->codigo == '20') {
+                        $e += $afectacion->total;
+                    } elseif ($afectacion->codigo == '30') {
+                        $i += $afectacion->total;
+                    }
+                }
+                $this->venta->update([
+                    'op_grabada' => $g,
+                    'op_exonerada' => $e,
+                    'op_inafecta' => $i,
+                    'igv' => $g * 0.18,
+                    'total' => $g + $e + $i,
+                    'updated_by' => auth()->user()->id
+                ]);
+            }
+            DB::commit();
+            if ($this->mpago == 1) {
+                $cambio = $this->mrecibido - $this->monto;
+                $this->dispatch('vu', $cambio);
+            }
+            $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Pago de cuota realizado correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo registrar el pago. ' . $e->getMessage()]);
         }
-        if ($this->venta->pagos->sum('monto') == $this->mtotal) {
-            $this->venta->update([
-                'est_pago' => null,
-                'updated_by' => auth()->user()->id
-            ]);
-        }
-        if ($this->mpago == 1) {
-            $cambio = $this->mrecibido - $this->monto;
-            $this->dispatch('vu', $cambio);
-        }
-        $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Pago de cuota realizado correctamente']);
     }
 }
