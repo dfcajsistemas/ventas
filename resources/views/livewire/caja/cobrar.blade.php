@@ -39,10 +39,10 @@
                                 @endif
 
                                 @can('caja.cajas.ver.cobrar.credito')
-                                    @if (!$venta->fpago)
+                                    @if (!$venta->fpago && $pagos->count() == 0)
                                         <button class="btn btn-icon btn-warning" wire:click='acredito'
                                             title="Venta a crédito"><i class="fa-solid fa-money-bill-transfer"></i></button>
-                                    @elseif($mcuotas == 0)
+                                    @elseif($mcuotas == 0 && $venta->est_pago == 1)
                                         <button class="btn btn-icon btn-info" wire:click='acredito'
                                             title="Venta al contado"><i class="fa-solid fa-money-bill"></i></button>
                                     @endif

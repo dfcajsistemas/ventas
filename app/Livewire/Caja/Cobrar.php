@@ -141,15 +141,18 @@ class Cobrar extends Component
             if ($this->venta->pagos->count() == 1) {
                 $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
                     ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
-                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo')
+                    ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
+                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo', 'igvporcientos.porcentaje')
                     ->where('dventas.venta_id', $this->venta->id)
                     ->get();
                 $g = 0;
                 $e = 0;
                 $i = 0;
+                $gigv = 0;
                 foreach ($afectaciones as $afectacion) {
                     if ($afectacion->codigo == '10') {
-                        $g += $afectacion->total;
+                        $gigv += $afectacion->total;
+                        $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
                     } elseif ($afectacion->codigo == '20') {
                         $e += $afectacion->total;
                     } elseif ($afectacion->codigo == '30') {
@@ -157,11 +160,11 @@ class Cobrar extends Component
                     }
                 }
                 $this->venta->update([
-                    'op_grabada' => $g,
+                    'op_grabada' => number_format($g, 6),
                     'op_exonerada' => $e,
                     'op_inafecta' => $i,
-                    'igv' => $g * 0.18,
-                    'total' => $g + $e + $i,
+                    'igv' => number_format(($gigv - $g), 6),
+                    'total' => $gigv + $e + $i,
                     'updated_by' => auth()->user()->id
                 ]);
             }
@@ -329,7 +332,7 @@ class Cobrar extends Component
         $ancho = 226.77; // 80mm en puntos
         $alto_por_fila = 25; // Altura estimada por fila en puntos
         $numero_filas = $this->venta->dventas()->count();
-        $alto = 180 + $alto_por_fila * $numero_filas;
+        $alto = 220 + $alto_por_fila * $numero_filas;
         $pdf = Pdf::loadView('caja.comprobante', ['venta' => $this->venta])
             ->setPaper([0, 0, $ancho, $alto]);
         // Guardar el PDF en un archivo temporal
@@ -405,15 +408,18 @@ class Cobrar extends Component
             if ($this->venta->pagos->count() == 1) {
                 $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
                     ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
-                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo')
+                    ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
+                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo', 'igvporcientos.porcentaje')
                     ->where('dventas.venta_id', $this->venta->id)
                     ->get();
                 $g = 0;
                 $e = 0;
                 $i = 0;
+                $gigv = 0;
                 foreach ($afectaciones as $afectacion) {
                     if ($afectacion->codigo == '10') {
-                        $g += $afectacion->total;
+                        $gigv += $afectacion->total;
+                        $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
                     } elseif ($afectacion->codigo == '20') {
                         $e += $afectacion->total;
                     } elseif ($afectacion->codigo == '30') {
@@ -421,11 +427,11 @@ class Cobrar extends Component
                     }
                 }
                 $this->venta->update([
-                    'op_grabada' => $g,
+                    'op_grabada' => number_format($g, 6),
                     'op_exonerada' => $e,
                     'op_inafecta' => $i,
-                    'igv' => $g * 0.18,
-                    'total' => $g + $e + $i,
+                    'igv' => number_format(($gigv - $g), 6),
+                    'total' => $gigv + $e + $i,
                     'updated_by' => auth()->user()->id
                 ]);
             }

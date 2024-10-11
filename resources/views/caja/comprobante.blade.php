@@ -38,7 +38,7 @@
 
 <body>
     <div class="ticket">
-        <p class="centered" style="font-size: 20px;">{{$venta->tcomprobante->descripcion}}<br></p>
+        <p class="centered" style="font-size: 20px;">{{ $venta->tcomprobante->descripcion }}<br></p>
         <p class="centered">{{ $venta->created_at->format('d/m/Y H:i:s') }}</p>
         <p class="centered" style="font-size: 11px;">Cliente: {{ $venta->cliente->razon_social }}</p>
         <table>
@@ -53,33 +53,33 @@
             </thead>
             <tbody>
                 @foreach ($venta->dventas as $dventa)
-                <tr>
-                    <td style="vertical-align: top;">{{$loop->iteration}}</td>
-                    <td>{{ $dventa->producto->nombre }}</td>
-                    <td style="text-align: right;">{{ $dventa->cantidad }}</td>
-                    <td style="text-align: right;">{{ number_format($dventa->precio, 2) }}</td>
-                    <td style="text-align: right;">{{ number_format($dventa->total, 2) }}</td>
-                </tr>
+                    <tr>
+                        <td style="vertical-align: top;">{{ $loop->iteration }}</td>
+                        <td>{{ $dventa->producto->nombre }}</td>
+                        <td style="text-align: right;">{{ $dventa->cantidad }}</td>
+                        <td style="text-align: right;">{{ number_format($dventa->precio, 2) }}</td>
+                        <td style="text-align: right;">{{ number_format($dventa->total, 2) }}</td>
+                    </tr>
                 @endforeach
                 <tr style="border-top: 1px solid #777;">
                     <td colspan="4">Op. Exonerada</td>
-                    <td>{{$venta->op_exonerada}}</td>
+                    <td style="text-align: right;">{{ number_format($venta->op_exonerada, 2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="4">Op. Inafecta</td>
-                    <td>{{$venta->op_inafecta}}</td>
+                    <td style="text-align: right;">{{ number_format($venta->op_inafecta, 2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="4">Op. Grabada</td>
-                    <td>{{$venta->op_grabada}}</td>
+                    <td style="text-align: right;">{{ number_format($venta->op_grabada, 2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="4">IGV</td>
-                    <td>{{$venta->igv}}</td>
+                    <td style="text-align: right;">{{ number_format($venta->igv, 2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="4">Total a Pagar</td>
-                    <td>{{$venta->total}}</td>
+                    <td style="text-align: right;">{{ number_format($venta->total, 2) }}</td>
                 </tr>
             </tbody>
         </table>
