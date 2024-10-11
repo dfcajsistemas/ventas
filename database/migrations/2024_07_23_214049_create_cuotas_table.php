@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('cuotas', function (Blueprint $table) {
             $table->id();
 
+            $table->tinyInteger('numero');
             $table->decimal('monto', 10, 2);
             $table->timestamp('fvence');
             $table->tinyInteger('estado')->default(1)->nullable(); // null: pagada, 1: Pendiente

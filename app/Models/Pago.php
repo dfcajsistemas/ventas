@@ -32,4 +32,8 @@ class Pago extends Model
     {
         return $this->belongsTo(Venta::class);
     }
+    public function cuota()
+    {
+        return $this->belongsTo(Cuota::class);
+    }
 }

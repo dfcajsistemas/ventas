@@ -33,9 +33,15 @@
                                     class="btn btn-icon btn-outline-secondary" title="Regresar a caja"><i
                                         class="fa-solid fa-arrow-left"></i></a>
                                 @if ($venta->est_pago == null || ($venta->fpago == 1 && $mcuotas == $mtotal))
-                                    <button class="btn btn-icon btn-info" wire:click='emitir'><i
-                                            class="fa-solid fa-receipt" title="Emitir comprobante"></i>
-                                    </button>
+                                    @if ($venta->serie == null)
+                                        <button class="btn btn-icon btn-info" wire:click='emitir'><i
+                                                class="fa-solid fa-receipt" title="Emitir comprobante"></i>
+                                        </button>
+                                    @else
+                                        <button class="btn btn-icon btn-info" wire:click='vcomprobante'><i
+                                                class="fa-solid fa-receipt" title="Ver comprobante"></i>
+                                        </button>
+                                    @endif
                                 @endif
 
                                 @can('caja.cajas.ver.cobrar.credito')
@@ -138,7 +144,7 @@
                                 <tr>
                                     <th>M. Pago</th>
                                     <th>Fecha</th>
-                                    <th>Cuota</th>
+                                    <th style="text-align: right;">Cuota</th>
                                     <th class="text-end">observación</th>
                                     <th class="text-end">Monto</th>
                                     <th>Eliminar</th>
@@ -155,7 +161,7 @@
                                     <tr>
                                         <td>{{ $pago->mpago->nombre }}</td>
                                         <td>{{ date('d/m/Y', strtotime($pago->created_at)) }}</td>
-                                        <td>{{ $pago->cuota_id }}</td>
+                                        <td style="text-align: right;">{{ $pago->cuota->numero ?? '' }}</td>
                                         <td>{{ $pago->observacion }}</td>
                                         <td class="text-end">{{ number_format($pago->monto, 2) }}</td>
                                         <td>
@@ -222,7 +228,7 @@
                                             }
                                         @endphp
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $cuota->numero }}</td>
                                             <td>{{ date('d/m/Y', strtotime($cuota->fvence)) }}</td>
                                             <td class="text-end">{{ $cuota->monto }}</td>
                                             <td>{!! estadoPago($cuota->estado) !!}</td>

@@ -9,7 +9,7 @@ class Cuota extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['monto', 'fvence', 'estado', 'venta_id', 'created_by', 'updated_by'];
+    protected $fillable = ['numero', 'monto', 'fvence', 'estado', 'venta_id', 'created_by', 'updated_by'];
 
     //relación uno a muchos
     public function pagos()

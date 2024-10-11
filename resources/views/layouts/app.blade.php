@@ -2,7 +2,7 @@
 
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     class="light-style layout-navbar-fixed layout-menu-fixed layout-compact layout-menu-collapsed" dir="ltr"
-    data-theme="theme-default" data-assets-path="../../assets/" data-template="vertical-menu-template">
+    data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template">
 
 <head>
     <meta charset="utf-8" />
@@ -65,7 +65,8 @@
                 <div class="app-brand demo">
                     <a href="{{ route('espacio') }}" class="app-brand-link">
                         <span class="app-brand-logo demo">
-                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.28 63.71">
+                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 71.28 63.71">
                                 <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38" ry="8.38"
                                     transform="translate(22.57 -20.53) rotate(30)" fill="#696cff" fill-opacity="0.8"
                                     stroke-width="0" />
@@ -159,9 +160,9 @@
                                                     <small class="text-muted">Bienvenido</small>
                                                     <span class="fw-medium d-block">
                                                         @if (Auth::check())
-                                                        {{ Auth::user()->name }}
+                                                            {{ Auth::user()->name }}
                                                         @else
-                                                        No identificado
+                                                            No identificado
                                                         @endif
                                                     </span>
                                                 </div>
@@ -181,16 +182,16 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     @if (Auth::check())
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">Log Out</span>
-                                        </a>
-                                    </li>
-                                    <form method="POST" id="logout-form" action="{{ route('logout') }}">
-                                        @csrf
-                                    </form>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <i class="bx bx-power-off me-2"></i>
+                                                <span class="align-middle">Log Out</span>
+                                            </a>
+                                        </li>
+                                        <form method="POST" id="logout-form" action="{{ route('logout') }}">
+                                            @csrf
+                                        </form>
                                     @endif
                                 </ul>
                             </li>

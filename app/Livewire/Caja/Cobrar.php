@@ -229,6 +229,7 @@ class Cobrar extends Component
         try {
             DB::beginTransaction();
             Cuota::create([
+                'numero' => (Cuota::where('venta_id', $this->venta->id)->max('numero') ?? 0) + 1,
                 'venta_id' => $this->venta->id,
                 'monto' => $this->mcuota,
                 'fvence' => $this->fvence,
@@ -316,15 +317,20 @@ class Cobrar extends Component
             //generar pdf
             $this->emitirpdf();
             //datos y evento para ver pdf
-            $this->mTitle = 'Comprobante';
-            $this->rComp = Storage::url('comprobantes/comprobante_' . $this->venta->id . '.pdf');
-            $this->dispatch('vcomp');
+            $this->vcomprobante();
 
             $this->dispatch('hmemi', ['t' => 'success', 'm' => '¡Hecho!<br>Comprobante emitido correctamente']);
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo emitir el comprobante. ' . $e->getMessage()]);
         }
+    }
+
+    public function vcomprobante()
+    {
+        $this->mTitle = 'Comprobante';
+        $this->rComp = Storage::url('comprobantes/comprobante_' . $this->venta->id . '.pdf');
+        $this->dispatch('vcomp');
     }
 
     public function emitirpdf()
