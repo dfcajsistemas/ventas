@@ -17,10 +17,10 @@
                     </select>
                 </div>
                 @can('despacho.pedidos.canasta')
-                <div class="col-4 col-md-1 d-grid">
-                    <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
-                            class="tf-icons fa-solid fa-basket-shopping"></i></button>
-                </div>
+                    <div class="col-4 col-md-1 d-grid">
+                        <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
+                                class="tf-icons fa-solid fa-basket-shopping"></i></button>
+                    </div>
                 @endcan
                 <div class="col-4 col-md-1 d-grid">
                     <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
@@ -30,55 +30,62 @@
         </div>
 
         @if ($pedidos->count())
-        <div class="table-responsive text-noweap">
-            <table class="table table-sm table-hover text-small">
-                <thead>
-                    <tr>
-                        <th>N° Pedido</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($pedidos as $pedido)
-                    <tr wire:key="{{ $pedido->id }}">
-                        <td>{{ $pedido->id }}</td>
-                        <td>{{ $pedido->razon_social }}</td>
-                        <td>{{ $pedido->created_at }}</td>
-                        <td>{{ estadoVenta($pedido->est_venta) }}</td>
-                        <td>
-                            @can('despacho.pedidos.canasta')
-                            <a href="{{route('despacho.pedidos.canasta', $pedido->id)}}"
-                                class="btn btn-icon btn-info btn-sm"><i
-                                    class="tf-icons fa-solid fa-basket-shopping"></i></a>
-                            @endcan
-                            @if($pedido->est_venta==1)
-                            @can('despacho.pedidos.eliminar')
-                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm" title="Eliminar"
-                                x-on:click="confirmar({{ $pedido->id }})"><i
-                                    class="tf-icons fa-solid fa-trash"></i></button>
-                            @endcan
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="m-3">
-            {{ $pedidos->links() }}
-        </div>
+            <div class="table-responsive text-noweap">
+                <table class="table table-sm table-hover text-small">
+                    <thead>
+                        <tr>
+                            <th>N° Pedido</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Est. Pago</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($pedidos as $pedido)
+                            <tr wire:key="{{ $pedido->id }}">
+                                <td>{{ $pedido->id }}</td>
+                                <td>{{ $pedido->razon_social }}</td>
+                                <td>{{ $pedido->created_at }}</td>
+                                <td>{!! estadoVenta($pedido->est_venta) !!}</td>
+                                <td>{!! estadoPago($pedido->est_pago) !!}</td>
+                                <td>
+                                    @if ($pedido->pagos()->count() == 0 && $pedido->cuotas()->count() == 0)
+                                        @can('despacho.pedidos.canasta')
+                                            <a href="{{ route('despacho.pedidos.canasta', $pedido->id) }}"
+                                                class="btn btn-icon btn-info btn-sm"><i
+                                                    class="tf-icons fa-solid fa-basket-shopping"></i></a>
+                                        @endcan
+                                        @can('despacho.pedidos.eliminar')
+                                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm"
+                                                title="Eliminar" x-on:click="confirmar({{ $pedido->id }})"><i
+                                                    class="tf-icons fa-solid fa-trash"></i></button>
+                                        @endcan
+                                    @endif
+                                    @can('despacho.pedidos.distribuir')
+                                        <a href="{{ route('despacho.pedidos.distribuir', $pedido->id) }}"
+                                            class="btn btn-icon btn-success btn-sm"><i
+                                                class="tf-icons fa-solid fa-boxes-packing"></i></a>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="m-3">
+                {{ $pedidos->links() }}
+            </div>
         @else
-        <div class="mx-3 mb-3">
-            <x-msg type="info" msg="No se encontraron resultados" />
-        </div>
+            <div class="mx-3 mb-3">
+                <x-msg type="info" msg="No se encontraron resultados" />
+            </div>
         @endif
     </div>
     @script
-    <script>
-        Livewire.on('sm', (e) => {
+        <script>
+            Livewire.on('sm', (e) => {
                 $("#mPer").modal('show')
             });
             Livewire.on('hm', (e) => {
@@ -108,6 +115,6 @@
                     })
                 }
             }))
-    </script>
+        </script>
     @endscript
 </div>

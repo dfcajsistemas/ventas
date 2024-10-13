@@ -90,6 +90,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'despacho'])->syncRoles($despacho);
         Permission::create(['name' => 'despacho.pedidos'])->syncRoles($despacho);
         Permission::create(['name' => 'despacho.pedidos.canasta'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.pedidos.distribuir'])->syncRoles($despacho);
         Permission::create(['name' => 'despacho.pedidos.eliminar'])->syncRoles($despacho);
         Permission::create(['name' => 'despacho.pedidos.canasta.agregar'])->syncRoles($despacho);
         Permission::create(['name' => 'despacho.pedidos.canasta.cantidad'])->syncRoles($despacho);
@@ -109,5 +110,15 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'delivery'])->assignRole($delivery);
         Permission::create(['name' => 'delivery.pedidos'])->assignRole($delivery);
+        Permission::create(['name' => 'delivery.pedidos.entregar'])->assignRole($delivery);
+        Permission::create(['name' => 'delivery.misentregas'])->assignRole($delivery);
+
+        Permission::create(['name' => 'reportes'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.ventas'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.cuentascobrar'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.inventario'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.ventascliente'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.flujocajas'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.ventaproductos'])->assignRole($reportes);
     }
 }

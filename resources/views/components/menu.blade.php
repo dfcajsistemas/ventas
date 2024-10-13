@@ -13,12 +13,12 @@
                     <div class="text-truncate">Mis módulos</div>
                 </a>
             </li>
-            <li class="menu-item {{ request()->routeIs('espacio.datos') ? 'active' : '' }}">
+            {{--             <li class="menu-item {{ request()->routeIs('espacio.datos') ? 'active' : '' }}">
                 <a href="{{ route('espacio.datos') }}" class="menu-link">
                     <i class='menu-icon tf-icons bx bxs-user-account'></i>
                     <div class="text-truncate">Mis datos</div>
                 </a>
-            </li>
+            </li> --}}
         </ul>
     @break
 
@@ -183,6 +183,7 @@
             @endcan
         </ul>
     @break
+
     @case('Caja')
         <ul class="menu-inner py-1">
             <li class="menu-header small text-uppercase">
@@ -206,6 +207,7 @@
             @endcan
         </ul>
     @break
+
     @case('Delivery')
         <ul class="menu-inner py-1">
             <li class="menu-header small text-uppercase">
@@ -227,8 +229,17 @@
                     </a>
                 </li>
             @endcan
+            @can('delivery.misentregas')
+                <li class="menu-item {{ request()->routeIs('delivery.misentregas*') ? 'active' : '' }}">
+                    <a href="{{ route('delivery.misentregas') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-dolly"></i>
+                        <div class="text-truncate">Mis entregas</div>
+                    </a>
+                </li>
+            @endcan
         </ul>
     @break
+
     @case('Reportes')
         <ul class="menu-inner py-1">
             <li class="menu-header small text-uppercase">
@@ -243,10 +254,50 @@
                 </li>
             @endcan
             @can('reportes.ventas')
-                <li class="menu-item {{ request()->routeIs('reportes.ventas*') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->routeIs('reportes.ventas') ? 'active' : '' }}">
                     <a href="{{ route('reportes.ventas') }}" class="menu-link">
                         <i class="menu-icon tf-icons fa-solid fa-money-bill-1-wave"></i>
-                        <div class="text-truncate">ventas</div>
+                        <div class="text-truncate">Ventas</div>
+                    </a>
+                </li>
+            @endcan
+            @can('reportes.cuentascobrar')
+                <li class="menu-item {{ request()->routeIs('reportes.cuentascobrar*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.cuentascobrar') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-hand-holding-dollar"></i>
+                        <div class="text-truncate">Cuentas por cobrar</div>
+                    </a>
+                </li>
+            @endcan
+            @can('reportes.inventario')
+                <li class="menu-item {{ request()->routeIs('reportes.inventario*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.inventario') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-boxes-stacked"></i>
+                        <div class="text-truncate">Inventario</div>
+                    </a>
+                </li>
+            @endcan
+            @can('reportes.ventascliente')
+                <li class="menu-item {{ request()->routeIs('reportes.ventascliente*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.ventascliente') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-user-group"></i>
+                        <div class="text-truncate">Ventas cliente</div>
+                    </a>
+                </li>
+            @endcan
+            @can('reportes.flujocajas')
+                <li class="menu-item {{ request()->routeIs('reportes.flujocajas*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.flujocajas') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-cash-register"></i>
+                        <div class="text-truncate">Flujo de cajas</div>
+                    </a>
+                </li>
+            @endcan
+            @can('reportes.ventaproductos')
+                <li class="menu-item {{ request()->routeIs('reportes.ventaproductos*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.ventaproductos') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-boxes-packing"></i>
+                        <div class="text-truncate">Venta productos</div>
                     </a>
                 </li>
             @endcan

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Despacho\CanastaController;
 use App\Livewire\Despacho\Dashboard;
+use App\Livewire\Despacho\Distribuir;
 use App\Livewire\Despacho\Elegir;
 use App\Livewire\Despacho\Pedidos;
 use Illuminate\Support\Facades\Route;
@@ -12,5 +13,4 @@ Route::put('/pedidos/cliente', [CanastaController::class, 'updateCliente'])->nam
 Route::get('pedidos/bcliente', [CanastaController::class, 'bcliente'])->name('despacho.pedidos.bcliente');
 
 Route::get('/pedidos/{venta}', [CanastaController::class, 'canasta'])->name('despacho.pedidos.canasta')->middleware('can:despacho.pedidos.canasta');
-
-
+Route::get('/pedidos/distribuir/{venta}', Distribuir::class)->name('despacho.pedidos.distribuir')->middleware('can:despacho.pedidos.distribuir');

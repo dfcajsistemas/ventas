@@ -118,7 +118,7 @@
                         </table>
                     @else
                         <div class="m-3">
-                            <x-msg type="info" msg="Canasta vacia" />
+                            <x-msg type="info" msg="Sin productos" />
                         </div>
                     @endif
                 </div>
@@ -161,9 +161,11 @@
                                     <tr>
                                         <td>{{ $pago->mpago->nombre }}</td>
                                         <td>{{ date('d/m/Y', strtotime($pago->created_at)) }}</td>
-                                        <td style="text-align: right;">{{ $pago->cuota->numero ?? '' }}</td>
+                                        <td style="text-align: right;">
+                                            {{ $pago->cuota->numero ?? '' }}</td>
                                         <td>{{ $pago->observacion }}</td>
-                                        <td class="text-end">{{ number_format($pago->monto, 2) }}</td>
+                                        <td class="text-end">{{ number_format($pago->monto, 2) }}
+                                        </td>
                                         <td>
                                             @if ($loop->last)
                                                 <button class="btn btn-icon btn-outline-danger btn-sm"

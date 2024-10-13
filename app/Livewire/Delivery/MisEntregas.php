@@ -7,46 +7,36 @@ use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 #[Lazy()]
-class Pedidos extends Component
+class MisEntregas extends Component
 {
-    use WithPagination;
-
     public $sucursal;
-
+    #[Url()]
+    public $fecha;
     #[Url(except: '')]
     public $search = '';
     #[Url(except: '10')]
     public $perPage = '10';
 
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
     public function mount()
     {
         $this->sucursal = auth()->user()->sucursal;
+        $this->fecha = now()->format('Y-m-d');
     }
-
-    #[Title(['Pedidos', 'Delivery'])]
+    #[Title(['Mis entregas', 'Delivery'])]
     public function render()
     {
         $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
             ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
-            ->where('ventas.sucursal_id', $this->sucursal->id)
-            ->where('ventas.est_venta', 2)
+            ->where('ventas.est_venta', 3)
+            ->whereDate('ventas.fentrega', $this->fecha)
+            ->where('ventas.updated_by', auth()->id())
             ->where(function ($query) {
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
             })
             ->paginate($this->perPage);
-        return view('livewire.delivery.pedidos', compact('pedidos'));
+        return view('livewire.delivery.mis-entregas', compact('pedidos'));
     }
 }

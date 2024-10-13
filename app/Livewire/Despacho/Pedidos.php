@@ -41,33 +41,36 @@ class Pedidos extends Component
     public function render()
     {
         $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
-            ->select('ventas.*', 'clientes.razon_social')
+            ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
             ->where('ventas.sucursal_id', $this->sucursal->id)
             ->where('clientes.razon_social', 'like', '%' . $this->search . '%')
+            ->orWhere('ventas.id', 'like', '%' . $this->search . '%')
             ->paginate($this->perPage);
         return view('livewire.despacho.pedidos', compact('pedidos'));
     }
 
-    public function create(){
-        $venta=Venta::create([
-            'user_id'=>auth()->id(),
-            'sucursal_id'=>auth()->user()->sucursal->id,
-            'tmoneda_id'=>1,
-            'cliente_id'=>1,
-            'est_venta'=>1,
-            'est_pago'=>1,
+    public function create()
+    {
+        $venta = Venta::create([
+            'user_id' => auth()->id(),
+            'sucursal_id' => auth()->user()->sucursal->id,
+            'tmoneda_id' => 1,
+            'cliente_id' => 1,
+            'est_venta' => 1,
+            'est_pago' => 1,
         ]);
 
-        return redirect()->route('despacho.pedidos.canasta',$venta);
+        return redirect()->route('despacho.pedidos.canasta', $venta);
     }
 
     #[On('delete')]
-    public function destroy(Venta $venta){
-        if($venta->dventas()->count()>0){
-            $this->dispatch('re', ['t'=>'error','m'=>'¡Error!<br>No se puede eliminar el pedido porque tiene productos.']);
-        }else{
+    public function destroy(Venta $venta)
+    {
+        if ($venta->dventas()->count() > 0) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se puede eliminar el pedido porque tiene productos.']);
+        } else {
             $venta->delete();
-            $this->dispatch('re', ['t'=>'success','m'=>'¡Hecho!<br>Pedido eliminado.']);
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido eliminado.']);
         }
     }
 }

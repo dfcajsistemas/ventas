@@ -4,16 +4,19 @@ if (!function_exists('estadoVenta')) {
     function estadoVenta($e = null)
     {
         $est = [
-            1 => 'Solicitado',
-            2 => 'Preparado',
-            3 => 'Delivery',
-            4 => 'Entregado',
-            5 => 'Anulado'
+            1 => ['estado' => 'Solicitado', 'color' => 'text-warning'],
+            2 => ['estado' => 'Delivery', 'color' => 'text-primary'],
+            3 => ['estado' => 'Entregado', 'color' => 'text-success'],
+            4 => ['estado' => 'Anulado', 'color' => 'text-danger'],
         ];
         if ($e == null) {
-            return $est;
+            $result = [];
+            foreach ($est as $key => $value) {
+                $result[$key] = $value['estado'];
+            }
+            return $result;
         } elseif (array_key_exists($e, $est)) {
-            return $est[$e];
+            return '<h6 class="mb-0 w-px-100 ' . $est[$e]['color'] . '"><i class="bx bxs-circle fs-tiny me-2"></i>' . $est[$e]['estado'] . '</h6>';
         } else {
             return 'Error';
         }

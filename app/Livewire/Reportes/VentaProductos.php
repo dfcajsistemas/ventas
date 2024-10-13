@@ -7,11 +7,11 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Lazy()]
-class Ventas extends Component
+class VentaProductos extends Component
 {
-    #[Title(['Ventas', 'Reportes'])]
+    #[Title(['Venta de productos', 'Reportes'])]
     public function render()
     {
-        return view('livewire.reportes.ventas');
+        return view('livewire.reportes.venta-productos');
     }
 }
