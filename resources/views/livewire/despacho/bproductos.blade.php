@@ -20,49 +20,49 @@
 
     <div class="card mt-4">
         @if ($productos->count())
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Precio</th>
-                        <th class="text-center">Agregar</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    @foreach ($productos as $producto)
-                    <tr>
-                        <td style="font-size: 0.9em;">{{$producto->nombre}}<small>({{$producto->stock}})</small></td>
-                        <td>{{$producto->p_venta}}</td>
-                        <td class="text-center"><button class="btn btn-icon btn-warning btn-sm"
-                                wire:click='add({{$producto->id}})' title="Agregar producto"><i
-                                    class="tf-icons fa-solid fa-basket-shopping"></i></button></td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="m-3">
-                {{ $productos->links() }}
+            <div class="table-responsive">
+                <table class="table table-hover" style="font-size: 0.9em;">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th class="text-center">Agregar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach ($productos as $producto)
+                            <tr>
+                                <td>{{ $producto->nombre }}<small>({{ $producto->stock }})</small></td>
+                                <td>{{ $producto->p_venta }}</td>
+                                <td class="text-center"><button class="btn btn-icon btn-warning btn-sm"
+                                        wire:click='add({{ $producto->id }})' title="Agregar producto"><i
+                                            class="tf-icons fa-solid fa-basket-shopping"></i></button></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="m-3">
+                    {{ $productos->links() }}
+                </div>
             </div>
-        </div>
         @else
-        <div class="m-3">
-            <x-msg type="info" msg="No se encontraron resultados" />
-        </div>
+            <div class="m-3">
+                <x-msg type="info" msg="No se encontraron resultados" />
+            </div>
         @endif
     </div>
     @script
-    <script>
-        Livewire.on('smp', (e) => {
-            $("#mModelo").modal('show')
-        });
-        Livewire.on('hmp', (e) => {
-            $("#mModelo").modal('hide')
-            noti(e[0]['m'], e[0]['t'])
-        })
-        Livewire.on('rep', (e) => {
-            noti(e[0]['m'], e[0]['t'])
-        })
-    </script>
+        <script>
+            Livewire.on('smp', (e) => {
+                $("#mModelo").modal('show')
+            });
+            Livewire.on('hmp', (e) => {
+                $("#mModelo").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+            Livewire.on('rep', (e) => {
+                noti(e[0]['m'], e[0]['t'])
+            })
+        </script>
     @endscript
 </div>

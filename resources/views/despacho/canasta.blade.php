@@ -5,13 +5,17 @@
     <div class="row">
         <div class="col-md-5">
             @livewire('despacho.bproductos', ['venta' => $venta->id])
-            <a href="{{route('despacho.pedidos')}}" class="btn btn-success mt-4"><i class='bx bx-left-arrow-alt e-2' ></i>Pedidos</a>
+            <a href="{{ route('despacho.pedidos') }}" class="btn btn-success mt-4"><i
+                    class='bx bx-left-arrow-alt e-2'></i>Pedidos</a>
         </div>
         <div class="col-md-7">
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <span>P: <b class="text-primary">{{ $venta->id }}</b></span>
+                        </div>
+                        <div class="col-md-8">
                             <x-select id="cliente" class="select2 form-select-lg" data-allow-clear="true">
                                 <option value="{{ $venta->cliente->id }}" selected>{{ $venta->cliente->razon_social }}
                                 </option>
