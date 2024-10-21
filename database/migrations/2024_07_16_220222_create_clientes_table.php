@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('razon_social');
             $table->string('ndocumento', 15)->unique();
+            $table->date('fnacimiento')->nullable();
             $table->string('correo')->nullable();
             $table->string('telefono', 15)->nullable();
             $table->string('direccion')->nullable();

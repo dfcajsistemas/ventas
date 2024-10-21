@@ -46,6 +46,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'mantenimiento.empresas'])->syncRoles($mantenimiento);
         Permission::create(['name' => 'mantenimiento.empresas.editardatos'])->syncRoles($mantenimiento);
         Permission::create(['name' => 'mantenimiento.empresas.editarsunat'])->syncRoles($mantenimiento);
+        Permission::create(['name' => 'mantenimiento.empresas.editarcertificado'])->syncRoles($mantenimiento);
 
         Permission::create(['name' => 'mantenimiento.sucursals'])->syncRoles($mantenimiento);
         Permission::create(['name' => 'mantenimiento.sucursals.agregar'])->syncRoles($mantenimiento);

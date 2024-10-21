@@ -8,10 +8,11 @@ use Livewire\Component;
 
 class Cliente extends Component
 {
-    public $razon_social, $ndocumento, $correo, $telefono, $direccion,  $referencia, $ubigeo, $tdocumento, $mMethod, $mTitle;
+    public $razon_social, $ndocumento, $correo, $telefono, $direccion,  $referencia, $ubigeo, $tdocumento, $fnacimiento, $mMethod, $mTitle;
     public $tdocumentos;
 
-    public function mount(){
+    public function mount()
+    {
         $this->tdocumentos = Tdocumento::where('estado', 1)->pluck('abreviatura', 'id');
     }
 
@@ -24,7 +25,7 @@ class Cliente extends Component
     {
         $this->mMethod = 'store';
         $this->mTitle = 'Nuevo Cliente';
-        $this->reset(['razon_social', 'tdocumento', 'ndocumento', 'correo', 'telefono', 'direccion', 'referencia', 'ubigeo']);
+        $this->reset(['razon_social', 'tdocumento', 'ndocumento', 'correo', 'telefono', 'direccion', 'referencia', 'ubigeo', 'fnacimiento']);
         $this->dispatch('smc');
     }
 
@@ -38,6 +39,7 @@ class Cliente extends Component
             'telefono' => 'nullable',
             'direccion' => 'nullable',
             'ubigeo' => 'nullable|digits:6',
+            'fnacimiento' => 'nullable|date',
         ], [
             'razon_social.required' => 'Ingrese el nombre/razón social',
             'razon_social.unique' => 'El nombre/razón social ya existe',
@@ -46,6 +48,7 @@ class Cliente extends Component
             'ndocumento.unique' => 'El número de documento ya existe',
             'correo.email' => 'Ingrese un correo válido',
             'ubigeo.digits' => 'El ubigeo debe tener 6 dígitos',
+            'fnacimiento.date' => 'Ingrese una fecha válida',
         ]);
 
         ModelsCliente::create([
@@ -57,6 +60,7 @@ class Cliente extends Component
             'direccion' => $this->direccion,
             'referencia' => $this->referencia,
             'ubigeo' => $this->ubigeo,
+            'fnacimiento' => $this->fnacimiento,
             'created_by' => auth()->user()->id,
             'updated_by' => auth()->user()->id,
         ]);
@@ -115,5 +119,4 @@ class Cliente extends Component
             return;
         }
     }
-
 }

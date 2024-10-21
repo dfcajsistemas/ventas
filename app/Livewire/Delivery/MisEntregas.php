@@ -36,6 +36,7 @@ class MisEntregas extends Component
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
             })
+            ->orderBy('ventas.id', 'desc')
             ->paginate($this->perPage);
         return view('livewire.delivery.mis-entregas', compact('pedidos'));
     }

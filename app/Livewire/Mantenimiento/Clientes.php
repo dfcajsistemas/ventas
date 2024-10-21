@@ -15,7 +15,7 @@ class Clientes extends Component
 {
     use WithPagination;
 
-    public $razon_social, $tdocumento, $ndocumento, $correo, $telefono, $direccion, $referencia, $ubigeo, $mMethod, $mTitle, $idm;
+    public $razon_social, $tdocumento, $ndocumento, $correo, $telefono, $direccion, $referencia, $ubigeo, $fnacimiento, $mMethod, $mTitle, $idm;
     public $tdocumentos, $vcliente;
 
     #[Url(except: '10')]
@@ -51,7 +51,7 @@ class Clientes extends Component
     {
         $this->mMethod = 'store';
         $this->mTitle = 'Nuevo Cliente';
-        $this->reset(['razon_social', 'tdocumento', 'ndocumento', 'correo', 'telefono', 'direccion', 'referencia', 'ubigeo']);
+        $this->reset(['razon_social', 'tdocumento', 'ndocumento', 'correo', 'telefono', 'direccion', 'referencia', 'ubigeo', 'fnacimiento']);
         $this->dispatch('sm');
     }
 
@@ -65,6 +65,7 @@ class Clientes extends Component
             'telefono' => 'nullable',
             'direccion' => 'nullable',
             'ubigeo' => 'nullable|digits:6',
+            'fnacimiento' => 'nullable|date',
         ], [
             'razon_social.required' => 'Ingrese el nombre/razón social',
             'razon_social.unique' => 'El nombre/razón social ya existe',
@@ -73,6 +74,7 @@ class Clientes extends Component
             'ndocumento.unique' => 'El número de documento ya existe',
             'correo.email' => 'Ingrese un correo válido',
             'ubigeo.digits' => 'El ubigeo debe tener 6 dígitos',
+            'fnacimiento.date' => 'Ingrese una fecha válida',
         ]);
 
         Cliente::create([
@@ -84,6 +86,7 @@ class Clientes extends Component
             'direccion' => $this->direccion,
             'referencia' => $this->referencia,
             'ubigeo' => $this->ubigeo,
+            'fnacimiento' => $this->fnacimiento,
             'created_by' => auth()->user()->id,
             'updated_by' => auth()->user()->id,
         ]);
@@ -157,18 +160,21 @@ class Clientes extends Component
         $this->direccion = $cliente->direccion;
         $this->referencia = $cliente->referencia;
         $this->ubigeo = $cliente->ubigeo;
+        $this->fnacimiento = $cliente->fnacimiento ?? null;
         $this->dispatch('sm');
     }
 
-    public function update(){
+    public function update()
+    {
         $this->validate([
-            'razon_social' => 'required|unique:clientes,razon_social,'.$this->idm,
+            'razon_social' => 'required|unique:clientes,razon_social,' . $this->idm,
             'tdocumento' => 'required',
-            'ndocumento' => 'required|unique:clientes,ndocumento,'.$this->idm,
+            'ndocumento' => 'required|unique:clientes,ndocumento,' . $this->idm,
             'correo' => 'nullable|email',
             'telefono' => 'nullable',
             'direccion' => 'nullable',
             'ubigeo' => 'nullable|digits:6',
+            'fnacimiento' => 'nullable|date',
         ], [
             'razon_social.required' => 'Ingrese el nombre/razón social',
             'razon_social.unique' => 'El nombre/razón social ya existe',
@@ -177,6 +183,7 @@ class Clientes extends Component
             'ndocumento.unique' => 'El número de documento ya existe',
             'correo.email' => 'Ingrese un correo válido',
             'ubigeo.digits' => 'El ubigeo debe tener 6 dígitos',
+            'fnacimiento.date' => 'Ingrese una fecha válida',
         ]);
 
         Cliente::find($this->idm)->update([
@@ -188,6 +195,7 @@ class Clientes extends Component
             'direccion' => $this->direccion,
             'referencia' => $this->referencia,
             'ubigeo' => $this->ubigeo,
+            'fnacimiento' => $this->fnacimiento,
             'updated_by' => auth()->user()->id,
         ]);
         $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Cliente actualizado.']);

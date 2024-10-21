@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('nom_comercial')->nullable();
             $table->string('dom_fiscal')->nullable();
             $table->string('rep_legal')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('certificado')->nullable();
+            $table->string('pas_certificado', 15)->nullable();
+            $table->date('ven_certificado')->nullable();
+            $table->string('ubigeo', 6)->nullable();
             $table->string('usuario_sol')->nullable();
             $table->string('clave_sol')->nullable();
 

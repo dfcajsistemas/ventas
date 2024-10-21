@@ -10,11 +10,14 @@ use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Lazy()]
 class Empresas extends Component
 {
-    public $ruc, $razon_social, $nom_comercial, $dom_fiscal, $rep_legal, $distritoId, $provinciaId, $departamentoId, $usuario_sol, $clave_sol, $mMethod, $mTitle, $idm;
+    use WithFileUploads;
+
+    public $ruc, $razon_social, $nom_comercial, $dom_fiscal, $rep_legal, $distritoId, $provinciaId, $departamentoId, $usuario_sol, $clave_sol, $certificado, $pas_certificado, $ven_certificado, $logo, $mMethod, $mTitle, $idm;
 
     public $dis, $distritos, $provincias, $departamentos;
 
@@ -29,7 +32,7 @@ class Empresas extends Component
     {
         $this->provinciaId = null;
         $this->provincias = Provincia::where('departamento_id', $value)->get();
-        $this->distritos=[];
+        $this->distritos = [];
     }
 
     public function updatedProvinciaId($value)
@@ -40,7 +43,7 @@ class Empresas extends Component
     #[Title(['Empresa', 'Mantenimiento'])]
     public function render()
     {
-        $empresa=Empresa::first();
+        $empresa = Empresa::first();
         return view('livewire.mantenimiento.empresas', compact('empresa'));
     }
 
@@ -65,7 +68,7 @@ class Empresas extends Component
     public function update()
     {
         $this->validate([
-            'ruc' => 'required|digits:11|unique:empresas,ruc,'.$this->idm,
+            'ruc' => 'required|digits:11|unique:empresas,ruc,' . $this->idm,
             'razon_social' => 'required',
             'nom_comercial' => 'required',
             'dom_fiscal' => 'required',
@@ -95,8 +98,7 @@ class Empresas extends Component
         $empresa->updated_by = auth()->id();
         $empresa->save();
 
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Empresa actualizada']);
-
+        $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Empresa actualizada']);
     }
 
     #[On('dispro')]
@@ -134,7 +136,81 @@ class Empresas extends Component
         $empresa->updated_by = auth()->id();
         $empresa->save();
 
-        $this->dispatch('hms', ['t'=>'success', 'm'=>'¡Hecho!<br>Datos SUNAT actualizados']);
+        $this->dispatch('hms', ['t' => 'success', 'm' => '¡Hecho!<br>Datos SUNAT actualizados']);
+    }
 
+    public function editCertificado(Empresa $empresa)
+    {
+        $this->mTitle = 'EDITAR DATOS CERTIFICADO';
+        $this->mMethod = 'updateCertificado';
+        $this->idm = $empresa->id;
+        $this->certificado = $empresa->certificado;
+        $this->pas_certificado = $empresa->pas_certificado;
+        $this->ven_certificado = $empresa->ven_certificado;
+
+        $this->resetValidation();
+        $this->dispatch('smc');
+    }
+
+    public function updateCertificado()
+    {
+        $this->validate([
+            'certificado' => 'required',
+            'pas_certificado' => 'required',
+            'ven_certificado' => 'required|date',
+        ], [
+            'certificado.required' => 'El certificado es obligatorio',
+            'pas_certificado.required' => 'La contraseña es obligatoria',
+            'ven_certificado.required' => 'La fecha de vencimiento es obligatoria',
+            'ven_certificado.date' => 'La fecha de vencimiento no es válida',
+        ]);
+
+        $empresa = Empresa::find($this->idm);
+        
+        $empresa->certificado = $this->certificado->store('certificados');
+        $empresa->pas_certificado = $this->pas_certificado;
+        $empresa->ven_certificado = $this->ven_certificado;
+        $empresa->updated_by = auth()->id();
+        $empresa->save();
+
+        $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Datos certificado actualizados']);
+    }
+
+    public function editLogo(Empresa $empresa)
+    {
+        $this->mTitle = 'EDITAR LOGO';
+        $this->mMethod = 'updateLogo';
+        $this->idm = $empresa->id;
+        $this->reset(['logo']);
+
+        $this->resetValidation();
+        $this->dispatch('sml');
+    }
+
+    public function updateLogo()
+    {
+        $this->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:512',
+        ], [
+            'logo.required' => 'El logo es obligatorio',
+            'logo.image' => 'El logo debe ser una imagen',
+            'logo.mimes' => 'El logo debe ser un archivo de tipo: jpeg, png, jpg, gif, svg',
+            'logo.max' => 'El logo no debe ser mayor a 512Kb',
+        ]);
+
+        $empresa = Empresa::find($this->idm);
+
+        if ($empresa->logo) {
+            unlink(public_path('storage/' . $empresa->logo));
+        }
+
+        $filename = 'logo_' . date('ymdHis') . '.' . $this->logo->getClientOriginalExtension();
+        $path = $this->logo->storeAs('logos', $filename);
+
+        $empresa->logo = $path;
+        $empresa->updated_by = auth()->id();
+        $empresa->save();
+
+        $this->dispatch('hml', ['t' => 'success', 'm' => '¡Hecho!<br>Logo actualizado']);
     }
 }

@@ -12,6 +12,7 @@ class Pago extends Model
     protected $fillable = [
         'monto',
         'observacion',
+        'estado',
         'mpago_id',
         'caja_id',
         'venta_id',

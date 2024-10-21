@@ -23,7 +23,7 @@
                             </td>
                             <td>
                                 <small>Estado</small><br>
-                                {{ estadoVenta($venta->est_venta) }}
+                                {!! estadoVenta($venta->est_venta) !!}
                             </td>
                             <td>
                                 <small>Fecha</small><br>{{ date('d/m/Y', strtotime($venta->created_at)) }}
@@ -32,6 +32,7 @@
                                 <a href="{{ route('caja.cajas.ver', $caja->id) }}"
                                     class="btn btn-icon btn-outline-secondary" title="Regresar a caja"><i
                                         class="fa-solid fa-arrow-left"></i></a>
+
                                 @if ($venta->est_pago == null || ($venta->fpago == 1 && $mcuotas == $mtotal))
                                     @if ($venta->serie == null)
                                         <button class="btn btn-icon btn-info" wire:click='emitir'><i
@@ -43,18 +44,18 @@
                                         </button>
                                     @endif
                                 @endif
-
-                                @can('caja.cajas.ver.cobrar.credito')
-                                    @if (!$venta->fpago && $pagos->count() == 0)
-                                        <button class="btn btn-icon btn-warning" wire:click='acredito'
-                                            title="Venta a crédito"><i class="fa-solid fa-money-bill-transfer"></i></button>
-                                    @elseif($mcuotas == 0 && $venta->est_pago == 1)
-                                        <button class="btn btn-icon btn-info" wire:click='acredito'
-                                            title="Venta al contado"><i class="fa-solid fa-money-bill"></i></button>
-                                    @endif
-
-                                @endcan
-
+                                @if (!$caja->cierre)
+                                    @can('caja.cajas.ver.cobrar.credito')
+                                        @if (!$venta->fpago && $pagos->count() == 0)
+                                            <button class="btn btn-icon btn-warning" wire:click='acredito'
+                                                title="Venta a crédito"><i
+                                                    class="fa-solid fa-money-bill-transfer"></i></button>
+                                        @elseif($mcuotas == 0 && $venta->est_pago == 1)
+                                            <button class="btn btn-icon btn-info" wire:click='acredito'
+                                                title="Venta al contado"><i class="fa-solid fa-money-bill"></i></button>
+                                        @endif
+                                    @endcan
+                                @endif
                             </td>
                         </tr>
 
@@ -71,11 +72,13 @@
                                     <th class="text-end">Cantidad</th>
                                     <th class="text-end">Precio</th>
                                     <th class="text-end">Total</th>
-                                    @can('caja.cajas.ver.cobrar.precio')
-                                        @if ($venta->pagos()->count() == 0)
-                                            <th class="text-end">C. Precio</th>
-                                        @endif
-                                    @endcan
+                                    @if (!$caja->cierre)
+                                        @can('caja.cajas.ver.cobrar.precio')
+                                            @if ($venta->pagos()->count() == 0)
+                                                <th class="text-end">C. Precio</th>
+                                            @endif
+                                        @endcan
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -91,15 +94,18 @@
                                         <td class="text-end">{{ $producto->cantidad }}</td>
                                         <td class="text-end">{{ $producto->precio }}</td>
                                         <td class="text-end">{{ number_format($producto->total, 2) }}</td>
-                                        @can('caja.cajas.ver.cobrar.precio')
-                                            @if ($venta->pagos()->count() == 0)
-                                                <td class="text-end">
-                                                    <button class="btn btn-icon btn-outline-info btn-sm"
-                                                        wire:click='eprecio({{ $producto->id }})' title="Cambiar precio"><i
-                                                            class="tf-icons fa-solid fa-dollar-sign"></i></button>
-                                                </td>
-                                            @endif
-                                        @endcan
+                                        @if (!$caja->cierre)
+                                            @can('caja.cajas.ver.cobrar.precio')
+                                                @if ($venta->pagos()->count() == 0)
+                                                    <td class="text-end">
+                                                        <button class="btn btn-icon btn-outline-info btn-sm"
+                                                            wire:click='eprecio({{ $producto->id }})'
+                                                            title="Cambiar precio"><i
+                                                                class="tf-icons fa-solid fa-dollar-sign"></i></button>
+                                                    </td>
+                                                @endif
+                                            @endcan
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -107,11 +113,13 @@
                                 <tr>
                                     <th colspan="3" class="fw-bold">Total</th>
                                     <th class="fw-bold text-end">{{ number_format($t, 2) }}</th>
-                                    @can('caja.cajas.ver.cobrar.precio')
-                                        @if ($venta->pagos()->count() == 0)
-                                            <th></th>
-                                        @endif
-                                    @endcan
+                                    @if (!$caja->cierre)
+                                        @can('caja.cajas.ver.cobrar.precio')
+                                            @if ($venta->pagos()->count() == 0)
+                                                <th></th>
+                                            @endif
+                                        @endcan
+                                    @endif
                                 </tr>
                             </thead>
 
@@ -147,7 +155,9 @@
                                     <th style="text-align: right;">Cuota</th>
                                     <th class="text-end">observación</th>
                                     <th class="text-end">Monto</th>
-                                    <th>Eliminar</th>
+                                    @if (!$caja->cierre)
+                                        <th>Eliminar</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,15 +176,17 @@
                                         <td>{{ $pago->observacion }}</td>
                                         <td class="text-end">{{ number_format($pago->monto, 2) }}
                                         </td>
-                                        <td>
-                                            @if ($loop->last)
-                                                <button class="btn btn-icon btn-outline-danger btn-sm"
-                                                    x-data="eliminar"
-                                                    x-on:click="confirmar({{ $pago->id }}, '{{ $pago->monto }}')"
-                                                    title="Eliminar pago"><i
-                                                        class="tf-icons fa-solid fa-trash"></i></button>
-                                            @endif
-                                        </td>
+                                        @if (!$caja->cierre)
+                                            <td>
+                                                @if ($loop->last)
+                                                    <button class="btn btn-icon btn-outline-danger btn-sm"
+                                                        x-data="eliminar"
+                                                        x-on:click="confirmar({{ $pago->id }}, '{{ $pago->monto }}')"
+                                                        title="Anular pago"><i
+                                                            class="tf-icons fa-solid fa-xmark"></i></button>
+                                                @endif
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -182,7 +194,9 @@
                                 <tr>
                                     <th colspan="4" class="fw-bold">Total</th>
                                     <th class="text-end fw-bold">{{ number_format($t, 2) }}</th>
-                                    <th></th>
+                                    @if (!$caja->cierre)
+                                        <th></th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>
@@ -214,7 +228,9 @@
                                         <th>F. Vence</th>
                                         <th class="text-end">Monto</th>
                                         <th>Estado</th>
-                                        <th class="text-end">Acciones</th>
+                                        @if (!$caja->cierre)
+                                            <th class="text-end">Acciones</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -234,34 +250,42 @@
                                             <td>{{ date('d/m/Y', strtotime($cuota->fvence)) }}</td>
                                             <td class="text-end">{{ $cuota->monto }}</td>
                                             <td>{!! estadoPago($cuota->estado) !!}</td>
-                                            <td class="text-end">
-                                                @if ($pcc == 1)
-                                                    <button class="btn btn-icon btn-outline-info btn-sm"
-                                                        wire:click='apagoCuota({{ $cuota->id }})'
-                                                        title="Cobrar cuota"><i
-                                                            class="fa-solid fa-hand-holding-dollar"></i></button>
-                                                @endif
-                                                @if ($loop->last)
-                                                    @if ($cuota->pagos()->count() == 0)
-                                                        <button class="btn btn-icon btn-outline-danger btn-sm"
-                                                            x-data="eliminarc"
-                                                            x-on:click="confirmar({{ $cuota->id }}, '{{ $cuota->monto . ' del ' . date('d/m/Y', strtotime($cuota->fvence)) }}')"
-                                                            title="Eliminar cuota"><i
-                                                                class="tf-icons fa-solid fa-trash"></i></button>
+                                            @if (!$caja->cierre)
+                                                <td class="text-end">
+                                                    @if ($pcc == 1)
+                                                        <button class="btn btn-icon btn-outline-info btn-sm"
+                                                            wire:click='apagoCuota({{ $cuota->id }})'
+                                                            title="Cobrar cuota"><i
+                                                                class="fa-solid fa-hand-holding-dollar"></i></button>
                                                     @endif
-                                                @endif
-                                            </td>
+                                                    @if ($loop->last)
+                                                        @if ($cuota->pagos()->count() == 0)
+                                                            <button class="btn btn-icon btn-outline-danger btn-sm"
+                                                                x-data="eliminarc"
+                                                                x-on:click="confirmar({{ $cuota->id }}, '{{ $cuota->monto . ' del ' . date('d/m/Y', strtotime($cuota->fvence)) }}')"
+                                                                title="Eliminar cuota"><i
+                                                                    class="tf-icons fa-solid fa-trash"></i></button>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <thead class="table-border-bottom-0">
                                     <tr>
-                                        <th colspan="4" class="fw-bold">Total cuotas</th>
+                                        <th colspan="3" class="fw-bold">Total cuotas</th>
                                         <th class="text-end fw-bold">{{ $tc }}</th>
+                                        @if (!$caja->cierre)
+                                            <th></th>
+                                        @endif
                                     </tr>
                                     <tr>
-                                        <th colspan="4" class="fw-bold">Total pendiente</th>
+                                        <th colspan="3" class="fw-bold">Total pendiente</th>
                                         <th class="text-end fw-bold">{{ $tc - $t }}</th>
+                                        @if (!$caja->cierre)
+                                            <th></th>
+                                        @endif
                                     </tr>
                                 </thead>
                             </table>
@@ -271,6 +295,44 @@
                             <x-msg type="info" msg="No se encontraron cuotas" />
                         </div>
                     @endif
+                </div>
+            @endif
+            @if ($pagosAnulados->count())
+                <div class="card card-action mb-4">
+                    <div class="card-header align-items-center flex-wrap gap-3 py-4">
+                        <h5 class="card-action-title mb-0">Pagos Anulados</h5>
+                        <div class="card-action-element">
+                            @if ($venta->est_pago == 1 && $venta->fpago == null)
+                                @can('caja.cajas.ver.cobrar.pago')
+                                    <button class="btn btn-icon btn-primary btn-sm" wire:click='apagoContado()'
+                                        title="Agregar pago"><i class="fa-solid fa-hand-holding-dollar"></i></button>
+                                @endcan
+                            @endif
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover border-top" style="font-size: 0.8em;">
+                            <thead>
+                                <tr>
+                                    <th>M. Pago</th>
+                                    <th>Fecha</th>
+                                    <th class="text-end">observación</th>
+                                    <th class="text-end">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pagosAnulados as $pagoAnulado)
+                                    <tr>
+                                        <td>{{ $pagoAnulado->mpago->nombre }}</td>
+                                        <td>{{ date('d/m/Y', strtotime($pagoAnulado->created_at)) }}</td>
+                                        <td>{{ $pagoAnulado->observacion }}</td>
+                                        <td class="text-end">{{ number_format($pagoAnulado->monto, 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             @endif
         </div>
@@ -389,12 +451,12 @@
                 confirmar(id, nom) {
                     Swal.fire({
                         title: '¿Estás seguro?',
-                        html: "¡Eliminarás!<p><strong>Pago de " + nom + "</strong></p>",
+                        html: "¡Anularás!<p><strong>Pago de " + nom + "</strong></p>",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: '¡Sí, bórralo!'
+                        confirmButtonText: '¡Sí, Anúlalo!'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             Livewire.dispatch('delete', {

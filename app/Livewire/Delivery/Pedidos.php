@@ -46,6 +46,7 @@ class Pedidos extends Component
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
             })
+            ->orderBy('ventas.id', 'desc')
             ->paginate($this->perPage);
         return view('livewire.delivery.pedidos', compact('pedidos'));
     }

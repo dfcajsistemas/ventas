@@ -1,13 +1,13 @@
 <div class="col-md-2">
     <button class="btn btn-icon btn-warning" wire:click='create'><i class="tf-icons fa-solid fa-plus"></i></button>
-    <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="md">
+    <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="lg">
         <div class="row">
             <div class="col-4">
                 <x-label for="tdocumento">Tipo Documento</x-label>
                 <x-select id="tdocumento" wire:model="tdocumento">
                     <option value="">Seleccione...</option>
-                    @foreach ($tdocumentos as $k=>$tdocumento)
-                    <option value="{{ $k }}">{{ $tdocumento }}</option>
+                    @foreach ($tdocumentos as $k => $tdocumento)
+                        <option value="{{ $k }}">{{ $tdocumento }}</option>
                     @endforeach
                 </x-select>
                 <x-input-error for="tdocumento" />
@@ -25,10 +25,15 @@
                     <i class="tf-icons fa-solid fa-magnifying-glass" wire:loading.remove wire:target='bDocumento'></i>
                 </button>
             </div>
-            <div class="col-12">
+            <div class="col-9">
                 <x-label for="razon_social">Nombre/Razon Social</x-label>
                 <x-input type="text" id="razon_social" wire:model="razon_social" />
                 <x-input-error for="razon_social" />
+            </div>
+            <div class="col-3">
+                <x-label for="fnacimiento">F. Nacimiento</x-label>
+                <x-input type="date" id="fnacimiento" wire:model="fnacimiento" />
+                <x-input-error for="fnacimiento" />
             </div>
             <div class="col-12">
                 <x-label for="direccion">Dirección</x-label>
@@ -58,17 +63,17 @@
         </div>
     </x-modal-form>
     @script
-    <script>
-        Livewire.on('smc', (e) => {
-            $("#mModelo").modal('show')
-        });
-        Livewire.on('hmc', (e) => {
-            $("#mModelo").modal('hide')
-            noti(e[0]['m'], e[0]['t'])
-        })
-        Livewire.on('rec', (e) => {
-            noti(e[0]['m'], e[0]['t'])
-        })
-    </script>
+        <script>
+            Livewire.on('smc', (e) => {
+                $("#mModelo").modal('show')
+            });
+            Livewire.on('hmc', (e) => {
+                $("#mModelo").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+            Livewire.on('rec', (e) => {
+                noti(e[0]['m'], e[0]['t'])
+            })
+        </script>
     @endscript
 </div>

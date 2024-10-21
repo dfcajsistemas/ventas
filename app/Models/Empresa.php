@@ -18,6 +18,11 @@ class Empresa extends Model
         'usuario_sol',
         'clave_sol',
         'distrito_id',
+        'ubigeo',
+        'certificado',
+        'pass_certificado',
+        'ven_certificado',
+        'logo',
         'created_by',
         'updated_by'
     ];

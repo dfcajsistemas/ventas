@@ -57,7 +57,7 @@ class Ver extends Component
             })
             ->select('ventas.id', 'ventas.created_at', 'clientes.razon_social as cliente')
             ->paginate($this->perPage);
-        $pagos = Pago::where('caja_id', $this->caja->id)->orderBy('created_at', 'desc')->paginate($this->perPagePagos, pageName: 'pagePagos');
+        $pagos = Pago::where('caja_id', $this->caja->id)->whereNull('estado')->orderBy('created_at', 'desc')->paginate($this->perPagePagos, pageName: 'pagePagos');
         $movimientos = Movimiento::where('caja_id', $this->caja->id)->paginate($this->perPageMovimientos, pageName: 'pageMovimientos');
         //obtener el total de pagos por caja y por nombre de mpago
         $totalPagos = Pago::where('caja_id', $this->caja->id)->selectRaw('mpago_id, sum(monto) as total')
@@ -104,5 +104,21 @@ class Ver extends Component
     {
         $movimiento->delete();
         $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Movimiento eliminado']);
+    }
+    public function cerrarCaja()
+    {
+        if ($this->caja->movimientos->count() == 0 && $this->caja->pagos()->whereNull('estado')->count() == 0) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La caja no tiene movimientos ni pagos']);
+            return;
+        }
+        if ($this->caja->pendiente == 1) {
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La caja tiene pagos al contado que no fueron cobrados por completo']);
+            return;
+        }
+        $this->caja->update([
+            'cierre' => now(),
+            'monto_cierre' => $this->caja->movimientos->sum('monto') + $this->caja->pagos()->whereNull('estado')->sum('monto'),
+        ]);
+        $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Caja cerrada']);
     }
 }

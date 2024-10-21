@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
-use PhpParser\Node\Stmt\TryCatch;
 
 #[Lazy()]
 class Cobrar extends Component
@@ -48,14 +47,16 @@ class Cobrar extends Component
         //monto de cuotas de la venta
         $this->mcuotas = Cuota::where('venta_id', $this->venta->id)->sum('monto');
         //obtener los pagos de la venta
-        $pagos = Pago::where('venta_id', $this->venta->id)->get();
+        $pagos = Pago::where('venta_id', $this->venta->id)->whereNull('estado')->get();
+        //obtener pagos anulados
+        $pagosAnulados = Pago::where('venta_id', $this->venta->id)->where('estado', 1)->get();
         //obtener los productos de la venta
         $productos = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
             ->select('dventas.id', 'productos.nombre', 'dventas.cantidad', 'dventas.precio', 'dventas.igv', 'dventas.total')
             ->where('dventas.venta_id', $this->venta->id)
             ->get();
 
-        return view('livewire.caja.cobrar', compact('pagos', 'productos'));
+        return view('livewire.caja.cobrar', compact('pagos', 'pagosAnulados', 'productos'));
     }
 
     //editar precio de un producto
@@ -138,7 +139,7 @@ class Cobrar extends Component
                     'updated_by' => auth()->user()->id
                 ]);
             }
-            if ($this->venta->pagos->count() == 1) {
+            if ($this->venta->pagos()->whereNull('estado')->count() == 1) {
                 $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
                     ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
                     ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
@@ -254,7 +255,6 @@ class Cobrar extends Component
     {
         DB::beginTransaction();
         try {
-            $pago->delete();
             $this->venta->update([
                 'est_pago' => 1,
                 'updated_by' => auth()->user()->id
@@ -267,11 +267,17 @@ class Cobrar extends Component
                     'updated_by' => auth()->user()->id
                 ]);
             }
+
+            $pago->update([
+                'estado' => 1,
+                'cuota_id' => null,
+                'updated_by' => auth()->user()->id
+            ]);
             DB::commit();
-            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Pago eliminado correctamente']);
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Pago anulado correctamente']);
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo eliminar el pago. ' . $e->getMessage()]);
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se pudo anular el pago. ' . $e->getMessage()]);
         }
     }
 
@@ -405,13 +411,13 @@ class Cobrar extends Component
                     'updated_by' => auth()->user()->id
                 ]);
             }
-            if ($this->venta->pagos->sum('monto') == $this->mtotal) {
+            if ($this->venta->pagos()->whereNull('estado')->sum('monto') == $this->mtotal) {
                 $this->venta->update([
                     'est_pago' => null,
                     'updated_by' => auth()->user()->id
                 ]);
             }
-            if ($this->venta->pagos->count() == 1) {
+            if ($this->venta->pagos()->whereNull('estado')->count() == 1) {
                 $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
                     ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
                     ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')

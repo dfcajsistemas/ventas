@@ -19,6 +19,7 @@ class Cliente extends Model
         'ubigeo',
         'estado',
         'tdocumento_id',
+        'fnacimiento',
         'created_by',
         'updated_by',
     ];
