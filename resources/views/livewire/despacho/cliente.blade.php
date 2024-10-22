@@ -1,5 +1,6 @@
 <div class="col-md-2">
-    <button class="btn btn-icon btn-warning" wire:click='create'><i class="tf-icons fa-solid fa-plus"></i></button>
+    <button class="btn btn-icon btn-primary" wire:click='create' title="Agregar cliente"><i
+            class="tf-icons fa-solid fa-user-plus"></i></button>
     <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="lg">
         <div class="row">
             <div class="col-4">

@@ -26,17 +26,22 @@
                         <tr>
                             <th>Producto</th>
                             <th>Precio</th>
-                            <th class="text-center">Agregar</th>
+                            @if (!$venta->est_venta)
+                                <th class="text-center">Agregar</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
                         @foreach ($productos as $producto)
                             <tr>
-                                <td>{{ $producto->nombre }}<small>({{ $producto->stock }})</small></td>
+                                <td>{{ $producto->nombre }} <small class="text-warning">({{ $producto->stock }})</small>
+                                </td>
                                 <td>{{ $producto->p_venta }}</td>
-                                <td class="text-center"><button class="btn btn-icon btn-warning btn-sm"
-                                        wire:click='add({{ $producto->id }})' title="Agregar producto"><i
-                                            class="tf-icons fa-solid fa-basket-shopping"></i></button></td>
+                                @if (!$venta->est_venta)
+                                    <td class="text-center"><button class="btn btn-icon btn-outline-warning btn-sm"
+                                            wire:click='add({{ $producto->id }})' title="Agregar producto"><i
+                                                class="tf-icons fa-solid fa-plus"></i></button></td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

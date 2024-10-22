@@ -6,6 +6,7 @@ use App\Models\Dventa;
 use App\Models\Producto;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -26,6 +27,7 @@ class Bproductos extends Component
         $this->sucursal = auth()->user()->sucursal;
     }
 
+    #[On('abp')]
     public function render()
     {
         $productos = Producto::join('stocks', 'productos.id', '=', 'stocks.producto_id')
@@ -43,8 +45,10 @@ class Bproductos extends Component
         $dventa = Dventa::where('venta_id', $this->venta->id)
             ->where('producto_id', $producto->id)
             ->first();
-
+        //obtenemos el stock del producto en la sucursal del usuario
         $stock = $producto->stocks->where('sucursal_id', $this->sucursal->id)->first();
+        //obtenemos el % de igv para el producto
+        $pigv = $producto->igvporciento->porcentaje;
 
         if ($stock->stock < 1) {
             $this->dispatch('rep', ['t' => 'error', 'm' => '¡Error!<br>Stock insuficiente']);
@@ -57,7 +61,7 @@ class Bproductos extends Component
             $p = $producto->{'p_venta' . $this->sucursal->p_venta};
             $t = $p * $c;
             if ($producto->igvafectacion_id == 1) {
-                $igv = $t * 0.18;
+                $igv = ($t * $pigv) / (100 + $pigv);
             } else {
                 $igv = 0;
             }
@@ -77,10 +81,10 @@ class Bproductos extends Component
                     'updated_by' => auth()->user()->id
                 ]);
                 DB::commit();
-                $this->dispatch('rep', ['t' => 'success', 'm' => '¡Hecho!<br>Se agregó una unidad más a la canasta']);
+                $this->dispatch('rep', ['t' => 'success', 'm' => '¡Hecho!<br>Se agregó una unidad más del producto']);
             } catch (\Throwable $th) {
                 DB::rollBack();
-                $this->dispatch('rep', ['t' => 'error', 'm' => '¡Error!<br>Hubo un problema al agregar el producto a la canasta']);
+                $this->dispatch('rep', ['t' => 'error', 'm' => '¡Error!<br>Hubo un problema al agregar el producto']);
             }
         } else {
             $p = $producto->{'p_venta' . $this->sucursal->p_venta};
@@ -97,15 +101,15 @@ class Bproductos extends Component
                     'producto_id' => $producto->id,
                     'cantidad' => 1,
                     'precio' => $p,
-                    'igv' => (($producto->igvafectacion_id == 1) ? ($p * 0.18) : 0),
+                    'igv' => (($producto->igvafectacion_id == 1) ? (($p * $pigv) / (100 + $pigv)) : 0),
                     'total' => $p,
                     'created_by' => auth()->user()->id,
                 ]);
                 DB::commit();
-                $this->dispatch('rep', ['t' => 'success', 'm' => '¡Hecho!<br>Producto agregado a la canasta']);
+                $this->dispatch('rep', ['t' => 'success', 'm' => '¡Hecho!<br>Producto agregado']);
             } catch (\Throwable $th) {
                 DB::rollBack();
-                $this->dispatch('rep', ['t' => 'error', 'm' => '¡Error!<br>Hubo un problema al agregar el producto a la canasta']);
+                $this->dispatch('rep', ['t' => 'error', 'm' => '¡Error!<br>Hubo un problema al agregar el producto']);
             }
         }
     }

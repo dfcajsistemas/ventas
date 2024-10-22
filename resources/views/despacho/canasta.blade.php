@@ -11,15 +11,25 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-2 d-flex align-items-center">
-                            <span>#P: <b class="text-primary">{{ $venta->id }}</b></span>
+                            <b class="text-primary"> {{ $venta->id }}</b>
                         </div>
-                        <div class="col-md-8">
-                            <x-select id="cliente" class="select2 form-select-lg" data-allow-clear="true">
-                                <option value="{{ $venta->cliente->id }}" selected>{{ $venta->cliente->razon_social }}
-                                </option>
-                            </x-select>
-                        </div>
-                        @livewire('despacho.cliente')
+                        @if (!$venta->est_venta)
+                            <div class="col-md-8">
+                                <x-select id="cliente" class="select2 form-select-lg" data-allow-clear="true">
+                                    <option value="{{ $venta->cliente->id }}" selected>
+                                        {{ $venta->cliente->razon_social }}
+                                    </option>
+                                </x-select>
+                            </div>
+                            @livewire('despacho.cliente')
+                        @else
+                            <div class="col-md-7">
+                                {{ $venta->cliente->razon_social }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ $venta->ser_ticket . '-' . $venta->cor_ticket }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

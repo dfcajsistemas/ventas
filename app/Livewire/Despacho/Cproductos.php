@@ -56,10 +56,13 @@ class Cproductos extends Component
             return;
         }
 
+        //obtenemos el porcentaje del igv
+        $pigv = $dventa->producto->igvporciento->porcentaje;
+
         $p = $dventa->precio;
         $t = $p * $this->cantidad;
         if ($dventa->producto->igvafectacion_id == 1) {
-            $igv = $t * 0.18;
+            $igv = ($t * $pigv) / (100 + $pigv);
         } else {
             $igv = 0;
         }
@@ -79,6 +82,7 @@ class Cproductos extends Component
             ]);
             DB::commit();
             $this->dispatch('hmca', ['t' => 'success', 'm' => '¡Hecho!<br>Cantidad actualizada correctamente']);
+            $this->dispatch('abp');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('hmca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
@@ -99,6 +103,7 @@ class Cproductos extends Component
             $dventa->delete();
             DB::commit();
             $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Producto eliminado de la canasta']);
+            $this->dispatch('abp');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('reca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
@@ -160,6 +165,7 @@ class Cproductos extends Component
             ]);
             DB::commit();
             $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido generado correctamente, ya no se podrá agregar más productos']);
+            $this->dispatch('abp');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('reca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);

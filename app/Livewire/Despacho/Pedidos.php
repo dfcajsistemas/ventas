@@ -44,6 +44,10 @@ class Pedidos extends Component
             ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
             ->where('ventas.sucursal_id', $this->sucursal->id)
             ->where(function ($query) {
+                $query->whereNull('ventas.est_venta')
+                    ->orWhere('ventas.est_venta', 1);
+            })
+            ->where(function ($query) {
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
             })

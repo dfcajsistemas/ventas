@@ -49,8 +49,12 @@
                                 <td>{{ $pedido->razon_social }}</td>
                                 <td>{{ $pedido->created_at }}</td>
                                 <td>
-                                    <h6 class="mb-0 w-px-100 text-secondary"><i
-                                            class="bx bxs-circle fs-tiny me-2"></i>En proceso</h6>
+                                    @if (!$pedido->est_venta)
+                                        <h6 class="mb-0 w-px-100 text-secondary"><i
+                                                class="bx bxs-circle fs-tiny me-2"></i>En proceso</h6>
+                                    @else
+                                        {!! estadoVenta($pedido->est_venta) !!}
+                                    @endif
                                 </td>
                                 <td>{!! estadoPago($pedido->est_pago) !!}</td>
                                 <td>

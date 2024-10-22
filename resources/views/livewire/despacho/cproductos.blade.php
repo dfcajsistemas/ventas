@@ -9,7 +9,9 @@
                             <th class="text-end">Cantidad</th>
                             <th class="text-end">Precio</th>
                             <th class="text-end">Total</th>
-                            <th class="text-end">Acciones</th>
+                            @if (!$cventa->est_venta)
+                                <th class="text-end">Acciones</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -25,15 +27,16 @@
                                 <td class="text-end">{{ $producto->cantidad }}</td>
                                 <td class="text-end">{{ $producto->precio }}</td>
                                 <td class="text-end">{{ number_format($producto->total, 2) }}</td>
-                                <td class="text-end">
-
-                                    <button class="btn btn-icon btn-outline-info btn-sm"
-                                        wire:click='ecantidad({{ $producto->id }})' title="Editar cantidad"><i
-                                            class="tf-icons fa-solid fa-hashtag"></i></button>
-                                    <button class="btn btn-icon btn-outline-danger btn-sm" x-data="eliminar"
-                                        x-on:click="confirmar({{ $producto->id }}, '{{ $producto->nombre }}')"
-                                        title="Eliminar"><i class="tf-icons fa-solid fa-trash-can"></i></button>
-                                </td>
+                                @if (!$cventa->est_venta)
+                                    <td class="text-end">
+                                        <button class="btn btn-icon btn-outline-info btn-sm"
+                                            wire:click='ecantidad({{ $producto->id }})' title="Editar cantidad"><i
+                                                class="tf-icons fa-solid fa-hashtag"></i></button>
+                                        <button class="btn btn-icon btn-outline-danger btn-sm" x-data="eliminar"
+                                            x-on:click="confirmar({{ $producto->id }}, '{{ $producto->nombre }}')"
+                                            title="Eliminar"><i class="tf-icons fa-solid fa-trash-can"></i></button>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -41,7 +44,9 @@
                         <tr>
                             <th colspan="3" class="fw-bold">Total</th>
                             <th class="text-end fw-bold">{{ number_format($t, 2) }}</th>
-                            <th></th>
+                            @if (!$cventa->est_venta)
+                                <th></th>
+                            @endif
                         </tr>
                     </thead>
                 </table>
