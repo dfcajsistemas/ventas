@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
 
+            $table->string('ser_ticket', 4)->nullable();
+            $table->unsignedBigInteger('cor_ticket')->nullable();
             $table->string('serie', 4)->nullable();
             $table->unsignedBigInteger('correlativo')->nullable();
             $table->tinyInteger('fpago')->nullable();   // null: Contado, 1: Crédito
@@ -37,9 +39,6 @@ return new class extends Migration
             $table->string('msj_sunat')->nullable();
             $table->tinyInteger('est_comprobante')->nullable(); // null: sin comprobante, 1: emitido, 2: enviado, 3: aceptado, 4: observado, 5: rechazado
             $table->tinyInteger('est_venta')->nullable(); // 1: solicitado, 2: delivery, 3: entregado, 4: anulado
-            $table->datetime('fentrega')->nullable();
-            $table->datetime('fdelivery')->nullable();
-            $table->datetime('fanulado')->nullable();
             $table->tinyInteger('est_pago')->nullable(); // null: pagada, 1: pendiente
 
             $table->foreignId('cliente_id')->constrained();

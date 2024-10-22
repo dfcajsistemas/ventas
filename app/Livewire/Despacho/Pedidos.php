@@ -20,7 +20,7 @@ class Pedidos extends Component
     #[Url(except: '')]
     public $search = '';
     #[Url(except: '10')]
-    public $perPage = 10;
+    public $perPage = '10';
 
     public function updatingSearch()
     {
@@ -59,7 +59,6 @@ class Pedidos extends Component
             'sucursal_id' => auth()->user()->sucursal->id,
             'tmoneda_id' => 1,
             'cliente_id' => 1,
-            'est_venta' => 1,
             'est_pago' => 1,
         ]);
 

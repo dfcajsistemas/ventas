@@ -95,6 +95,7 @@ class Empresas extends Component
         $empresa->dom_fiscal = $this->dom_fiscal;
         $empresa->rep_legal = $this->rep_legal;
         $empresa->distrito_id = $this->distritoId;
+        $empresa->ubigeo = Distrito::find($this->distritoId)->ubigeo;
         $empresa->updated_by = auth()->id();
         $empresa->save();
 
@@ -166,7 +167,7 @@ class Empresas extends Component
         ]);
 
         $empresa = Empresa::find($this->idm);
-        
+
         $empresa->certificado = $this->certificado->store('certificados');
         $empresa->pas_certificado = $this->pas_certificado;
         $empresa->ven_certificado = $this->ven_certificado;
@@ -201,7 +202,9 @@ class Empresas extends Component
         $empresa = Empresa::find($this->idm);
 
         if ($empresa->logo) {
-            unlink(public_path('storage/' . $empresa->logo));
+            if (file_exists(public_path('storage/' . $empresa->logo))) {
+                unlink(public_path('storage/' . $empresa->logo));
+            }
         }
 
         $filename = 'logo_' . date('ymdHis') . '.' . $this->logo->getClientOriginalExtension();

@@ -4,10 +4,11 @@ if (!function_exists('estadoVenta')) {
     function estadoVenta($e = null)
     {
         $est = [
+            0 => ['estado' => 'En proceso', 'color' => 'text-warning'],
             1 => ['estado' => 'Solicitado', 'color' => 'text-warning'],
             2 => ['estado' => 'Delivery', 'color' => 'text-primary'],
             3 => ['estado' => 'Entregado', 'color' => 'text-success'],
-            4 => ['estado' => 'Anulado', 'color' => 'text-danger'],
+            4 => ['estado' => 'Anulado', 'color' => 'text-danger']
         ];
         if ($e == null) {
             $result = [];

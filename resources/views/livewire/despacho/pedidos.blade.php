@@ -48,7 +48,10 @@
                                 <td>{{ $pedido->id }}</td>
                                 <td>{{ $pedido->razon_social }}</td>
                                 <td>{{ $pedido->created_at }}</td>
-                                <td>{!! estadoVenta($pedido->est_venta) !!}</td>
+                                <td>
+                                    <h6 class="mb-0 w-px-100 text-secondary"><i
+                                            class="bx bxs-circle fs-tiny me-2"></i>En proceso</h6>
+                                </td>
                                 <td>{!! estadoPago($pedido->est_pago) !!}</td>
                                 <td>
                                     @if ($pedido->pagos()->count() == 0 && $pedido->cuotas()->count() == 0)
