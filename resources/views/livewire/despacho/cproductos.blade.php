@@ -50,50 +50,6 @@
                     <x-msg type="info" msg="Canasta vacia" />
                 </div>
             @endif
-
-            <x-modal-form mId="mCan" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
-                <div class="row">
-                    <div class="col">
-                        <x-label for="cantidad">Cantidad</x-label>
-                        <x-input type="number" id="cantidad" wire:model="cantidad" />
-                        <x-input-error for="cantidad" />
-                    </div>
-                </div>
-            </x-modal-form>
-            @script
-                <script>
-                    Livewire.on('smca', (e) => {
-                        $("#mCan").modal('show')
-                    });
-                    Livewire.on('hmca', (e) => {
-                        $("#mCan").modal('hide')
-                        noti(e[0]['m'], e[0]['t'])
-                    })
-                    Livewire.on('reca', (e) => {
-                        noti(e[0]['m'], e[0]['t'])
-                    })
-
-                    Alpine.data('eliminar', () => ({
-                        confirmar(id, nom) {
-                            Swal.fire({
-                                title: '¿Estás seguro?',
-                                html: "¡Eliminarás!<p><strong>" + nom + "</strong></p>",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: '¡Sí, bórralo!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    Livewire.dispatch('delete', {
-                                        dventa: id
-                                    })
-                                }
-                            })
-                        }
-                    }))
-                </script>
-            @endscript
         </div>
     </div>
     <a href="{{ route('despacho.pedidos') }}" class="btn btn-secondary"><i
@@ -107,4 +63,47 @@
                 Pedido</button>
         @endif
     @endif
+    <x-modal-form mId="mCan" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
+        <div class="row">
+            <div class="col">
+                <x-label for="cantidad">Cantidad</x-label>
+                <x-input type="number" id="cantidad" wire:model="cantidad" />
+                <x-input-error for="cantidad" />
+            </div>
+        </div>
+    </x-modal-form>
+    @script
+        <script>
+            Livewire.on('smca', (e) => {
+                $("#mCan").modal('show')
+            });
+            Livewire.on('hmca', (e) => {
+                $("#mCan").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+            Livewire.on('reca', (e) => {
+                noti(e[0]['m'], e[0]['t'])
+            })
+
+            Alpine.data('eliminar', () => ({
+                confirmar(id, nom) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        html: "¡Eliminarás!<p><strong>" + nom + "</strong></p>",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Sí, bórralo!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Livewire.dispatch('delete', {
+                                dventa: id
+                            })
+                        }
+                    })
+                }
+            }))
+        </script>
+    @endscript
 </div>

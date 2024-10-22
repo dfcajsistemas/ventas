@@ -109,32 +109,32 @@ class Cproductos extends Component
     {
         $tcomprobante_id = Tcomprobante::where('codigo', 'TK')->first()->id;
         $serie = Serie::where('sucursal_id', auth()->user()->sucursal->id)->where('tcomprobante_id', $tcomprobante_id)->first();
+        //obtenemos el correlativo
+        $correlativo = $serie->correlativo + 1;
+        //calculamos los montos de operaciones grabadas, exoneradas e inafectas
+        $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
+            ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
+            ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
+            ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo', 'igvporcientos.porcentaje')
+            ->where('dventas.venta_id', $this->cventa->id)
+            ->get();
+        $g = 0;
+        $e = 0;
+        $i = 0;
+        $gigv = 0;
+        foreach ($afectaciones as $afectacion) {
+            if ($afectacion->codigo == '10') {
+                $gigv += $afectacion->total;
+                $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
+            } elseif ($afectacion->codigo == '20') {
+                $e += $afectacion->total;
+            } elseif ($afectacion->codigo == '30') {
+                $i += $afectacion->total;
+            }
+        }
 
         try {
             DB::beginTransaction();
-            //obtenemos el correlativo
-            $correlativo = $serie->correlativo + 1;
-            //calculamos los montos de operaciones grabadas, exoneradas e inafectas
-            $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
-                ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
-                ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
-                ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo', 'igvporcientos.porcentaje')
-                ->where('dventas.venta_id', $this->cventa->id)
-                ->get();
-            $g = 0;
-            $e = 0;
-            $i = 0;
-            $gigv = 0;
-            foreach ($afectaciones as $afectacion) {
-                if ($afectacion->codigo == '10') {
-                    $gigv += $afectacion->total;
-                    $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
-                } elseif ($afectacion->codigo == '20') {
-                    $e += $afectacion->total;
-                } elseif ($afectacion->codigo == '30') {
-                    $i += $afectacion->total;
-                }
-            }
             //actualizamos la venta y la serie del ticket
             $this->cventa->update([
                 'ser_ticket' => $serie->serie,
@@ -153,7 +153,7 @@ class Cproductos extends Component
                 'updated_by' => auth()->user()->id
             ]);
             //creamos el estado de venta
-            Eventa::created([
+            Eventa::create([
                 'venta_id' => $this->cventa->id,
                 'est_venta' => 1,
                 'user_id' => auth()->user()->id

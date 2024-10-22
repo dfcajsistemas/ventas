@@ -35,4 +35,8 @@ class Venta extends Model
     {
         return $this->hasMany(Pago::class);
     }
+    public function eventas()
+    {
+        return $this->hasMany(Eventa::class);
+    }
 }

@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Eventa extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'est_venta',
+        'venta_id',
+        'user_id',
+    ];
+
+    //relacion uno a muchos inversa
+    public function venta()
+    {
+        return $this->belongsTo(Venta::class);
+    }
 }
