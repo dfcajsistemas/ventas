@@ -1,17 +1,16 @@
 <x-app-layout modulo="Despacho" pagina="Canasta">
 
-    <h4><span class="text-muted fw-light">Despacho /</span> Canasta <span class="text-warning">(Sucursal:
-            {{ $sucursal->nombre }})</span></h4>
+    <h4><span class="text-muted fw-light">Despacho /</span> Canasta <span class="text-primary"><i
+                class="fa-solid fa-store text-muted"></i>
+            {{ $sucursal->nombre }}</span></h4>
     <div class="row">
-        <div class="col-md-5">
-            @livewire('despacho.bproductos', ['venta' => $venta->id])
-        </div>
+
         <div class="col-md-7">
-            <div class="card mb-4">
+            <div class="card mb-3">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-2 d-flex align-items-center">
-                            <b class="text-primary"> {{ $venta->id }}</b>
+                            P:&nbsp;<span class="text-primary fw-bold"> {{ $venta->id }}</span>
                         </div>
                         @if (!$venta->est_venta)
                             <div class="col-md-8">
@@ -24,10 +23,11 @@
                             @livewire('despacho.cliente')
                         @else
                             <div class="col-md-7">
-                                {{ $venta->cliente->razon_social }}
+                                C: {{ $venta->cliente->razon_social }}
                             </div>
                             <div class="col-md-3">
-                                {{ $venta->ser_ticket . '-' . $venta->cor_ticket }}
+                                T:&nbsp;<span
+                                    class="text-warning fw-bold">{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}</span>
                             </div>
                         @endif
                     </div>
@@ -36,9 +36,10 @@
 
             @livewire('despacho.cproductos', ['venta' => $venta->id])
 
-
         </div>
-
+        <div class="col-md-5">
+            @livewire('despacho.bproductos', ['venta' => $venta->id])
+        </div>
     </div>
 
     @push('scripts')

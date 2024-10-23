@@ -164,8 +164,9 @@ class Cproductos extends Component
                 'user_id' => auth()->user()->id
             ]);
             DB::commit();
-            $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido generado correctamente, ya no se podrá agregar más productos']);
-            $this->dispatch('abp');
+            // $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido generado correctamente, ya no se podrá agregar más productos']);
+            // $this->dispatch('abp');
+            return redirect()->route('despacho.pedidos.canasta', $this->cventa->id)->with('success', '¡Hecho!<br>Pedido generado correctamente');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('reca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);

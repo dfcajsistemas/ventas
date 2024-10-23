@@ -103,10 +103,10 @@ class CanastaController extends Controller
                 'user_id' => auth()->user()->id
             ]);
             DB::commit();
-            return redirect()->route('despacho.canasta', $venta->id)->with('success', '¡Hecho!<br>Pedido generado correctamente');
+            return redirect()->route('despacho.pedidos.canasta', $venta->id)->with('success', '¡Hecho!<br>Pedido generado correctamente');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('despacho.canasta', $venta->id)->with('error', '¡Error!<br>Hubo un problema al generar el pedido');
+            return redirect()->route('despacho.pedidos.canasta', $venta->id)->with('error', '¡Error!<br>Hubo un problema al generar el pedido');
         }
     }
 }
