@@ -1,6 +1,9 @@
 <div>
-    <h4><span class="text-muted fw-light">Despacho /</span> Pedidos <span class="text-warning">(Sucursal:
-            {{ $sucursal->nombre }})</span></h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Despacho /</span> Pedidos en proceso</h4>
+        <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>
+                {{ $sucursal->nombre }}</span></h4>
+    </div>
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -16,9 +19,9 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                @can('despacho.pedidos.canasta')
+                @can('despacho.gpedidos.canasta')
                     <div class="col-4 col-md-1 d-grid">
-                        <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
+                        <button class="btn btn-primary" title="Generar pedido" wire:click="create()"><i
                                 class="tf-icons fa-solid fa-basket-shopping"></i></button>
                     </div>
                 @endcan
@@ -38,7 +41,6 @@
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Estado</th>
-                            <th>Est. Pago</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -49,32 +51,21 @@
                                 <td>{{ $pedido->razon_social }}</td>
                                 <td>{{ $pedido->created_at }}</td>
                                 <td>
-                                    @if (!$pedido->est_venta)
-                                        <h6 class="mb-0 w-px-100 text-secondary"><i
-                                                class="bx bxs-circle fs-tiny me-2"></i>En proceso</h6>
-                                    @else
-                                        {!! estadoVenta($pedido->est_venta) !!}
-                                    @endif
+                                    <h6 class="mb-0 w-px-100 text-warning"><i class="bx bxs-circle fs-tiny me-2"></i>En
+                                        proceso</h6>
                                 </td>
-                                <td>{!! estadoPago($pedido->est_pago) !!}</td>
                                 <td>
-                                    @if ($pedido->pagos()->count() == 0 && $pedido->cuotas()->count() == 0)
-                                        @can('despacho.pedidos.canasta')
-                                            <a href="{{ route('despacho.pedidos.canasta', $pedido->id) }}"
-                                                class="btn btn-icon btn-info btn-sm"><i
-                                                    class="tf-icons fa-solid fa-basket-shopping"></i></a>
-                                        @endcan
-                                        @can('despacho.pedidos.eliminar')
-                                            <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm"
-                                                title="Eliminar" x-on:click="confirmar({{ $pedido->id }})"><i
-                                                    class="tf-icons fa-solid fa-trash"></i></button>
-                                        @endcan
-                                    @endif
-                                    @can('despacho.pedidos.distribuir')
-                                        <a href="{{ route('despacho.pedidos.distribuir', $pedido->id) }}"
-                                            class="btn btn-icon btn-success btn-sm"><i
-                                                class="tf-icons fa-solid fa-boxes-packing"></i></a>
+                                    @can('despacho.gpedidos.canasta')
+                                        <a href="{{ route('despacho.gpedidos.canasta', $pedido->id) }}"
+                                            class="btn btn-icon btn-info btn-sm"><i
+                                                class="tf-icons fa-solid fa-basket-shopping"></i></a>
                                     @endcan
+                                    @can('despacho.gpedidos.eliminar')
+                                        <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm"
+                                            title="Eliminar" x-on:click="confirmar({{ $pedido->id }})"><i
+                                                class="tf-icons fa-solid fa-trash"></i></button>
+                                    @endcan
+
                                 </td>
                             </tr>
                         @endforeach
@@ -86,7 +77,7 @@
             </div>
         @else
             <div class="mx-3 mb-3">
-                <x-msg type="info" msg="No se encontraron resultados" />
+                <x-msg type="info" msg="No se encontraron pedidos en proceso" />
             </div>
         @endif
     </div>

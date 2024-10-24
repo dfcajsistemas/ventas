@@ -20,10 +20,10 @@
     <div class="card mb-3">
         @if ($productos->count())
             <div class="table-responsive">
-                <table class="table table-hover" style="font-size: 0.9em;">
+                <table class="table table-hover table-sm">
                     <thead>
                         <tr>
-                            <th>Stock Producto</th>
+                            <th>Stock | Producto</th>
                             <th>PU</th>
                             <th></th>
                         </tr>
@@ -32,11 +32,11 @@
                         @foreach ($productos as $producto)
                             <tr>
                                 <td>
-                                    <span class="text-danger">{{ $producto->stock }}</span> {{ $producto->nombre }}
+                                    <small class="text-warning">{{ $producto->stock }}</small> | {{ $producto->nombre }}
                                 </td>
-                                <td>{{ $producto->p_venta }}</td>
+                                <td class="text-info">{{ $producto->p_venta }}</td>
                                 <td>
-                                    <button class="btn btn-icon btn-warning btn-sm"
+                                    <button class="btn btn-icon btn-success btn-sm"
                                         wire:click='add({{ $producto->id }})' title="Agregar producto"><i
                                             class="tf-icons fa-solid fa-plus"></i></button>
                                 </td>
@@ -56,13 +56,6 @@
     </div>
     @script
         <script>
-            Livewire.on('smp', (e) => {
-                $("#mModelo").modal('show')
-            });
-            Livewire.on('hmp', (e) => {
-                $("#mModelo").modal('hide')
-                noti(e[0]['m'], e[0]['t'])
-            })
             Livewire.on('rep', (e) => {
                 noti(e[0]['m'], e[0]['t'])
             })

@@ -173,11 +173,19 @@
                     </a>
                 </li>
             @endcan
-            @can('despacho.pedidos')
-                <li class="menu-item {{ request()->routeIs('despacho.pedidos*') ? 'active' : '' }}">
-                    <a href="{{ route('despacho.pedidos') }}" class="menu-link">
+            @can('despacho.gpedidos')
+                <li class="menu-item {{ request()->routeIs('despacho.gpedidos*') ? 'active' : '' }}">
+                    <a href="{{ route('despacho.gpedidos') }}" class="menu-link">
                         <i class="menu-icon tf-icons fa-solid fa-basket-shopping"></i>
-                        <div class="text-truncate">Pedidos</div>
+                        <div class="text-truncate">Generar Pedidos</div>
+                    </a>
+                </li>
+            @endcan
+            @can('despacho.dpedidos')
+                <li class="menu-item {{ request()->routeIs('despacho.dpedidos*') ? 'active' : '' }}">
+                    <a href="{{ route('despacho.dpedidos') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-dolly"></i>
+                        <div class="text-truncate">Distribuir Pedidos</div>
                     </a>
                 </li>
             @endcan

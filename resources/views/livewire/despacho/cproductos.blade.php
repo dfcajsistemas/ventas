@@ -33,9 +33,11 @@
                                             <button class="btn btn-icon btn-outline-info btn-sm"
                                                 wire:click='ecantidad({{ $producto->id }})' title="Editar cantidad"><i
                                                     class="tf-icons fa-solid fa-hashtag"></i></button>
-                                            <button class="btn btn-icon btn-outline-warning btn-sm"
-                                                wire:click='eprecio({{ $producto->id }})' title="Editar precio"><i
-                                                    class="tf-icons fa-solid fa-dollar-sign"></i></button>
+                                            @can('despacho.gpedidos.canasta.precio')
+                                                <button class="btn btn-icon btn-outline-warning btn-sm"
+                                                    wire:click='eprecio({{ $producto->id }})' title="Editar precio"><i
+                                                        class="tf-icons fa-solid fa-dollar-sign"></i></button>
+                                            @endcan
                                             <button class="btn btn-icon btn-outline-danger btn-sm"
                                                 x-data="eliminar"
                                                 x-on:click="confirmar({{ $producto->id }}, '{{ $producto->nombre }}')"
@@ -58,26 +60,23 @@
                 </table>
             @else
                 <div class="m-3">
-                    <x-msg type="info" msg="Canasta vacia" />
+                    <x-msg type="info" msg="Canasta sin productos" />
                 </div>
             @endif
         </div>
     </div>
     <div class="mb-3">
-
+        <a href="{{ route('despacho.gpedidos') }}" class="btn btn-secondary"><i
+                class='tf-icons bx bx-left-arrow-alt'></i> Regresar</a>
         @if ($productos->count())
-            @if ($cventa->est_venta)
-                <button class="btn btn-success" wire:click='impTicket'><i class="fa-solid fa-receipt me-2"></i>
-                    Imprimir
-                    Ticket</button>
-            @else
-                <button class="btn btn-info" wire:click='genPedido'><i class="fa-solid fa-boxes-packing me-2"
-                        title="Generar Pedido"></i> Generar
+            @if (!$cventa->est_venta)
+                <button class="btn btn-info" wire:click='genPedido'><i
+                        class="tf-icons fa-solid fa-box-archive me-2"></i>
+                    Generar
                     Pedido</button>
             @endif
         @endif
-        <a href="{{ route('despacho.pedidos') }}" class="btn btn-icon btn-secondary"><i
-                class='tf-icons bx bx-left-arrow-alt'></i></a>
+
     </div>
     <x-modal-form mId="mCan" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
         <div class="row">
@@ -88,6 +87,17 @@
             </div>
         </div>
     </x-modal-form>
+    @can('despacho.gpedidos.canasta.precio')
+        <x-modal-form mId="mPre" :mTitle="$mTitle" :mMethod="$mMethod" mSize="sm">
+            <div class="row">
+                <div class="col">
+                    <x-label for="precio">Precio</x-label>
+                    <x-input type="number" id="precio" wire:model="precio" />
+                    <x-input-error for="precio" />
+                </div>
+            </div>
+        </x-modal-form>
+    @endcan
     @script
         <script>
             Livewire.on('smca', (e) => {
@@ -97,6 +107,15 @@
                 $("#mCan").modal('hide')
                 noti(e[0]['m'], e[0]['t'])
             })
+
+            Livewire.on('smpr', (e) => {
+                $("#mPre").modal('show')
+            });
+            Livewire.on('hmpr', (e) => {
+                $("#mPre").modal('hide')
+                noti(e[0]['m'], e[0]['t'])
+            })
+
             Livewire.on('reca', (e) => {
                 noti(e[0]['m'], e[0]['t'])
             })

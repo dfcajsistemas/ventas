@@ -49,7 +49,7 @@ class CanastaController extends Controller
         return response()->json($data);
     }
 
-    public function gPedido(Venta $venta)
+    public function fPedido(Venta $venta)
     {
         $tcomprobante_id = Tcomprobante::where('codigo', 'TK')->first()->id;
         $serie = Serie::where('sucursal_id', auth()->user()->sucursal->id)->where('tcomprobante_id', $tcomprobante_id)->first();

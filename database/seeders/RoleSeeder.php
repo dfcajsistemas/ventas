@@ -90,13 +90,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'abastecimiento.productos.reposiciones.eliminar'])->syncRoles($abastecimiento);
 
         Permission::create(['name' => 'despacho'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.canasta'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.distribuir'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.eliminar'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.canasta.agregar'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.canasta.cantidad'])->syncRoles($despacho);
-        Permission::create(['name' => 'despacho.pedidos.canasta.eliminar'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.gpedidos'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.gpedidos.eliminar'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.gpedidos.canasta'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.gpedidos.canasta.precio'])->syncRoles($despacho);
+
+        Permission::create(['name' => 'despacho.dpedidos'])->syncRoles($despacho);
 
         Permission::create(['name' => 'caja'])->assignRole($caja);
         Permission::create(['name' => 'caja.cajas'])->assignRole($caja);

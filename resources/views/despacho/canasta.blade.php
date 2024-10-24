@@ -1,7 +1,7 @@
 <x-app-layout modulo="Despacho" pagina="Canasta">
     <div class="d-flex justify-content-between">
-        <h4><span class="text-muted fw-light">Despacho /</span> Canasta</h4>
-        <h4><span class="text-primary"><i class="fa-solid fa-store text-muted"></i>
+        <h4><span class="text-muted fw-light">Despacho / Pedidos / </span> Canasta</h4>
+        <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>
                 {{ $sucursal->nombre }}</span></h4>
     </div>
     <div class="row">
@@ -52,7 +52,7 @@
                         minimumInputLength: 3,
                         dropdownParent: $this.parent(),
                         ajax: {
-                            url: '{{ route('despacho.pedidos.bcliente') }}',
+                            url: '{{ route('despacho.gpedidos.bcliente') }}',
                             dataType: 'json',
                             delay: 250,
                             processResults: function(data) {
@@ -73,7 +73,7 @@
                 $('#cliente').on('change', function(e) {
                     var selectedValue = $(this).val();
                     $.ajax({
-                        url: '{{ route('despacho.pedidos.cliente') }}', // Ruta al controlador
+                        url: '{{ route('despacho.gpedidos.cliente') }}', // Ruta al controlador
                         type: 'put',
                         data: {
                             _token: '{{ csrf_token() }}', // Token CSRF para seguridad

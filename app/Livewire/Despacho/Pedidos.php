@@ -43,10 +43,7 @@ class Pedidos extends Component
         $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
             ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
             ->where('ventas.sucursal_id', $this->sucursal->id)
-            ->where(function ($query) {
-                $query->whereNull('ventas.est_venta')
-                    ->orWhere('ventas.est_venta', 1);
-            })
+            ->whereNull('ventas.est_venta')
             ->where(function ($query) {
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
@@ -60,13 +57,13 @@ class Pedidos extends Component
     {
         $venta = Venta::create([
             'user_id' => auth()->id(),
-            'sucursal_id' => auth()->user()->sucursal->id,
+            'sucursal_id' => $this->sucursal->id,
             'tmoneda_id' => 1,
             'cliente_id' => 1,
             'est_pago' => 1,
         ]);
 
-        return redirect()->route('despacho.pedidos.canasta', $venta);
+        return redirect()->route('despacho.gpedidos.canasta', $venta);
     }
 
     #[On('delete')]

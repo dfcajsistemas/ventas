@@ -13,7 +13,7 @@ use Livewire\Component;
 
 class Cproductos extends Component
 {
-    public $cantidad, $mTitle, $mMethod, $idm;
+    public $cantidad, $precio, $mTitle, $mMethod, $idm;
     public $cventa;
     public function mount(Venta $venta)
     {
@@ -77,8 +77,7 @@ class Cproductos extends Component
             $dventa->update([
                 'cantidad' => $this->cantidad,
                 'total' => $t,
-                'igv' => $igv,
-                'updated_by' => auth()->user()->id
+                'igv' => $igv
             ]);
             DB::commit();
             $this->dispatch('hmca', ['t' => 'success', 'm' => '¡Hecho!<br>Cantidad actualizada correctamente']);
@@ -86,6 +85,53 @@ class Cproductos extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('hmca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
+        }
+    }
+
+    public function eprecio($id)
+    {
+        $this->mTitle = 'Editar Precio';
+        $this->mMethod = 'gprecio';
+        $this->idm = $id;
+        $this->precio = Dventa::find($id)->precio;
+        $this->resetValidation();
+        $this->dispatch('smpr');
+    }
+
+    public function gprecio()
+    {
+        $this->validate([
+            'precio' => 'required|numeric|min:0.01',
+        ], [
+            'precio.required' => 'Ingrese el precio',
+            'precio.numeric' => 'El precio debe ser un número',
+            'precio.min' => 'El precio debe ser mayor a 0',
+        ]);
+        $dventa = Dventa::find($this->idm);
+
+        //obtenemos el porcentaje del igv
+        $pigv = $dventa->producto->igvporciento->porcentaje;
+
+        $t = $this->precio * $dventa->cantidad;
+        if ($dventa->producto->igvafectacion_id == 1) {
+            $igv = ($t * $pigv) / (100 + $pigv);
+        } else {
+            $igv = 0;
+        }
+
+        try {
+            DB::beginTransaction();
+            $dventa->update([
+                'precio' => $this->precio,
+                'total' => $t,
+                'igv' => $igv,
+                'updated_by' => auth()->user()->id
+            ]);
+            DB::commit();
+            $this->dispatch('hmpr', ['t' => 'success', 'm' => '¡Hecho!<br>Precio actualizado correctamente']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('hmpr', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
         }
     }
 
