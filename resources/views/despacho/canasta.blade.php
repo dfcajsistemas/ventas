@@ -1,10 +1,15 @@
 <x-app-layout modulo="Despacho" pagina="Canasta">
-
-    <h4><span class="text-muted fw-light">Despacho /</span> Canasta <span class="text-primary"><i
-                class="fa-solid fa-store text-muted"></i>
-            {{ $sucursal->nombre }}</span></h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Despacho /</span> Canasta</h4>
+        <h4><span class="text-primary"><i class="fa-solid fa-store text-muted"></i>
+                {{ $sucursal->nombre }}</span></h4>
+    </div>
     <div class="row">
-
+        @if (!$venta->est_venta)
+            <div class="col-md-5">
+                @livewire('despacho.bproductos', ['venta' => $venta->id])
+            </div>
+        @endif
         <div class="col-md-7">
             <div class="card mb-3">
                 <div class="card-header">
@@ -13,7 +18,7 @@
                             P:&nbsp;<span class="text-primary fw-bold"> {{ $venta->id }}</span>
                         </div>
                         @if (!$venta->est_venta)
-                            <div class="col-md-8">
+                            <div class="col-9 col-md-8">
                                 <x-select id="cliente" class="select2 form-select-lg" data-allow-clear="true">
                                     <option value="{{ $venta->cliente->id }}" selected>
                                         {{ $venta->cliente->razon_social }}
@@ -33,12 +38,7 @@
                     </div>
                 </div>
             </div>
-
             @livewire('despacho.cproductos', ['venta' => $venta->id])
-
-        </div>
-        <div class="col-md-5">
-            @livewire('despacho.bproductos', ['venta' => $venta->id])
         </div>
     </div>
 
