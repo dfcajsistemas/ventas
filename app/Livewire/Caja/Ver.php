@@ -53,9 +53,11 @@ class Ver extends Component
             ->where(function ($query) {
                 $query->where('clientes.razon_social', 'like', "%$this->search%")
                     ->where('ventas.sucursal_id', $this->sucursal->id)
-                    ->where('ventas.est_pago', 1);
+                    ->where('ventas.est_pago', 1)
+                    ->whereIn('ventas.est_venta', [1, 2, 3, 5]);
             })
             ->select('ventas.id', 'ventas.created_at', 'clientes.razon_social as cliente')
+            ->orderBy('ventas.id', 'desc')
             ->paginate($this->perPage);
         $pagos = Pago::where('caja_id', $this->caja->id)->whereNull('estado')->orderBy('created_at', 'desc')->paginate($this->perPagePagos, pageName: 'pagePagos');
         $movimientos = Movimiento::where('caja_id', $this->caja->id)->paginate($this->perPageMovimientos, pageName: 'pageMovimientos');

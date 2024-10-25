@@ -4,6 +4,7 @@ namespace App\Livewire\Delivery;
 
 use App\Models\Dventa;
 use App\Models\Venta;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -30,17 +31,47 @@ class Entregar extends Component
             ->select('productos.nombre', 'dventas.cantidad', 'dventas.precio', 'dventas.total')
             ->where('dventas.venta_id', $this->venta->id)
             ->get();
-        return view('livewire.delivery.entregar', compact('productos'));
+        $eventas = $this->venta->eventas;
+        return view('livewire.delivery.entregar', compact('productos', 'eventas'));
     }
 
     #[On('entregar')]
     public function entregar()
     {
-        $this->venta->update([
-            'est_venta' => 3,
-            'fentrega' => now(),
-            'updated_by' => auth()->id(),
-        ]);
-        $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Se registró la entrega del pedido']);
+        try {
+            DB::beginTransaction();
+            $this->venta->update([
+                'est_venta' => 3,
+            ]);
+            $this->venta->eventas()->create([
+                'user_id' => auth()->id(),
+                'est_venta' => 3,
+            ]);
+            DB::commit();
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Entrega registrada']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Hubo un error al registrar la entrega del pedido']);
+        }
+    }
+
+    #[On('devolver')]
+    public function devolver()
+    {
+        try {
+            DB::beginTransaction();
+            $this->venta->update([
+                'est_venta' => 5,
+            ]);
+            $this->venta->eventas()->create([
+                'user_id' => auth()->id(),
+                'est_venta' => 5,
+            ]);
+            DB::commit();
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Devolución registrada']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Hubo un error al registrar la devolución del pedido']);
+        }
     }
 }

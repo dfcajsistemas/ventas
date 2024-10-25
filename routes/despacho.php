@@ -4,7 +4,6 @@ use App\Http\Controllers\Despacho\CanastaController;
 use App\Livewire\Despacho\Dashboard;
 use App\Livewire\Despacho\Distribuir;
 use App\Livewire\Despacho\Dpedidos;
-use App\Livewire\Despacho\Elegir;
 use App\Livewire\Despacho\Pedidos;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +18,4 @@ Route::get('/pedidos/gpedido/{venta}', [CanastaController::class, 'fPedido'])->n
 
 Route::get('/dpedidos', Dpedidos::class)->name('despacho.dpedidos')->middleware('can:despacho.dpedidos');
 Route::get('/dpedidos/{venta}', Distribuir::class)->name('despacho.dpedidos.distribuir')->middleware('can:despacho.dpedidos.distribuir');
+Route::get('/dpedidos/ticket', [Distribuir::class, 'ticket'])->name('despacho.dpedidos.ticket');

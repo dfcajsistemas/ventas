@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Delivery;
 
+use App\Models\Eventa;
 use App\Models\Venta;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
@@ -27,16 +28,16 @@ class MisEntregas extends Component
     #[Title(['Mis entregas', 'Delivery'])]
     public function render()
     {
-        $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
-            ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
-            ->where('ventas.est_venta', 3)
-            ->whereDate('ventas.fentrega', $this->fecha)
-            ->where('ventas.updated_by', auth()->id())
+        $pedidos = Eventa::join('ventas', 'eventas.venta_id', '=', 'ventas.id')
+            ->join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
+            ->select('ventas.id', 'eventas.created_at', 'eventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
+            ->whereDate('eventas.created_at', $this->fecha)
+            ->where('eventas.est_venta', 3)
             ->where(function ($query) {
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
             })
-            ->orderBy('ventas.id', 'desc')
+            ->orderBy('ventas.id', 'DESC')
             ->paginate($this->perPage);
         return view('livewire.delivery.mis-entregas', compact('pedidos'));
     }

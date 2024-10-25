@@ -70,7 +70,8 @@
                 class='tf-icons bx bx-left-arrow-alt'></i></a>
         @if ($productos->count())
             @if (!$cventa->est_venta)
-                <button class="btn btn-success" wire:click='genPedido'><i class='tf-icons bx bxs-box me-1'></i>
+                <button x-data="genPedido" x-on:click="confirmar" class="btn btn-success"><i
+                        class='tf-icons bx bxs-box me-1'></i>
                     Generar Pedido</button>
             @endif
         @endif
@@ -133,6 +134,24 @@
                             Livewire.dispatch('delete', {
                                 dventa: id
                             })
+                        }
+                    })
+                }
+            }))
+
+            Alpine.data('genPedido', () => ({
+                confirmar() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡Ya no podras agregar más productos ni cambiar de cliente!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Sí, generar pedido!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Livewire.dispatch('addPedido')
                         }
                     })
                 }

@@ -1,6 +1,9 @@
 <div>
-    <h4><span class="text-muted fw-light">Delivery /</span> Entregar <span class="text-info">(Sucursal:
-            {{ $sucursal->nombre }})</span></h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Delivery /</span> Pedido</h4>
+        <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>
+                {{ $sucursal->nombre }}</span></h4>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="flex mb-3">
@@ -8,14 +11,14 @@
                         class="fa-solid fa-arrow-left"></i></a>
             </div>
             <div class="card mb-4">
-                <div class="table-responsive text-nowrap">
+                <div class="table-responsive text-wrap">
                     @if ($productos->count())
-                        <table class="table table-hover" style="font-size: 0.8em;">
+                        <table class="table table-sm table-hover" style="font-size: 0.9em;">
                             <thead>
                                 <tr>
-                                    <th>Producto</th>
-                                    <th class="text-end">Cantidad</th>
-                                    <th class="text-end">Precio</th>
+                                    <th># Producto</th>
+                                    <th class="text-end">Cant</th>
+                                    <th class="text-end">PU</th>
                                     <th class="text-end">Total</th>
                                 </tr>
                             </thead>
@@ -28,8 +31,9 @@
                                         $t += $producto->total;
                                     @endphp
                                     <tr>
-                                        <td>{{ $producto->nombre }}</td>
-                                        <td class="text-end text-danger">{{ $producto->cantidad }}</td>
+                                        <td><span class="fw-bold">{{ $loop->iteration }}</span>
+                                            {{ $producto->nombre }}</td>
+                                        <td class="text-end text-warning">{{ $producto->cantidad }}</td>
                                         <td class="text-end">{{ $producto->precio }}</td>
                                         <td class="text-end">{{ number_format($producto->total, 2) }}</td>
                                     </tr>
@@ -37,8 +41,8 @@
                             </tbody>
                             <thead class="table-border-bottom-0">
                                 <tr>
-                                    <th colspan="3" class="fw-bold">Total</th>
-                                    <th class="fw-bold text-end">{{ number_format($t, 2) }}</th>
+                                    <th colspan="3" class="fw-bold text-danger">Total</th>
+                                    <th class="fw-bold text-end text-danger">{{ number_format($t, 2) }}</th>
                                 </tr>
                             </thead>
 
@@ -57,7 +61,10 @@
                 <div class="table-responsive">
                     <table class="table" style="font-size: 0.9em;">
                         <tr>
-                            <td><small>Pedido ID</small><br><span class="text-primary">{{ $venta->id }}</span></td>
+                            <td><small>Pedido[Ticket]</small><br><span
+                                    class="text-primary">{{ $venta->id }}</span><span class="text-danger">
+                                    [{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}]</span>
+                            </td>
                             <td><small>Pago</small><br>{!! estadoPago($venta->est_pago) !!}</td>
                             <td><small>Estado</small><br>{!! estadoVenta($venta->est_venta) !!}</td>
                         </tr>
@@ -80,33 +87,12 @@
 
             </div>
             <div class="row m-4">
-                <div class="col">
-                    <h6 class="mb-0 w-px-100 text-warning"><i class="bx bxs-circle fs-tiny me-2"></i>Solicitado
-                        <spam class="text-muted" style="font-size: 0.7em;">
-                            {{ date('d/m/y H:i:s', strtotime($venta->created_at)) }}</spam>
-                    </h6>
-                </div>
-                @if ($venta->fdelivery)
+                @foreach ($eventas as $eventa)
                     <div class="col">
-                        <h6 class="mb-0 w-px-100 text-primary"><i class="bx bxs-circle fs-tiny me-2"></i>Delivery
-                            <spam class="text-muted" style="font-size: 0.7em;">
-                                {{ date('d/m/y H:i:s', strtotime($venta->fdelivery)) }}</spam>
+                        {!! estadoVenta($eventa->est_venta) !!}
+                        <span style="font-size: 0.7em">{{ date('d/m/y H:i:s', strtotime($eventa->created_at)) }}</span>
                     </div>
-                @endif
-                @if ($venta->fentrega)
-                    <div class="col">
-                        <h6 class="mb-0 w-px-100 text-success"><i class="bx bxs-circle fs-tiny me-2"></i>Entregado
-                            <spam class="text-muted" style="font-size: 0.7em;">
-                                {{ date('d/m/y H:i:s', strtotime($venta->fentrega)) }}</spam>
-                    </div>
-                @endif
-                @if ($venta->fanulado)
-                    <div class="col">
-                        <h6 class="mb-0 w-px-100 text-danger"><i class="bx bxs-circle fs-tiny me-2"></i>Anulado
-                            <spam class="text-muted" style="font-size: 0.7em;">
-                                {{ date('d/m/y H:i:s', strtotime($venta->fanulado)) }}</spam>
-                    </div>
-                @endif
+                @endforeach
             </div>
             <div class="card">
                 <div class="table-responsive">

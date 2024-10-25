@@ -27,6 +27,7 @@ class Detalle extends Component
             ->select('productos.nombre', 'dventas.cantidad', 'dventas.precio', 'dventas.total')
             ->where('dventas.venta_id', $this->venta->id)
             ->get();
-        return view('livewire.delivery.detalle', compact('productos'));
+        $eventas = $this->venta->eventas;
+        return view('livewire.delivery.detalle', compact('productos', 'eventas'));
     }
 }

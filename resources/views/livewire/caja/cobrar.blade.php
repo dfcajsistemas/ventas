@@ -1,15 +1,18 @@
 <div>
-    <h4><span class="text-muted fw-light">Cajas / Caja {{ $caja->id }} </span> /Cobrar
-        <span class="text-warning">(Sucursal:
-            {{ $sucursal->nombre }})</span>
-    </h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Caja {{ $caja->id }} </span> /Cobrar</h4>
+        <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>
+                {{ $sucursal->nombre }}</span></h4>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="table-responsive">
-                    <table class="table table-border-bottom-0">
+                    <table class="table table-border-bottom-0" style="font-size: 0.9em;">
                         <tr>
-                            <td><small># Venta</small><br><b class="text-primary">{{ $venta->id }}</b></td>
+                            <td><small>Pedido[Ticket]</small><br><span class="text-primary">{{ $venta->id }}</span>
+                                <span class="text-success">[{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}]</span>
+                            </td>
                             <td>
                                 <small>Pago</small><br>
                                 {!! estadoPago($venta->est_pago) !!}
@@ -22,18 +25,17 @@
                                 <small>F. Pago</small><br>{{ $venta->fpago == 1 ? 'Crédito' : 'Contado' }}
                             </td>
                             <td>
-                                <small>Estado</small><br>
+                                <small>Estado pedido</small><br>
                                 {!! estadoVenta($venta->est_venta) !!}
                             </td>
                             <td>
-                                <small>Fecha</small><br>{{ date('d/m/Y', strtotime($venta->created_at)) }}
+                                <small>Fecha</small><br>{{ $venta->updated_at->format('d/m/Y H:i:s') }}
                             </td>
                             <td class="text-end">
-                                <a href="{{ route('caja.cajas.ver', $caja->id) }}"
-                                    class="btn btn-icon btn-outline-secondary" title="Regresar a caja"><i
-                                        class="fa-solid fa-arrow-left"></i></a>
+                                <a href="{{ route('caja.cajas.ver', $caja->id) }}" class="btn btn-icon btn-secondary"
+                                    title="Regresar a caja"><i class="fa-solid fa-arrow-left"></i></a>
 
-                                @if ($venta->est_pago == null || ($venta->fpago == 1 && $mcuotas == $mtotal))
+                                @if ($venta->est_pago == null || ($venta->fpago == 1 && $mcuotas == $venta->total))
                                     @if ($venta->serie == null)
                                         <button class="btn btn-icon btn-info" wire:click='emitir'><i
                                                 class="fa-solid fa-receipt" title="Emitir comprobante"></i>
@@ -65,20 +67,13 @@
             <div class="card mb-4">
                 <div class="table-responsive text-nowrap">
                     @if ($productos->count())
-                        <table class="table table-hover" style="font-size: 0.8em;">
+                        <table class="table table-hover table-sm" style="font-size: 0.8em;">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
                                     <th class="text-end">Cantidad</th>
                                     <th class="text-end">Precio</th>
                                     <th class="text-end">Total</th>
-                                    @if (!$caja->cierre)
-                                        @can('caja.cajas.ver.cobrar.precio')
-                                            @if ($venta->pagos()->count() == 0)
-                                                <th class="text-end">C. Precio</th>
-                                            @endif
-                                        @endcan
-                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,18 +89,6 @@
                                         <td class="text-end">{{ $producto->cantidad }}</td>
                                         <td class="text-end">{{ $producto->precio }}</td>
                                         <td class="text-end">{{ number_format($producto->total, 2) }}</td>
-                                        @if (!$caja->cierre)
-                                            @can('caja.cajas.ver.cobrar.precio')
-                                                @if ($venta->pagos()->count() == 0)
-                                                    <td class="text-end">
-                                                        <button class="btn btn-icon btn-outline-info btn-sm"
-                                                            wire:click='eprecio({{ $producto->id }})'
-                                                            title="Cambiar precio"><i
-                                                                class="tf-icons fa-solid fa-dollar-sign"></i></button>
-                                                    </td>
-                                                @endif
-                                            @endcan
-                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -113,13 +96,6 @@
                                 <tr>
                                     <th colspan="3" class="fw-bold">Total</th>
                                     <th class="fw-bold text-end">{{ number_format($t, 2) }}</th>
-                                    @if (!$caja->cierre)
-                                        @can('caja.cajas.ver.cobrar.precio')
-                                            @if ($venta->pagos()->count() == 0)
-                                                <th></th>
-                                            @endif
-                                        @endcan
-                                    @endif
                                 </tr>
                             </thead>
 
@@ -140,7 +116,7 @@
                         @if ($venta->est_pago == 1 && $venta->fpago == null)
                             @can('caja.cajas.ver.cobrar.pago')
                                 <button class="btn btn-icon btn-primary btn-sm" wire:click='apagoContado()'
-                                    title="Agregar pago"><i class="fa-solid fa-hand-holding-dollar"></i></button>
+                                    title="Registrar pago"><i class="fa-solid fa-hand-holding-dollar"></i></button>
                             @endcan
                         @endif
                     </div>
@@ -212,7 +188,7 @@
                     <div class="card-header align-items-center flex-wrap gap-3 py-4">
                         <h5 class="card-action-title mb-0">Cuotas</h5>
                         <div class="card-action-element">
-                            @if ($mcuotas < $mtotal)
+                            @if ($mcuotas < $venta->total)
                                 <button class="btn btn-icon btn-primary btn-sm" wire:click='acuota'
                                     title="Agregar cuota"><i class="fa-solid fa-plus"></i></button>
                             @endif
@@ -419,6 +395,7 @@
                 $("#mPre").modal('hide')
                 noti(e[0]['m'], e[0]['t'])
             })
+
             Livewire.on('re', (e) => {
                 noti(e[0]['m'], e[0]['t'])
             })

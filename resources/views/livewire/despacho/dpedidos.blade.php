@@ -35,7 +35,9 @@
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
+                            @can('despacho.dpedidos.distribuir')
+                                <th>Acciones</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -43,16 +45,16 @@
                             <tr wire:key="{{ $pedido->id }}">
                                 <td>{{ $pedido->id }}</td>
                                 <td>{{ $pedido->razon_social }}</td>
-                                <td>{{ date('d/m/Y H:i:s', strtotime($pedido->created_at)) }}</td>
+                                <td>{{ $pedido->created_at->format('d/m/Y H:i:s') }}</td>
                                 <td>
                                     {!! estadoVenta($pedido->est_venta) !!}
                                 </td>
-                                <td>
-                                    @can('despacho.dpedidos.distribuir')
+                                @can('despacho.dpedidos.distribuir')
+                                    <td>
                                         <a href="{{ route('despacho.dpedidos.distribuir', $pedido->id) }}"
                                             class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-box'></i></a>
-                                    @endcan
-                                </td>
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach
                     </tbody>

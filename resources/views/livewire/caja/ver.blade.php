@@ -161,14 +161,14 @@
                             </div>
                         </div>
                         @if ($ventas->count())
-                            <div class="table-responsive text-noweap">
+                            <div class="table-responsive text-nowrap">
                                 <table class="table table-sm table-hover text-small">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
+                                            <th>#P</th>
                                             <th>Cliente</th>
                                             <th>Fecha</th>
-                                            <th>Cobrar</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -180,7 +180,8 @@
 
                                                 <td>
                                                     <a href="{{ route('caja.cajas.ver.cobrar', [$caja->id, $venta->id]) }}"
-                                                        class="btn btn-icon btn-outline-success btn-sm" title="Cobrar"><i
+                                                        class="btn btn-icon btn-outline-success btn-sm"
+                                                        title="Cobrar pedido"><i
                                                             class="tf-icons fa-solid fa-money-bill-1-wave"></i></a>
                                                 </td>
 

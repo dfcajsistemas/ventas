@@ -23,7 +23,7 @@ use Livewire\Attributes\On;
 class Cobrar extends Component
 {
     public $mTitle, $mMethod, $idm, $precio, $monto, $mpago, $mrecibido, $observacion, $tcomprobante, $rComp;
-    public $caja, $venta, $sucursal, $mpagos, $tcomprobantes, $mtotal, $mpagado, $mcuotas;
+    public $caja, $venta, $sucursal, $mpagos, $tcomprobantes, $mpagado, $mcuotas;
     public $fvence, $mcuota;
 
     public function mount(Caja $caja, Venta $venta)
@@ -40,8 +40,6 @@ class Cobrar extends Component
     #[Title(['Cobrar Venta', 'Caja'])]
     public function render()
     {
-        //monto total de la venta
-        $this->mtotal = Dventa::where('venta_id', $this->venta->id)->sum('total');
         //monto pagado de la venta
         $this->mpagado = Pago::where('venta_id', $this->venta->id)->sum('monto');
         //monto de cuotas de la venta
@@ -59,53 +57,19 @@ class Cobrar extends Component
         return view('livewire.caja.cobrar', compact('pagos', 'pagosAnulados', 'productos'));
     }
 
-    //editar precio de un producto
-    public function eprecio(Dventa $dventa)
-    {
-        $this->mTitle = 'Editar Precio';
-        $this->mMethod = 'gprecio';
-        $this->idm = $dventa->id;
-        $this->precio = $dventa->precio;
-        $this->dispatch('smp');
-    }
-    //guardar precio de un producto
-    public function gprecio()
-    {
-        $this->validate([
-            'precio' => 'required|numeric|min:1',
-        ], [
-            'precio.required' => 'Ingrese el precio',
-            'precio.numeric' => 'El precio debe ser un número',
-            'precio.min' => 'El precio debe ser mayor a 0',
-        ]);
-        $dventa = Dventa::find($this->idm);
-        $t = $this->precio * $dventa->cantidad;
-        if ($dventa->producto->igvafectacion_id == 1) {
-            $igv = $t * 0.18;
-        } else {
-            $igv = 0;
-        }
-        $dventa->update([
-            'precio' => $this->precio,
-            'total' => $t,
-            'igv' => $igv,
-            'updated_by' => auth()->user()->id
-        ]);
-        $this->dispatch('hmp', ['t' => 'success', 'm' => '¡Hecho!<br>Precio cambiado correctamente']);
-    }
     //agregar pago contado
     public function apagoContado()
     {
         $this->mTitle = 'Registrar Pago';
         $this->mMethod = 'gpagoContado';
         $this->reset(['mpago', 'mrecibido', 'observacion']);
-        $this->monto = $this->mtotal - $this->mpagado;
+        $this->monto = $this->venta->total - $this->mpagado;
         $this->dispatch('smc');
     }
     //guardar pago contado
     public function gpagoContado()
     {
-        if (($this->mpagado + $this->monto) > $this->mtotal) {
+        if (($this->mpagado + $this->monto) > $this->venta->total) {
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto total a pagar es mayor al total de la venta']);
             return;
         }
@@ -133,40 +97,9 @@ class Cobrar extends Component
                 'observacion' => $this->observacion,
                 'created_by' => auth()->user()->id
             ]);
-            if (($this->mpagado + $this->monto) == $this->mtotal) {
+            if (($this->mpagado + $this->monto) == $this->venta->total) {
                 $this->venta->update([
-                    'est_pago' => null,
-                    'updated_by' => auth()->user()->id
-                ]);
-            }
-            if ($this->venta->pagos()->whereNull('estado')->count() == 1) {
-                $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
-                    ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
-                    ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
-                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo', 'igvporcientos.porcentaje')
-                    ->where('dventas.venta_id', $this->venta->id)
-                    ->get();
-                $g = 0;
-                $e = 0;
-                $i = 0;
-                $gigv = 0;
-                foreach ($afectaciones as $afectacion) {
-                    if ($afectacion->codigo == '10') {
-                        $gigv += $afectacion->total;
-                        $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
-                    } elseif ($afectacion->codigo == '20') {
-                        $e += $afectacion->total;
-                    } elseif ($afectacion->codigo == '30') {
-                        $i += $afectacion->total;
-                    }
-                }
-                $this->venta->update([
-                    'op_grabada' => number_format($g, 6),
-                    'op_exonerada' => $e,
-                    'op_inafecta' => $i,
-                    'igv' => number_format(($gigv - $g), 6),
-                    'total' => $gigv + $e + $i,
-                    'updated_by' => auth()->user()->id
+                    'est_pago' => null
                 ]);
             }
             DB::commit();
@@ -184,10 +117,9 @@ class Cobrar extends Component
     public function acredito()
     {
         $this->venta->update([
-            'fpago' => $this->venta->fpago ? null : 1,
-            'updated_by' => auth()->user()->id
+            'fpago' => $this->venta->fpago ? null : 1
         ]);
-        $this->dispatch('hmc', ['t' => 'success', 'm' => '¡Hecho!<br>Se cambio la forma de pago.']);
+        $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Se cambio la forma de pago.']);
     }
 
     public function acuota()
@@ -196,9 +128,10 @@ class Cobrar extends Component
         $this->mMethod = 'gcuota';
         $this->reset(['fvence', 'mcuota']);
         $this->dispatch('smcuo');
-        $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
-        $mc = Cuota::where('venta_id', $this->venta->id)->sum('monto');
-        $this->mcuota = $mt - $mc;
+        $mt = $this->venta->total;
+        $mc = $this->mcuotas;
+        $this->mcuota = round($this->venta->total, 2) - $this->mcuotas;
+        //dd($this->venta->total, $this->mcuotas, $this->mcuota);
     }
     public function gcuota()
     {
@@ -213,8 +146,8 @@ class Cobrar extends Component
             'mcuota.min' => 'El monto de la cuota debe ser mayor a 0',
         ]);
 
-        $mt = Dventa::where('venta_id', $this->venta->id)->sum('total');
-        $mc = Cuota::where('venta_id', $this->venta->id)->sum('monto');
+        $mt = $this->venta->total;
+        $mc = $this->mcuotas;
         if (($mc + $this->mcuota) > $mt) {
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>El monto de la cuota es mayor al total de la venta']);
             return;
@@ -236,12 +169,6 @@ class Cobrar extends Component
                 'fvence' => $this->fvence,
                 'created_by' => auth()->user()->id
             ]);
-            if ($this->venta->fpago == null) {
-                $this->venta->update([
-                    'fpago' => 1,
-                    'updated_by' => auth()->user()->id
-                ]);
-            }
             DB::commit();
             $this->dispatch('hmcuo', ['t' => 'success', 'm' => '¡Hecho!<br>Cuota registrada correctamente']);
         } catch (\Exception $e) {
@@ -257,7 +184,6 @@ class Cobrar extends Component
         try {
             $this->venta->update([
                 'est_pago' => 1,
-                'updated_by' => auth()->user()->id
             ]);
 
             if ($pago->cuota_id) {
@@ -316,7 +242,7 @@ class Cobrar extends Component
                 'tcomprobante_id' => $this->tcomprobante,
                 'serie' => $serie->serie,
                 'correlativo' => $correlativo,
-                'updated_by' => auth()->user()->id
+                'femision' => now()
             ]);
 
             DB::commit();
@@ -377,7 +303,7 @@ class Cobrar extends Component
     {
         $cu = Cuota::where('estado', 1)->where('venta_id', $this->venta->id)->orderBy('id')->first();
         if ($this->idm != $cu->id) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>La cuota no es la próxima a pagar']);
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Existe una cuota anterior por pagar']);
             return;
         }
         $this->validate([
@@ -413,40 +339,10 @@ class Cobrar extends Component
             }
             if ($this->venta->pagos()->whereNull('estado')->sum('monto') == $this->mtotal) {
                 $this->venta->update([
-                    'est_pago' => null,
-                    'updated_by' => auth()->user()->id
+                    'est_pago' => null
                 ]);
             }
-            if ($this->venta->pagos()->whereNull('estado')->count() == 1) {
-                $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
-                    ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
-                    ->join('igvporcientos', 'productos.igvporciento_id', '=', 'igvporcientos.id')
-                    ->select('dventas.id', 'dventas.total', 'igvafectacions.codigo', 'igvporcientos.porcentaje')
-                    ->where('dventas.venta_id', $this->venta->id)
-                    ->get();
-                $g = 0;
-                $e = 0;
-                $i = 0;
-                $gigv = 0;
-                foreach ($afectaciones as $afectacion) {
-                    if ($afectacion->codigo == '10') {
-                        $gigv += $afectacion->total;
-                        $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
-                    } elseif ($afectacion->codigo == '20') {
-                        $e += $afectacion->total;
-                    } elseif ($afectacion->codigo == '30') {
-                        $i += $afectacion->total;
-                    }
-                }
-                $this->venta->update([
-                    'op_grabada' => number_format($g, 6),
-                    'op_exonerada' => $e,
-                    'op_inafecta' => $i,
-                    'igv' => number_format(($gigv - $g), 6),
-                    'total' => $gigv + $e + $i,
-                    'updated_by' => auth()->user()->id
-                ]);
-            }
+
             DB::commit();
             if ($this->mpago == 1) {
                 $cambio = $this->mrecibido - $this->monto;

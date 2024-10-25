@@ -42,7 +42,7 @@ class Dpedidos extends Component
         $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
             ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
             ->where('ventas.sucursal_id', $this->sucursal->id)
-            ->where('ventas.est_venta', 1)
+            ->whereIn('ventas.est_venta', [1, 5])
             ->where(function ($query) {
                 $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
                     ->orWhere('ventas.id', 'like', '%' . $this->search . '%');

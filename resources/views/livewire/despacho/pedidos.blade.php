@@ -49,9 +49,10 @@
                             <tr wire:key="{{ $pedido->id }}">
                                 <td>{{ $pedido->id }}</td>
                                 <td>{{ $pedido->razon_social }}</td>
-                                <td>{{ $pedido->created_at }}</td>
+                                <td>{{ $pedido->created_at->format('d/m/Y H:i:s') }}</td>
                                 <td>
-                                    <h6 class="mb-0 w-px-100 text-warning"><i class="bx bxs-circle fs-tiny me-2"></i>En
+                                    <h6 class="mb-0 w-px-100 text-secondary"><i
+                                            class="bx bxs-circle fs-tiny me-2"></i>En
                                         proceso</h6>
                                 </td>
                                 <td>

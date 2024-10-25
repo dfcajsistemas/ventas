@@ -18,9 +18,9 @@
                         <button x-data="anular" x-on:click="confirmar" class="btn btn-icon btn-danger"
                             title="Anular pedido"><i class="tf-icons fa-solid fa-xmark"></i></button>
                     @endcan
-                    <button class="btn btn-icon btn-success" title="Imprimir ticket"><i
-                            class="tf-icons fa-solid fa-receipt"></i></button>
                 @endif
+                <button class="btn btn-icon btn-success" title="Imprimir ticket" wire:click='ticket'><i
+                        class="tf-icons fa-solid fa-receipt"></i></button>
             </div>
             <div class="card mb-4">
                 <div class="table-responsive text-wrap">
@@ -73,7 +73,10 @@
                 <div class="table-responsive">
                     <table class="table" style="font-size: 0.9em;">
                         <tr>
-                            <td><small>Pedido ID</small><br><span class="text-primary">{{ $venta->id }}</span></td>
+                            <td><small>Pedido[Ticket]</small><br><span
+                                    class="text-primary">{{ $venta->id }}</span><span class="text-success">
+                                    [{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}]</span>
+                            </td>
                             <td><small>Pago</small><br>{!! estadoPago($venta->est_pago) !!}</td>
                             <td><small>Estado</small><br>{!! estadoVenta($venta->est_venta) !!}</td>
                         </tr>
