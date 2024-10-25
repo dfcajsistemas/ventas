@@ -37,7 +37,7 @@ class Pedidos extends Component
         $this->sucursal = auth()->user()->sucursal;
     }
 
-    #[Title(['Pedidos', 'Despacho'])]
+    #[Title(['Pedidos en proceso', 'Despacho'])]
     public function render()
     {
         $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
@@ -70,7 +70,7 @@ class Pedidos extends Component
     public function destroy(Venta $venta)
     {
         if ($venta->dventas()->count() > 0) {
-            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se puede eliminar el pedido porque tiene productos.']);
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>No se puede eliminar el pedido, mientras tenga productos.']);
         } else {
             $venta->delete();
             $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido eliminado.']);

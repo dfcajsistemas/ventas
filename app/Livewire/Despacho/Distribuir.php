@@ -30,7 +30,8 @@ class Distribuir extends Component
             ->where('dventas.venta_id', $this->venta->id)
             ->get();
         $cliente = $this->venta->cliente;
-        return view('livewire.despacho.distribuir', compact('cliente', 'productos'));
+        $eventas = $this->venta->eventas;
+        return view('livewire.despacho.distribuir', compact('cliente', 'productos', 'eventas'));
     }
     public function eDatosCliente()
     {
@@ -69,22 +70,40 @@ class Distribuir extends Component
     #[On('entregar')]
     public function entregar()
     {
-        $this->venta->update([
-            'est_venta' => 3,
-            'fentrega' => now(),
-            'updated_by' => auth()->id(),
-        ]);
-        $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Se registró la entrega del pedido']);
+        try {
+            DB::beginTransaction();
+            $this->venta->update([
+                'est_venta' => 3,
+            ]);
+            $this->venta->eventas()->create([
+                'user_id' => auth()->id(),
+                'est_venta' => 3,
+            ]);
+            DB::commit();
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Entrega registrada']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Hubo un error al registrar la entrega del pedido']);
+        }
     }
     #[On('delivery')]
     public function delivery()
     {
-        $this->venta->update([
-            'est_venta' => 2,
-            'fdelivery' => now(),
-            'updated_by' => auth()->id(),
-        ]);
-        $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Se registró el pedido para delivery']);
+        try {
+            DB::beginTransaction();
+            $this->venta->update([
+                'est_venta' => 2,
+            ]);
+            $this->venta->eventas()->create([
+                'user_id' => auth()->id(),
+                'est_venta' => 2,
+            ]);
+            DB::commit();
+            $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido enviado para delivery']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Hubo un error al enviar para delivery el pedido']);
+        }
     }
 
     #[On('anular')]
@@ -94,8 +113,11 @@ class Distribuir extends Component
             DB::beginTransaction();
             $this->venta->update([
                 'est_venta' => 4,
-                'fanulado' => now(),
                 'updated_by' => auth()->id(),
+            ]);
+            $this->venta->eventas()->create([
+                'user_id' => auth()->id(),
+                'est_venta' => 4,
             ]);
 
             foreach ($this->venta->dventas as $dventa) {

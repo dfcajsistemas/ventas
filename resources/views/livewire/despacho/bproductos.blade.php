@@ -32,13 +32,12 @@
                         @foreach ($productos as $producto)
                             <tr>
                                 <td>
-                                    <small class="text-warning">{{ $producto->stock }}</small> | {{ $producto->nombre }}
+                                    <small class="fw-bold">{{ $producto->stock }}</small> | {{ $producto->nombre }}
                                 </td>
-                                <td class="text-info">{{ $producto->p_venta }}</td>
+                                <td class="text-warning">{{ $producto->p_venta }}</td>
                                 <td>
-                                    <button class="btn btn-icon btn-success btn-sm"
-                                        wire:click='add({{ $producto->id }})' title="Agregar producto"><i
-                                            class="tf-icons fa-solid fa-plus"></i></button>
+                                    <button class="btn btn-icon btn-info btn-sm" wire:click='add({{ $producto->id }})'
+                                        title="Agregar producto"><i class="tf-icons fa-solid fa-plus"></i></button>
                                 </td>
                             </tr>
                         @endforeach

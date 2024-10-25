@@ -18,6 +18,9 @@ class CanastaController extends Controller
 
     public function canasta(Venta $venta)
     {
+        if ($venta->est_venta) {
+            return redirect()->route('despacho.dpedidos.distribuir', $venta->id);
+        }
         $sucursal = auth()->user()->sucursal;
         return view('despacho.canasta', compact('venta', 'sucursal'));
     }

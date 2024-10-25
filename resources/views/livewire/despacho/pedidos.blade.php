@@ -57,12 +57,12 @@
                                 <td>
                                     @can('despacho.gpedidos.canasta')
                                         <a href="{{ route('despacho.gpedidos.canasta', $pedido->id) }}"
-                                            class="btn btn-icon btn-info btn-sm"><i
-                                                class="tf-icons fa-solid fa-basket-shopping"></i></a>
+                                            class="btn btn-icon btn-info btn-sm" title="Ver pedido en proceso"><i
+                                                class="tf-icons fa-solid fa-box-open"></i></a>
                                     @endcan
                                     @can('despacho.gpedidos.eliminar')
                                         <button x-data="eliminar" class="btn btn-icon btn-danger btn-sm"
-                                            title="Eliminar" x-on:click="confirmar({{ $pedido->id }})"><i
+                                            title="Eliminar pedido" x-on:click="confirmar({{ $pedido->id }})"><i
                                                 class="tf-icons fa-solid fa-trash"></i></button>
                                     @endcan
 

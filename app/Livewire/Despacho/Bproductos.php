@@ -58,7 +58,7 @@ class Bproductos extends Component
         if ($dventa) {
 
             $c = $dventa->cantidad + 1;
-            $p = $producto->{'p_venta' . $this->sucursal->p_venta};
+            $p = $dventa->precio;
             $t = $p * $c;
             if ($producto->igvafectacion_id == 1) {
                 $igv = ($t * $pigv) / (100 + $pigv);

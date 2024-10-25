@@ -1,30 +1,36 @@
 <div>
-    <h4><span class="text-muted fw-light">Despacho /</span> Distribuir <span class="text-warning">(Sucursal:
-            {{ $sucursal->nombre }})</span></h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Despacho /</span> Distribuir</h4>
+        <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>
+                {{ $sucursal->nombre }}</span></h4>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="flex mb-3">
-                <a href="{{ route('despacho.pedidos') }}" class="btn btn-icon btn-secondary" title="Regresar"><i
-                        class="fa-solid fa-arrow-left"></i></a>
-                @if (!$venta->fentrega && !$venta->fdelivery && !$venta->fanulado)
-                    <button x-data="entregar" x-on:click="confirmar" class="btn btn-success btn-block"
-                        title="Entregar pedido"><i class="fa-solid fa-box-archive me-2"></i>Entregar</button>
-                    <button x-data="delivery" x-on:click="confirmar" class="btn btn-info btn-block"
-                        title="Pedido para delivery"><i class="fa-solid fa-motorcycle me-2"></i>A delivery</button>
-                    <button x-data="anular" x-on:click="confirmar" class="btn btn-danger btn-block"
-                        title="Anular pedido"><i class="fa-solid fa-xmark me-2"></i>Anular</button>
+                <a href="{{ route('despacho.dpedidos') }}" class="btn btn-icon btn-secondary" title="Regresar"><i
+                        class='bx bx-arrow-back'></i></a>
+                @if ($venta->est_venta == 1 || $venta->est_venta == 5)
+                    <button x-data="entregar" x-on:click="confirmar" class="btn btn-icon btn-success"
+                        title="Entregar pedido"><i class="tf-icons fa-solid fa-people-carry-box"></i></button>
+                    <button x-data="delivery" x-on:click="confirmar" class="btn btn-icon btn-info"
+                        title="Enviar a delivery"><i class="t-icons fa-solid fa-motorcycle"></i></button>
+                    @can('despacho.dpedidos.distribuir.anular')
+                        <button x-data="anular" x-on:click="confirmar" class="btn btn-icon btn-danger"
+                            title="Anular pedido"><i class="tf-icons fa-solid fa-xmark"></i></button>
+                    @endcan
+                    <button class="btn btn-icon btn-success" title="Imprimir ticket"><i
+                            class="tf-icons fa-solid fa-receipt"></i></button>
                 @endif
-
             </div>
             <div class="card mb-4">
-                <div class="table-responsive text-nowrap">
+                <div class="table-responsive text-wrap">
                     @if ($productos->count())
-                        <table class="table table-hover" style="font-size: 0.8em;">
+                        <table class="table table-sm table-hover" style="font-size: 0.9em;">
                             <thead>
                                 <tr>
-                                    <th>Producto</th>
-                                    <th class="text-end">Cantidad</th>
-                                    <th class="text-end">Precio</th>
+                                    <th># Producto</th>
+                                    <th class="text-end">Cant</th>
+                                    <th class="text-end">PU</th>
                                     <th class="text-end">Total</th>
                                 </tr>
                             </thead>
@@ -37,8 +43,9 @@
                                         $t += $producto->total;
                                     @endphp
                                     <tr>
-                                        <td>{{ $producto->nombre }}</td>
-                                        <td class="text-end text-danger">{{ $producto->cantidad }}</td>
+                                        <td><span class="fw-bold">{{ $loop->iteration }}</span>
+                                            {{ $producto->nombre }}</td>
+                                        <td class="text-end">{{ $producto->cantidad }}</td>
                                         <td class="text-end">{{ $producto->precio }}</td>
                                         <td class="text-end">{{ number_format($producto->total, 2) }}</td>
                                     </tr>
@@ -46,8 +53,8 @@
                             </tbody>
                             <thead class="table-border-bottom-0">
                                 <tr>
-                                    <th colspan="3" class="fw-bold">Total</th>
-                                    <th class="fw-bold text-end">{{ number_format($t, 2) }}</th>
+                                    <th colspan="3" class="fw-bold text-danger">Total</th>
+                                    <th class="fw-bold text-end text-danger">{{ number_format($t, 2) }}</th>
                                 </tr>
                             </thead>
 
@@ -89,33 +96,12 @@
 
             </div>
             <div class="row m-4">
-                <div class="col">
-                    <h6 class="mb-0 w-px-100 text-warning"><i class="bx bxs-circle fs-tiny me-2"></i>Solicitado
-                        <spam class="text-muted" style="font-size: 0.7em;">
-                            {{ date('d/m/y H:i:s', strtotime($venta->created_at)) }}</spam>
-                    </h6>
-                </div>
-                @if ($venta->fdelivery)
+                @foreach ($eventas as $eventa)
                     <div class="col">
-                        <h6 class="mb-0 w-px-100 text-primary"><i class="bx bxs-circle fs-tiny me-2"></i>Delivery
-                            <spam class="text-muted" style="font-size: 0.7em;">
-                                {{ date('d/m/y H:i:s', strtotime($venta->fdelivery)) }}</spam>
+                        {!! estadoVenta($eventa->est_venta) !!}
+                        <span style="font-size: 0.7em">{{ date('d/m/y H:i:s', strtotime($eventa->created_at)) }}</span>
                     </div>
-                @endif
-                @if ($venta->fentrega)
-                    <div class="col">
-                        <h6 class="mb-0 w-px-100 text-success"><i class="bx bxs-circle fs-tiny me-2"></i>Entregado
-                            <spam class="text-muted" style="font-size: 0.7em;">
-                                {{ date('d/m/y H:i:s', strtotime($venta->fentrega)) }}</spam>
-                    </div>
-                @endif
-                @if ($venta->fanulado)
-                    <div class="col">
-                        <h6 class="mb-0 w-px-100 text-danger"><i class="bx bxs-circle fs-tiny me-2"></i>Anulado
-                            <spam class="text-muted" style="font-size: 0.7em;">
-                                {{ date('d/m/y H:i:s', strtotime($venta->fanulado)) }}</spam>
-                    </div>
-                @endif
+                @endforeach
             </div>
             <div class="card">
                 <div class="table-responsive">

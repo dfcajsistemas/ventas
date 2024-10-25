@@ -15,6 +15,7 @@ Route::get('/pedidos/bcliente', [CanastaController::class, 'bcliente'])->name('d
 
 Route::get('/pedidos/{venta}', [CanastaController::class, 'canasta'])->name('despacho.gpedidos.canasta')->middleware('can:despacho.gpedidos.canasta');
 Route::get('/pedidos/gpedido/{venta}', [CanastaController::class, 'fPedido'])->name('despacho.gpedidos.fpedido'); //finalizar pedido
-Route::get('/pedidos/distribuir/{venta}', Distribuir::class)->name('despacho.pedidos.distribuir')->middleware('can:despacho.pedidos.distribuir');
 
-Route::get('dpedidos', Dpedidos::class)->name('despacho.dpedidos')->middleware('can:despacho.dpedidos');
+
+Route::get('/dpedidos', Dpedidos::class)->name('despacho.dpedidos')->middleware('can:despacho.dpedidos');
+Route::get('/dpedidos/{venta}', Distribuir::class)->name('despacho.dpedidos.distribuir')->middleware('can:despacho.dpedidos.distribuir');

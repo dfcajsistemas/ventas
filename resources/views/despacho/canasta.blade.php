@@ -1,4 +1,4 @@
-<x-app-layout modulo="Despacho" pagina="Canasta">
+<x-app-layout modulo="Despacho" pagina="Canasta - Pedidos">
     <div class="d-flex justify-content-between">
         <h4><span class="text-muted fw-light">Despacho / Pedidos / </span> Canasta</h4>
         <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>

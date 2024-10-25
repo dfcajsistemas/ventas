@@ -96,6 +96,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'despacho.gpedidos.canasta.precio'])->syncRoles($despacho);
 
         Permission::create(['name' => 'despacho.dpedidos'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.dpedidos.distribuir'])->syncRoles($despacho);
+        Permission::create(['name' => 'despacho.dpedidos.distribuir.anular'])->syncRoles($despacho);
 
         Permission::create(['name' => 'caja'])->assignRole($caja);
         Permission::create(['name' => 'caja.cajas'])->assignRole($caja);

@@ -66,14 +66,12 @@
         </div>
     </div>
     <div class="mb-3">
-        <a href="{{ route('despacho.gpedidos') }}" class="btn btn-secondary"><i
-                class='tf-icons bx bx-left-arrow-alt'></i> Regresar</a>
+        <a href="{{ route('despacho.gpedidos') }}" class="btn btn-icon btn-secondary"><i
+                class='tf-icons bx bx-left-arrow-alt'></i></a>
         @if ($productos->count())
             @if (!$cventa->est_venta)
-                <button class="btn btn-info" wire:click='genPedido'><i
-                        class="tf-icons fa-solid fa-box-archive me-2"></i>
-                    Generar
-                    Pedido</button>
+                <button class="btn btn-success" wire:click='genPedido'><i class='tf-icons bx bxs-box me-1'></i>
+                    Generar Pedido</button>
             @endif
         @endif
 

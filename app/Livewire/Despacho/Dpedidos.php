@@ -2,12 +2,53 @@
 
 namespace App\Livewire\Despacho;
 
+use App\Models\Venta;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
+#[Lazy()]
 class Dpedidos extends Component
 {
+    use WithPagination;
+
+    public $sucursal;
+
+    #[Url(except: '')]
+    public $search = '';
+    #[Url(except: '10')]
+    public $perPage = '10';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function mount()
+    {
+        $this->sucursal = auth()->user()->sucursal;
+    }
+
+    #[Title(['Pedidos | Canasta', 'Despacho'])]
     public function render()
     {
-        return view('livewire.despacho.dpedidos');
+        $pedidos = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
+            ->select('ventas.id', 'ventas.created_at', 'ventas.est_venta', 'ventas.est_pago', 'clientes.razon_social')
+            ->where('ventas.sucursal_id', $this->sucursal->id)
+            ->where('ventas.est_venta', 1)
+            ->where(function ($query) {
+                $query->where('clientes.razon_social', 'like', '%' . $this->search . '%')
+                    ->orWhere('ventas.id', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('ventas.id', 'desc')
+            ->paginate($this->perPage);
+        return view('livewire.despacho.dpedidos', compact('pedidos'));
     }
 }

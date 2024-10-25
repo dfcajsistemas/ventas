@@ -212,7 +212,7 @@ class Cproductos extends Component
             DB::commit();
             // $this->dispatch('reca', ['t' => 'success', 'm' => '¡Hecho!<br>Pedido generado correctamente, ya no se podrá agregar más productos']);
             // $this->dispatch('abp');
-            return redirect()->route('despacho.pedidos.canasta', $this->cventa->id)->with('success', '¡Hecho!<br>Pedido generado correctamente');
+            return redirect()->route('despacho.dpedidos.distribuir', $this->cventa->id)->with('success', '¡Hecho!<br>Pedido generado correctamente');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('reca', ['t' => 'error', 'm' => '¡Error!<br>' . $e->getMessage()]);
