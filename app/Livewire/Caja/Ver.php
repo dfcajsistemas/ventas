@@ -107,6 +107,8 @@ class Ver extends Component
         $movimiento->delete();
         $this->dispatch('re', ['t' => 'success', 'm' => '¡Hecho!<br>Movimiento eliminado']);
     }
+
+    #[On('cerrar')]
     public function cerrarCaja()
     {
         if ($this->caja->movimientos->count() == 0 && $this->caja->pagos()->whereNull('estado')->count() == 0) {

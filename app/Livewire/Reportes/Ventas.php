@@ -5,6 +5,7 @@ namespace App\Livewire\Reportes;
 use App\Models\Venta;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,6 +15,7 @@ class Ventas extends Component
     use WithPagination;
 
     public $estado = '';
+    #[Url(except: '10')]
     public $perPage = '10';
     public $desde;
     public $hasta;
@@ -31,6 +33,7 @@ class Ventas extends Component
         if ($this->estado == '') {
             $ventas = Venta::whereDate('created_at', '>=', $this->desde)
                 ->whereDate('created_at', '<=', $this->hasta)
+                ->whereNotNull('est_venta')
                 ->orderBy('id', 'desc')
                 ->paginate($this->perPage);
         } else {

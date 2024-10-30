@@ -50,7 +50,7 @@
                         @foreach ($ventas as $venta)
                             <tr wire:key="{{ $venta->id }}">
                                 <td>{{ $venta->id }}</td>
-                                <td>{{ $venta->created_at }}</td>
+                                <td>{{ $venta->created_at->format('d/m/Y') }}</td>
                                 <td>{{ $venta->cliente->razon_social }}</td>
                                 <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
                                 <td>{!! estadoPago($venta->est_pago) !!}</td>

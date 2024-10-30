@@ -1,6 +1,9 @@
 <div>
-    <h4><span class="text-muted fw-light">Caja /</span> Detalle <span class="text-warning">(Sucursal:
-            {{ $sucursal->nombre }})</span></h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Caja /</span> Detalle</h4>
+        <h4><span class="text-info"><i class="fa-solid fa-store text-muted"></i>
+                {{ $sucursal->nombre }}</span></h4>
+    </div>
     <div class="row">
         <div class="col-md-7">
             <div class="card mb-4">
@@ -35,8 +38,9 @@
                                 @if (!$caja->cierre)
                                     @can('caja.cajas.ver.cerrar')
                                         @if ($caja->user_id == auth()->user()->id)
-                                            <button class="btn btn-icon btn-outline-danger" wire:click='cerrarCaja'
-                                                title="Cerrar caja"><i class="tf-icons fa-solid fa-lock"></i></button>
+                                            <button x-data="cerrar" x-on:click='confirmar()'
+                                                class="btn btn-icon btn-outline-danger" title="Cerrar caja"><i
+                                                    class="tf-icons fa-solid fa-lock"></i></button>
                                         @endif
                                     @endcan
                                 @endif
@@ -51,7 +55,7 @@
                 <h5 class="card-header text-info">Pagos</h5>
                 @if ($pagos->count())
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover table-sm">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -73,8 +77,8 @@
                                         <td style="font-size:0.8em;">{{ $pago->mpago->nombre }}</td>
                                         <td>
                                             <a href="{{ route('caja.cajas.ver.cobrar', [$caja->id, $pago->venta_id]) }}"
-                                                class="btn btn-icon btn-warning btn-sm" title="Ver venta"><i
-                                                    class="fa-solid fa-hand-holding-dollar"></i></a>
+                                                class="btn btn-icon btn-outline-warning btn-sm" title="Ver pago"><i
+                                                    class="tf-icons fa-regular fa-eye"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -97,13 +101,15 @@
                 @endphp
                 @if ($movimientos->count())
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>Tipo</th>
                                     <th>Concepto</th>
                                     <th>Monto</th>
-                                    <th>Eliminar</th>
+                                    @if ($caja->user_id == auth()->user()->id && !$caja->cierre)
+                                        <th>Eliminar</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,12 +125,14 @@
                                         <td>{{ tipoMovimiento($movimiento->tipo) }}</td>
                                         <td>{{ $movimiento->concepto }}</td>
                                         <td>{{ $movimiento->monto }}</td>
-                                        <td>
-                                            <button x-data="eliminar"
-                                                class="btn btn-icon btn-outline-danger btn-sm" title="Eliminar"
-                                                x-on:click='confirmar({{ $movimiento->id }}, "{{ $movimiento->concepto }}")'><i
-                                                    class="tf-icons fa-solid fa-trash-can"></i></button>
-                                        </td>
+                                        @if ($caja->user_id == auth()->user()->id && !$caja->cierre)
+                                            <td>
+                                                <button x-data="eliminar"
+                                                    class="btn btn-icon btn-outline-danger btn-sm" title="Eliminar"
+                                                    x-on:click='confirmar({{ $movimiento->id }}, "{{ $movimiento->concepto }}")'><i
+                                                        class="tf-icons fa-solid fa-trash-can"></i></button>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -177,14 +185,13 @@
                                                 <td>{{ $venta->id }}</td>
                                                 <td>{{ $venta->cliente }}</td>
                                                 <td>{{ date('d/m/Y', strtotime($venta->created_at)) }}</td>
-
-                                                <td>
-                                                    <a href="{{ route('caja.cajas.ver.cobrar', [$caja->id, $venta->id]) }}"
-                                                        class="btn btn-icon btn-outline-success btn-sm"
-                                                        title="Cobrar pedido"><i
-                                                            class="tf-icons fa-solid fa-money-bill-1-wave"></i></a>
-                                                </td>
-
+                                                @if ($caja->user_id == auth()->user()->id)
+                                                    <td>
+                                                        <a href="{{ route('caja.cajas.ver.cobrar', [$caja->id, $venta->id]) }}"
+                                                            class="btn btn-icon btn-success btn-sm" title="Cobrar pedido"><i
+                                                                class="tf-icons fa-solid fa-money-bill-1-wave"></i></a>
+                                                    </td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -208,7 +215,7 @@
                 @endphp
                 @if ($totalPagos->count())
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover table-sm">
                             <thead>
                                 <tr>
                                     <th>M. Pago</th>
@@ -237,7 +244,7 @@
             <div class="card mb-4">
                 <h5 class="card-header text-info">Resumen caja</h5>
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-sm">
                         <tbody class="table-border-bottom-0">
                             <tr>
                                 <td>Total pagos</td>
@@ -300,7 +307,8 @@
                 confirmar(id, con) {
                     Swal.fire({
                         title: '¿Estás seguro?',
-                        html: "¡Eliminarás!<br><b>" + con + "</b>",
+                        html: "¡Eliminarás el movimiento!<br><b>" + con +
+                            "</b><br>¡No podrás revertir esto!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -311,6 +319,23 @@
                             Livewire.dispatch('delete', {
                                 movimiento: id
                             })
+                        }
+                    })
+                }
+            }))
+            Alpine.data('cerrar', () => ({
+                confirmar() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        html: "Cerrarás la caja<br>¡No podrás revertir esto!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Sí, ciérralo!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Livewire.dispatch('cerrar')
                         }
                     })
                 }

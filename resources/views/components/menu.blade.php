@@ -104,7 +104,7 @@
             @can('mantenimiento.productos')
                 <li class="menu-item {{ request()->routeIs('mantenimiento.productos*') ? 'active' : '' }}">
                     <a href="{{ route('mantenimiento.productos') }}" class="menu-link">
-                        <i class="menu-icon tf-icons fa-solid fa-cube"></i>
+                        <i class="menu-icon tf-icons fa-solid fa-boxes-packing"></i>
                         <div class="text-truncate">Productos</div>
                     </a>
                 </li>
@@ -113,7 +113,7 @@
                 <li class="menu-item {{ request()->routeIs('mantenimiento.mpagos*') ? 'active' : '' }}">
                     <a href="{{ route('mantenimiento.mpagos') }}" class="menu-link">
                         <i class="menu-icon tf-icons fa-solid fa-sack-dollar"></i>
-                        <div class="text-truncate">Modo pagos</div>
+                        <div class="text-truncate">Metodos pago</div>
                     </a>
                 </li>
             @endcan

@@ -41,7 +41,7 @@ class Cobrar extends Component
     public function render()
     {
         //monto pagado de la venta
-        $this->mpagado = Pago::where('venta_id', $this->venta->id)->sum('monto');
+        $this->mpagado = Pago::where('venta_id', $this->venta->id)->whereNull('estado')->sum('monto');
         //monto de cuotas de la venta
         $this->mcuotas = Cuota::where('venta_id', $this->venta->id)->sum('monto');
         //obtener los pagos de la venta
@@ -337,7 +337,7 @@ class Cobrar extends Component
                     'updated_by' => auth()->user()->id
                 ]);
             }
-            if ($this->venta->pagos()->whereNull('estado')->sum('monto') == $this->mtotal) {
+            if ($this->venta->pagos()->whereNull('estado')->sum('monto') == $this->venta->total) {
                 $this->venta->update([
                     'est_pago' => null
                 ]);

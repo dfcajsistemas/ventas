@@ -277,14 +277,6 @@
                 <div class="card card-action mb-4">
                     <div class="card-header align-items-center flex-wrap gap-3 py-4">
                         <h5 class="card-action-title mb-0">Pagos Anulados</h5>
-                        <div class="card-action-element">
-                            @if ($venta->est_pago == 1 && $venta->fpago == null)
-                                @can('caja.cajas.ver.cobrar.pago')
-                                    <button class="btn btn-icon btn-primary btn-sm" wire:click='apagoContado()'
-                                        title="Agregar pago"><i class="fa-solid fa-hand-holding-dollar"></i></button>
-                                @endcan
-                            @endif
-                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover border-top" style="font-size: 0.8em;">
