@@ -19,7 +19,7 @@
     </div>
     <div class="card mb-3">
         @if ($productos->count())
-            <div class="table-responsive">
+            <div class="table-responsive text-nowrap">
                 <table class="table table-hover table-sm">
                     <thead>
                         <tr>

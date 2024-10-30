@@ -1,6 +1,6 @@
 <div>
     <div class="card mb-4">
-        <div class="table-responsive">
+        <div class="table-responsive text-nowrap">
             @if ($productos->count())
                 <table class="table table-hover table-sm" style="font-size: 0.9em;">
                     <thead>

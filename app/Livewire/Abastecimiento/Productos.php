@@ -16,7 +16,7 @@ class Productos extends Component
     use WithPagination;
 
     public $stock_minimo, $idm, $idp, $mTitle, $mMethod;
-    public $sucursal_id, $sucursal_nombre;
+    public $sucursal;
 
     #[Url(except: '')]
     public $search = '';
@@ -35,9 +35,7 @@ class Productos extends Component
 
     public function mount()
     {
-        $sucursal = Auth()->user()->sucursal;
-        $this->sucursal_id = $sucursal->id;
-        $this->sucursal_nombre = $sucursal->nombre;
+        $this->sucursal = Auth()->user()->sucursal;
     }
 
     #[Title(['Productos', 'Abastecimiento'])]
@@ -55,7 +53,7 @@ class Productos extends Component
         $this->mTitle = 'Stock de ' . $producto->nombre;
         $this->mMethod = 'ustock';
         $this->idp = $producto->id;
-        if ($s = $producto->stocks->where('sucursal_id', $this->sucursal_id)->first()) {
+        if ($s = $producto->stocks->where('sucursal_id', $this->sucursal->id)->first()) {
             $this->stock_minimo = $s->stock_minimo;
             $this->idm = $s->id;
         } else {
@@ -77,7 +75,7 @@ class Productos extends Component
         } else {
             $stock = new Stock();
             $stock->producto_id = $this->idp;
-            $stock->sucursal_id = $this->sucursal_id;
+            $stock->sucursal_id = $this->sucursal->id;
             $stock->created_by = Auth()->user()->id;
         }
         $stock->stock_minimo = $this->stock_minimo;
@@ -85,6 +83,6 @@ class Productos extends Component
 
         $stock->save();
 
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Stock mínimo actualizado']);
+        $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Stock mínimo actualizado']);
     }
 }

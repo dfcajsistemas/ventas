@@ -121,7 +121,7 @@
                             <thead>
                                 <tr>
                                     <th>Cliente</th>
-                                    <th>Cumpleaños</th>
+                                    <th>F. Cumpleaños</th>
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
@@ -141,8 +141,8 @@
                             </tbody>
                         </table>
                     @else
-                        <div class="mx-3 mb-3">
-                            <x-msg type="info" msg="No se encontraron resultados" />
+                        <div class="mx-3 m-3">
+                            <x-msg type="info" msg="Este mes, ningún cliente esta de cumpleaños" />
                         </div>
                     @endif
                 </div>
