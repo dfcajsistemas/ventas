@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('eventas', function (Blueprint $table) {
             $table->id();
 
-            $table->tinyInteger('est_venta'); // 1: solicitado, 2: delivery, 3: entregado, 4: anulado
+            $table->tinyInteger('est_venta'); // 1: solicitado, 2: delivery, 3: entregado, 4: anulado, 5: devuelto
+            $table->tinyInteger('est_anterior')->nullable(); // 1: solicitado, 2: delivery, 3: entregado, 4: anulado, 5: devuelto
 
             $table->foreignId('venta_id')->constrained();
             $table->foreignId('user_id')->constrained();
