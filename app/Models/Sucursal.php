@@ -28,7 +28,10 @@ class Sucursal extends Model
     {
         return $this->hasMany(Caja::class);
     }
-
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
 
     //Relacion uno a muchos inversa
     public function distrito()

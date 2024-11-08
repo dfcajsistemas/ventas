@@ -9,7 +9,8 @@ class EspacioController extends Controller
 {
     public function modulos()
     {
-        return view('espacio.modulos');
+        $sucursal = auth()->user()->sucursal;
+        return view('espacio.modulos', compact('sucursal'));
     }
     public function datos()
     {

@@ -5,28 +5,63 @@
             {{ $sucursal->nombre }}</h4>
     </div>
     <div class="row">
-        <div class="col-lg-2 col-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-
-                            <i class="fa-solid fa-box-open"></i>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="cardOpt6" style="">
-                                <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+        <div class="col-12">
+            <h5>Pedidos</h5>
+            <div class="card mb-4">
+                <div class="card-widget-separator-wrapper">
+                    <div class="card-body card-widget-separator">
+                        <div class="row gy-4 gy-sm-1">
+                            <div class="col-sm-6 col-lg-3">
+                                <div
+                                    class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
+                                    <div>
+                                        <h3 class="mb-1 text-secondary">{{ $enproceso }}</h3>
+                                        <p class="mb-0">En proceso</p>
+                                    </div>
+                                    <span class="badge bg-label-secondary rounded p-2 me-sm-4">
+                                        <i class='bx bxs-basket bx-sm'></i>
+                                    </span>
+                                </div>
+                                <hr class="d-none d-sm-block d-lg-none me-4">
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div
+                                    class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+                                    <div>
+                                        <h3 class="mb-1 text-info">{{ $solicitados }}</h3>
+                                        <p class="mb-0">Solicitados</p>
+                                    </div>
+                                    <span class="badge bg-label-info rounded p-2 me-lg-4">
+                                        <i class='bx bxs-box bx-sm'></i>
+                                    </span>
+                                </div>
+                                <hr class="d-none d-sm-block d-lg-none">
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div
+                                    class="d-flex justify-content-between align-items-start border-end pb-3 pb-sm-0 card-widget-3">
+                                    <div>
+                                        <h3 class="mb-1 text-primary">{{ $deliverys }}</h3>
+                                        <p class="mb-0">Delivery</p>
+                                    </div>
+                                    <span class="badge bg-label-primary rounded p-2 me-sm-4">
+                                        <i class='bx bxs-truck bx-sm'></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="mb-1 text-warning">{{ $devueltos }}</h3>
+                                        <p class="mb-0">Devueltos</p>
+                                    </div>
+                                    <span class="badge bg-label-warning rounded p-2">
+                                        <i class='bx bxs-left-arrow-square bx-sm'></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <span class="d-block">Sales</span>
-                    <h4 class="card-title mb-1">$4,679</h4>
-                    <small class="text-success fw-medium"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
                 </div>
             </div>
         </div>

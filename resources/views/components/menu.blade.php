@@ -10,7 +10,7 @@
             <li class="menu-item {{ request()->routeIs('espacio') ? 'active' : '' }}">
                 <a href="{{ route('espacio') }}" class="menu-link">
                     <i class='menu-icon tf-icons bx bxs-widget'></i>
-                    <div class="text-truncate">Mis módulos</div>
+                    <div class="text-truncate">Módulos</div>
                 </a>
             </li>
             {{--             <li class="menu-item {{ request()->routeIs('espacio.datos') ? 'active' : '' }}">

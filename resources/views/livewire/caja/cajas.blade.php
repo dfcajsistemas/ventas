@@ -1,6 +1,9 @@
 <div>
-    <h4><span class="text-muted fw-light">Caja /</span> Cajas <span class="text-warning">(Sucursal:
-        {{ $sucursal->nombre }})</span></h4>
+    <div class="d-flex justify-content-between">
+        <h4><span class="text-muted fw-light">Caja /</span> Cajas</h4>
+        <h4><i class="fa-solid fa-store text-muted"></i>
+            {{ $sucursal->nombre }}</h4>
+    </div>
     <div class="card">
         <div class="card-header">
             <div class="row">

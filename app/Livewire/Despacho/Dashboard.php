@@ -20,6 +20,10 @@ class Dashboard extends Component
     #[Title(['Dashboard', 'Despacho'])]
     public function render()
     {
-        return view('livewire.despacho.dashboard');
+        $enproceso = $this->sucursal->ventas()->whereNull('est_venta')->count();
+        $solicitados = $this->sucursal->ventas()->where('est_venta', 1)->count();
+        $deliverys = $this->sucursal->ventas()->where('est_venta', 2)->count();
+        $devueltos = $this->sucursal->ventas()->where('est_venta', 5)->count();
+        return view('livewire.despacho.dashboard', compact('enproceso', 'solicitados', 'deliverys', 'devueltos'));
     }
 }

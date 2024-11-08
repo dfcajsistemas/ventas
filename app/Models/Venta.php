@@ -21,6 +21,10 @@ class Venta extends Model
     {
         return $this->belongsTo(Tcomprobante::class);
     }
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class);
+    }
 
     //relación uno a muchos
     public function dventas()
