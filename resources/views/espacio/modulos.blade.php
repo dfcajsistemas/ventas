@@ -30,7 +30,7 @@
         @endcan
 
         @can('reportes')
-            <x-enlace-modulo imagen="assets/img/modulos/reportes.png" mod="Reportes" ruta="reportes" />
+            <x-enlace-modulo imagen="assets/img/modulos/reportes.png" mod="Reportes" ruta="reportes.ventas" />
         @endcan
     </div>
 </x-app-layout>

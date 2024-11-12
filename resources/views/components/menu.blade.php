@@ -253,14 +253,6 @@
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text"> Reportes</span>
             </li>
-            @can('reportes')
-                <li class="menu-item {{ request()->routeIs('reportes') ? 'active' : '' }}">
-                    <a href="{{ route('reportes') }}" class="menu-link">
-                        <i class="menu-icon tf-icons fa-solid fa-gauge-high"></i>
-                        <div class="text-truncate">Dashboard</div>
-                    </a>
-                </li>
-            @endcan
             @can('reportes.ventas')
                 <li class="menu-item {{ request()->routeIs('reportes.ventas') ? 'active' : '' }}">
                     <a href="{{ route('reportes.ventas') }}" class="menu-link">

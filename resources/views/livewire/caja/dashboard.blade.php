@@ -36,7 +36,8 @@
                             <p class="card-text">Cobrado Hoy</p>
                             <div class="d-flex align-items-end mb-2">
                                 <h4 class="card-title mb-0 me-2">S/ {{ $cobradoHoy }}</h4>
-                                <small class="text-info">({{ ($cobradoHoy / $cobradoMes) * 100 }}% Mes)</small>
+                                <small class="text-info">({{ $cobradoMes ? ($cobradoHoy / $cobradoMes) * 100 : 0 }}%
+                                    Mes)</small>
                             </div>
                             <small>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</small>
                         </div>

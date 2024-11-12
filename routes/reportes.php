@@ -9,7 +9,7 @@ use App\Livewire\Reportes\Ventas;
 use App\Livewire\Reportes\VentasCliente;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Dashboard::class)->name('reportes')->middleware('can:reportes');
+//Route::get('/', Dashboard::class)->name('reportes')->middleware('can:reportes');
 Route::get('/ventas', Ventas::class)->name('reportes.ventas')->middleware('can:reportes.ventas');
 Route::get('/cuentas-cobrar', CuentasCobrar::class)->name('reportes.cuentascobrar')->middleware('can:reportes.cuentascobrar');
 Route::get('/inventario', Inventario::class)->name('reportes.inventario')->middleware('can:reportes.inventario');
