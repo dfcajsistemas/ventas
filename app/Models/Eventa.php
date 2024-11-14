@@ -11,6 +11,7 @@ class Eventa extends Model
 
     protected $fillable = [
         'est_venta',
+        'est_anterior',
         'venta_id',
         'user_id',
     ];

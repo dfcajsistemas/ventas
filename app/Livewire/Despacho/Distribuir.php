@@ -74,11 +74,12 @@ class Distribuir extends Component
     {
         try {
             DB::beginTransaction();
-            $this->venta->update([
-                'est_venta' => 3,
-            ]);
             $this->venta->eventas()->create([
                 'user_id' => auth()->id(),
+                'est_venta' => 3,
+                'est_anterior' => $this->venta->est_venta,
+            ]);
+            $this->venta->update([
                 'est_venta' => 3,
             ]);
             DB::commit();
@@ -93,11 +94,12 @@ class Distribuir extends Component
     {
         try {
             DB::beginTransaction();
-            $this->venta->update([
-                'est_venta' => 2,
-            ]);
             $this->venta->eventas()->create([
                 'user_id' => auth()->id(),
+                'est_venta' => 2,
+                'est_anterior' => $this->venta->est_venta,
+            ]);
+            $this->venta->update([
                 'est_venta' => 2,
             ]);
             DB::commit();
@@ -113,15 +115,15 @@ class Distribuir extends Component
     {
         try {
             DB::beginTransaction();
-            $this->venta->update([
-                'est_venta' => 4,
-                'updated_by' => auth()->id(),
-            ]);
+
             $this->venta->eventas()->create([
                 'user_id' => auth()->id(),
                 'est_venta' => 4,
+                'est_anterior' => $this->venta->est_venta,
             ]);
-
+            $this->venta->update([
+                'est_venta' => 4,
+            ]);
             foreach ($this->venta->dventas as $dventa) {
                 $stock = $dventa->producto->stocks->where('sucursal_id', $this->sucursal->id)->first();
                 $stock->update([

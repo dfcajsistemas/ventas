@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    class="light-style layout-navbar-fixed layout-menu-fixed layout-wide" dir="ltr" data-theme="theme-default"
-    data-assets-path="/assets/" data-template="vertical-menu-template-no-customizer">
+    class="light-style layout-navbar-fixed layout-menu-fixed layout-compact layout-menu-collapsed" dir="ltr"
+    data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template">
 
 <head>
     <meta charset="utf-8" />
@@ -30,8 +30,9 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/flag-icons.css') }}" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/theme-default.css') }}"
+        class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
 
     <!-- Vendors CSS -->
@@ -41,12 +42,13 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
-
     <!-- Page CSS -->
-    @stack('css')
+
     <!-- Helpers -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="{{ asset('assets/vendor/js/template-customizer.js') }}"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('assets/js/config.js') }}"></script>
 
@@ -63,14 +65,13 @@
                 <div class="app-brand demo">
                     <a href="{{ route('espacio') }}" class="app-brand-link">
                         <span class="app-brand-logo demo">
-                            <svg width="25" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 67.7">
-                                <g>
-                                    <path fill="#696cff"
-                                        d="M29.9,14c-2.2,2.2-3.9,4.1-4.9,5.5c-1,1.4-2.1,3.5-3.3,6.2c-0.9,2-1.5,4-1.9,6.2c-0.5,1.9-0.7,4.4-0.7,7.4c0,4.3,0.4,7.8,1.2,10.7 c0.8,2.8,2,5,3.6,6.4c1.6,1.4,3.5,2.2,5.8,2.2c1.8,0,3.7-0.7,5.6-2c1.9-1.3,3.6-3.1,5.2-5.2c1.5-2.2,2.8-4.6,3.7-7.3 c0.9-2.7,1.4-5.2,1.4-7.7c0-4.5-1.5-9.1-4.6-14c-1.1-2-1.7-3.3-1.7-4c0-1.3,0.7-2.7,2.2-4c1.7-1.6,3.6-3,5.7-4.2 c2.1-1.2,3.8-1.9,5.1-1.9c0.7,0,1.5,0.2,2.3,0.5c0.8,0.3,1.4,0.8,1.8,1.3c1,1.1,1.9,3.1,2.6,5.9s1,5.9,1,9.2 c0,7.7-1.6,14.8-4.7,21.3c-3.1,6.5-7.4,11.6-12.8,15.4c-5.4,3.8-11.2,5.7-17.5,5.7c-3.6,0-7.2-0.7-10.7-2c-3.5-1.3-6.4-3.1-8.6-5.4 C1.9,56.6,0,51.7,0,45.6c0-3.5,0.7-7.2,2.1-11.2c1.4-3.9,3.2-7.8,5.6-11.5c2.4-3.7,5.2-7.1,8.3-10.2c3.1-3.1,6.4-5.5,9.7-7.3 c3-1.6,6.3-2.9,9.8-3.9C38.9,0.5,42,0,44.6,0c3.7,0,5.6,0.6,5.6,1.7c0,0.5-0.4,1.2-1.2,2.1c-1.4,1.3-2.7,2.3-3.7,2.8 c-1.1,0.6-2.8,1.2-5.2,1.9c-2.6,0.8-4.5,1.5-5.7,2.1S31.8,12.4,29.9,14z" />
-                                </g>
-                                <path fill="#696cff" fill-opacity="0.8" d="M41.1,35.8l16.7,16.7c3,3,3,7.8,0,10.8l-3.6,3.6c-1,1-2.7,1-3.7,0L30.2,46.7c-3-3-3-7.8,0-10.8l0,0
-                              C33.2,32.8,38.1,32.8,41.1,35.8z" />
+                            <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 71.28 63.71">
+                                <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38" ry="8.38"
+                                    transform="translate(22.57 -20.53) rotate(30)" fill="#696cff" fill-opacity="0.8"
+                                    stroke-width="0" />
+                                <rect x="11.75" y="-3.15" width="23" height="70" rx="11.5" ry="11.5"
+                                    transform="translate(-12.81 15.89) rotate(-30)" fill="#696cff" stroke-width="0" />
                             </svg>
                         </span>
                         <span class="app-brand-text demo menu-text fw-bold ms-2">VenSis</span>
@@ -82,7 +83,6 @@
                 </div>
 
                 <div class="menu-inner-shadow"></div>
-
                 <x-menu :modulo="$title[1]" />
             </aside>
             <!-- / Menu -->
@@ -91,7 +91,7 @@
             <div class="layout-page">
                 <!-- Navbar -->
 
-                <nav class="layout-navbar container-fluid navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                     id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
@@ -101,20 +101,42 @@
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <!-- Search -->
-                        {{-- <div class="navbar-nav align-items-center">
+                        <div class="navbar-nav align-items-center">
                             <div class="nav-item navbar-search-wrapper mb-0">
                                 <a class="nav-item nav-link search-toggler px-0" href="javascript:void(0);">
                                     <i class="bx bx-search bx-sm"></i>
                                     <span class="d-none d-md-inline-block text-muted">Buscar (Ctrl+/)</span>
                                 </a>
                             </div>
-                        </div> --}}
+                        </div>
                         <!-- /Search -->
-                        <span class="text-primary fw-bold fs-5 text-uppercase">
-                            <i class='bx bx-store-alt bx-sm text-muted'></i> {{ Auth::user()->sucursal->nombre }}
-                        </span>
-                        <ul class="navbar-nav flex-row align-items-center ms-auto">
 
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <!-- Style Switcher -->
+                            <li class="nav-item dropdown-style-switcher dropdown me-2 me-xl-0">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
+                                    data-bs-toggle="dropdown">
+                                    <i class="bx bx-sm"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
+                                    <li>
+                                        <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
+                                            <span class="align-middle"><i class="bx bx-sun me-2"></i>Light</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
+                                            <span class="align-middle"><i class="bx bx-moon me-2"></i>Dark</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
+                                            <span class="align-middle"><i class="bx bx-desktop me-2"></i>System</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- / Style Switcher-->
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
@@ -126,7 +148,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="pages-account-settings-account.html">
+                                        <a class="dropdown-item" href="javascript:void(0);">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
@@ -135,6 +157,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
+                                                    <small class="text-muted">Bienvenido</small>
                                                     <span class="fw-medium d-block">
                                                         @if (Auth::check())
                                                             {{ Auth::user()->name }}
@@ -142,7 +165,6 @@
                                                             No identificado
                                                         @endif
                                                     </span>
-                                                    <small class="text-muted">Bienvenido</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -179,8 +201,8 @@
 
                     <!-- Search Small Screens -->
                     <div class="navbar-search-wrapper search-input-wrapper d-none">
-                        <input type="text" class="form-control search-input container-fluid border-0"
-                            placeholder="Search..." aria-label="Search..." />
+                        <input type="text" class="form-control search-input container-xxl border-0"
+                            placeholder="Buscar..." aria-label="Buscar..." />
                         <i class="bx bx-x bx-sm search-toggler cursor-pointer"></i>
                     </div>
                 </nav>
@@ -190,16 +212,16 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
+                    <div class="container-xxl flex-grow-1 container-p-y">
 
-                    <div class="container-fluid flex-grow-1 container-p-y">
                         {{ $slot }}
+
                     </div>
                     <!-- / Content -->
-
                     <!-- Footer -->
                     <footer class="content-footer footer bg-footer-theme">
                         <div
-                            class="container-fluid d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                            class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                             <div class="mb-2 mb-md-0">
                                 ©
                                 <script>
@@ -246,7 +268,6 @@
     <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
-    @stack('js')
     <!-- endbuild -->
 
     <!-- Vendors JS -->
@@ -254,7 +275,6 @@
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
-    <!-- Page JS -->
     @stack('scripts')
 
     <script>
@@ -270,7 +290,10 @@
         @endif
     </script>
 
+    <!-- Page JS -->
+
     @livewireScripts
+
 </body>
 
 </html>

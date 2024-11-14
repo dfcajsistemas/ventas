@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Reportes;
 
+use App\Exports\Reportes\VentasExport;
 use App\Models\Venta;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Lazy()]
 class Ventas extends Component
@@ -45,5 +47,10 @@ class Ventas extends Component
         }
 
         return view('livewire.reportes.ventas', compact('ventas'));
+    }
+
+    public function export()
+    {
+        return Excel::download(new VentasExport($this->desde, $this->hasta, $this->estado), 'ventas_' . date('dmYHis') . 'xlsx');
     }
 }

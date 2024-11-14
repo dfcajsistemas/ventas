@@ -40,11 +40,12 @@ class Entregar extends Component
     {
         try {
             DB::beginTransaction();
-            $this->venta->update([
-                'est_venta' => 3,
-            ]);
             $this->venta->eventas()->create([
                 'user_id' => auth()->id(),
+                'est_venta' => 3,
+                'est_anterior' => $this->venta->est_venta,
+            ]);
+            $this->venta->update([
                 'est_venta' => 3,
             ]);
             DB::commit();
@@ -60,11 +61,12 @@ class Entregar extends Component
     {
         try {
             DB::beginTransaction();
-            $this->venta->update([
-                'est_venta' => 5,
-            ]);
             $this->venta->eventas()->create([
                 'user_id' => auth()->id(),
+                'est_venta' => 5,
+                'est_anterior' => $this->venta->est_venta,
+            ]);
+            $this->venta->update([
                 'est_venta' => 5,
             ]);
             DB::commit();
