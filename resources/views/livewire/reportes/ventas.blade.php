@@ -4,6 +4,13 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-3 mb-2 mb-md-0">
+                    <x-select wire:model.live='sucursal'>
+                        @foreach ($sucursales as $ids => $sucursal)
+                            <option value="{{ $ids }}">{{ $sucursal }}</option>
+                        @endforeach
+                    </x-select>
+                </div>
+                <div class="col-md-2 mb-2 mb-md-0">
                     <x-select wire:model.live='estado'>
                         <option value="">Todos</option>
                         @foreach (estadoVenta() as $k => $v)
@@ -11,10 +18,10 @@
                         @endforeach
                     </x-select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <x-input type="date" wire:model.live='desde' />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <x-input type="date" wire:model.live='hasta' />
                 </div>
                 <div class="col-4 col-md-1">
@@ -38,6 +45,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Fecha</th>
+                            <th>Sucursal</th>
                             <th>Cliente</th>
                             <th>F. pago</th>
                             <th>Pago</th>
@@ -51,6 +59,7 @@
                             <tr wire:key="{{ $venta->id }}">
                                 <td>{{ $venta->id }}</td>
                                 <td>{{ $venta->created_at->format('d/m/Y') }}</td>
+                                <td>{{ $venta->sucursal->nombre }}</td>
                                 <td>{{ $venta->cliente->razon_social }}</td>
                                 <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
                                 <td>{!! estadoPago($venta->est_pago) !!}</td>

@@ -1,24 +1,9 @@
 <table>
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($invoices as $invoice)
-            <tr>
-                <td>{{ $invoice->name }}</td>
-                <td>{{ $invoice->email }}</td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
-<table>
-    <thead>
-        <tr>
             <th>Id</th>
             <th>Fecha</th>
+            <th>Sucursal</th>
             <th>Cliente</th>
             <th>F. pago</th>
             <th>Pago</th>
@@ -31,6 +16,7 @@
             <tr>
                 <td>{{ $venta->id }}</td>
                 <td>{{ $venta->created_at->format('d/m/Y') }}</td>
+                <td>{{ $venta->sucursal->nombre }}</td>
                 <td>{{ $venta->cliente->razon_social }}</td>
                 <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
                 <td>{!! estadoPago($venta->est_pago) !!}</td>

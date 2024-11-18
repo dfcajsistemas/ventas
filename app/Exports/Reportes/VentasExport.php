@@ -12,27 +12,33 @@ class VentasExport implements FromView, ShouldAutoSize
 {
     use Exportable;
 
-    private $desde, $hasta, $estado;
+    private $desde, $hasta, $estado, $sucursal;
 
-    public function __construct($desde, $hasta, $estado)
+    public function __construct($desde, $hasta, $estado, $sucursal)
     {
         $this->desde = $desde;
         $this->hasta = $hasta;
         $this->estado = $estado;
+        $this->sucursal = $sucursal;
     }
 
     public function view(): View
     {
+        //dd($this->desde, $this->hasta, $this->estado);
         if ($this->estado == '') {
             $ventas = Venta::whereDate('created_at', '>=', $this->desde)
+                ->where('sucursal_id', $this->sucursal)
                 ->whereDate('created_at', '<=', $this->hasta)
                 ->whereNotNull('est_venta')
-                ->orderBy('id', 'desc');
+                ->orderBy('id', 'desc')
+                ->get();
         } else {
             $ventas = Venta::whereDate('created_at', '>=', $this->desde)
+                ->where('sucursal_id', $this->sucursal)
                 ->whereDate('created_at', '<=', $this->hasta)
                 ->where('est_venta', $this->estado)
-                ->orderBy('id', 'desc');
+                ->orderBy('id', 'desc')
+                ->get();
         }
         return view('reportes.ventas-export', ['ventas' => $ventas]);
     }
