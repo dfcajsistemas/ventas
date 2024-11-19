@@ -1,6 +1,5 @@
 <div>
-    <h4><span class="text-muted fw-light">Despacho /</span> despacho <span class="text-warning">(Sucursal:
-            {{ $sucursal->nombre }})</span></h4>
+    <h4><span class="text-muted fw-light">Despacho /</span> Despacho</h4>
     <div class="row">
 
         <div class="col-md-5">
@@ -8,9 +7,10 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-10">
-                            <x-select id="cliente" class="select2 form-select-lg" data-allow-clear="true" x-init="$($el).select2({
-                                placeholder: 'Elija un cliente',
-                            })">
+                            <x-select id="cliente" class="select2 form-select-lg" data-allow-clear="true"
+                                x-init="$($el).select2({
+                                    placeholder: 'Elija un cliente',
+                                })">
                                 <option value="">Cliente común</option>
                                 @for ($i = 1; $i <= 10; $i++)
                                     <option value="{{ $i }}">Cliente {{ $i }}</option>
@@ -82,59 +82,58 @@
                 </div>
             </div>
             @if ($productos->count())
-            <div class="row mt-4">
-                @foreach ($productos as $producto)
-                <div class="col-md-3">
-                    <div class="card text-center mb-3 p-0">
-                        <a href="javascript:void(0)" wire:click='add({{ $producto->id }})'>
-                            <div class="card-body">
-                                <small class="text-info">{{ $producto->nombre }}</small><br>
-                                <span class="text-muted">Precio:
-                                    {{ $producto->p_venta2 }}</span>
+                <div class="row mt-4">
+                    @foreach ($productos as $producto)
+                        <div class="col-md-3">
+                            <div class="card text-center mb-3 p-0">
+                                <a href="javascript:void(0)" wire:click='add({{ $producto->id }})'>
+                                    <div class="card-body">
+                                        <small class="text-info">{{ $producto->nombre }}</small><br>
+                                        <span class="text-muted">Precio:
+                                            {{ $producto->p_venta2 }}</span>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
-                @endforeach
-            </div>
 
-            <div class="m-3">
-                {{ $productos->links() }}
-            </div>
+                <div class="m-3">
+                    {{ $productos->links() }}
+                </div>
             @else
-            <div class="mx-3 mb-3">
-                <x-msg type="info" msg="No se encontraron resultados" />
-            </div>
+                <div class="mx-3 mb-3">
+                    <x-msg type="info" msg="No se encontraron resultados" />
+                </div>
             @endif
 
         </div>
     </div>
     @can('despacho.despachar.agregar')
-    <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="md">
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <x-label for="cantidad">Cantidad</x-label>
-                <x-input type="number" id="cantidad" wire:model="cantidad" />
-                <x-input-error for="cantidad" />
+        <x-modal-form mId="mModelo" :mTitle="$mTitle" :mMethod="$mMethod" mSize="md">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <x-label for="cantidad">Cantidad</x-label>
+                    <x-input type="number" id="cantidad" wire:model="cantidad" />
+                    <x-input-error for="cantidad" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <x-label for="lote">Lote</x-label>
+                    <x-input type="text" id="lote" wire:model="lote" />
+                    <x-input-error for="lote" />
+                </div>
+                <div class="col-12">
+                    <x-label for="observaciones">Observaciones</x-label>
+                    <x-input type="text" id="observaciones" wire:model="observaciones" />
+                    <x-input-error for="observaciones" />
+                </div>
             </div>
-            <div class="col-12 col-md-6">
-                <x-label for="lote">Lote</x-label>
-                <x-input type="text" id="lote" wire:model="lote" />
-                <x-input-error for="lote" />
-            </div>
-            <div class="col-12">
-                <x-label for="observaciones">Observaciones</x-label>
-                <x-input type="text" id="observaciones" wire:model="observaciones" />
-                <x-input-error for="observaciones" />
-            </div>
-        </div>
-    </x-modal-form>
+        </x-modal-form>
     @endcan
 
     @script
-    <script>
-
-        Livewire.on('sm', (e) => {
+        <script>
+            Livewire.on('sm', (e) => {
                 $("#mModelo").modal('show')
             });
             Livewire.on('hm', (e) => {
@@ -169,9 +168,9 @@
                 }
             }))
             document.addEventListener("DOMContentLoaded", function() {
-            $(".select2").select2();
-        });
-    </script>
+                $(".select2").select2();
+            });
+        </script>
     @endscript
 
 </div>

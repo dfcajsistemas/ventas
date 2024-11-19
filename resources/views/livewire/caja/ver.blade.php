@@ -1,9 +1,5 @@
 <div>
-    <div class="d-flex justify-content-between">
-        <h4><span class="text-muted fw-light">Caja /</span> Detalle</h4>
-        <h4><i class="fa-solid fa-store text-muted"></i>
-            {{ $sucursal->nombre }}</h4>
-    </div>
+    <h4><span class="text-muted fw-light">Caja /</span> Detalle</h4>
     <div class="row">
         <div class="col-md-7">
             <div class="card mb-4">
