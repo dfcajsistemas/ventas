@@ -38,12 +38,17 @@
                 </div>
             </div>
         </div>
+
+        <div wire:loading wire:target="sucursal, estado, desde, hasta, perPage, export" class="mx-3">
+            <i class="fa-solid fa-circle-notch fa-spin text-warning"></i> Cargando
+        </div>
+
         @if ($ventas->count())
             <div class="table-responsive text-noweap">
                 <table class="table table-sm table-hover text-small">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th># Ped</th>
                             <th>Fecha</th>
                             <th>Sucursal</th>
                             <th>Cliente</th>
@@ -51,7 +56,9 @@
                             <th>Pago</th>
                             <th>Estado</th>
                             <th>Monto</th>
-                            <th>Detalle</th>
+                            @can('reportes.detalleventa')
+                                <th>Detalle</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -65,12 +72,12 @@
                                 <td>{!! estadoPago($venta->est_pago) !!}</td>
                                 <td>{!! estadoVenta($venta->est_venta) !!}</td>
                                 <td>{{ $venta->total }}</td>
-                                <td>
-                                    <button class="btn btn-icon btn-info btn-sm" title="Detalle venta"
-                                        wire:click="detalle({{ $venta->id }})"><i
-                                            class="tf-icons fa-solid fa-list"></i></button>
-                                </td>
-
+                                @can('reportes.detalleventa')
+                                    <td>
+                                        <a href="{{ route('reportes.detalleventa', $venta->id) }}"
+                                            class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-detail'></i></a>
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach
                     </tbody>
@@ -120,3 +127,28 @@
         </script>
     @endscript
 </div>
+
+<style>
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>

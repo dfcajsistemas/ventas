@@ -5,6 +5,7 @@ namespace App\Livewire\Despacho;
 use App\Models\Dventa;
 use App\Models\Eventa;
 use App\Models\Serie;
+use App\Models\Sucursal;
 use App\Models\Tcomprobante;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
@@ -159,10 +160,6 @@ class Cproductos extends Component
     #[On('addPedido')]
     public function genPedido()
     {
-        $tcomprobante_id = Tcomprobante::where('codigo', 'TK')->first()->id;
-        $serie = Serie::where('sucursal_id', auth()->user()->sucursal->id)->where('tcomprobante_id', $tcomprobante_id)->first();
-        //obtenemos el correlativo
-        $correlativo = $serie->correlativo + 1;
         //calculamos los montos de operaciones grabadas, exoneradas e inafectas
         $afectaciones = Dventa::join('productos', 'dventas.producto_id', '=', 'productos.id')
             ->join('igvafectacions', 'productos.igvafectacion_id', '=', 'igvafectacions.id')
@@ -187,9 +184,23 @@ class Cproductos extends Component
 
         try {
             DB::beginTransaction();
+            //obtenemos la sucursal de la venta
+            $sucursal = Sucursal::find($this->cventa->sucursal_id);
+            //actualizamos el correlativo en la sucursal
+            if ($sucursal->ano_ticket == date('Y')) {
+                $correlativo = $sucursal->cor_ticket + 1;
+                $sucursal->update([
+                    'cor_ticket' => $correlativo,
+                ]);
+            } else {
+                $correlativo = 1;
+                $sucursal->update([
+                    'cor_ticket' => $correlativo,
+                    'ano_ticket' => date('Y')
+                ]);
+            }
             //actualizamos la venta y la serie del ticket
             $this->cventa->update([
-                'ser_ticket' => $serie->serie,
                 'cor_ticket' => $correlativo,
                 'op_grabada' => number_format($g, 6),
                 'op_exonerada' => $e,
@@ -197,11 +208,6 @@ class Cproductos extends Component
                 'igv' => number_format(($gigv - $g), 6),
                 'total' => $gigv + $e + $i,
                 'est_venta' => 1,
-                'updated_by' => auth()->user()->id
-            ]);
-            //actualizamos el correlativo de la serie
-            $serie->update([
-                'correlativo' => $correlativo,
                 'updated_by' => auth()->user()->id
             ]);
             //creamos el estado de venta

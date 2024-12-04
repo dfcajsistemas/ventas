@@ -40,8 +40,7 @@
     <div class="ticket">
         <div class="centered">
             <span style="font-size: 15px;">{{ $empresa->razon_social }}</span>
-            <p style="font-size: 18px;">Ticket</p>
-            <p style="font-size: 14px">{{ $venta->ser_ticket }}-{{ $venta->cor_ticket }}</p>
+            <p style="font-size: 17px;">T-{{ $venta->cor_ticket }}</p>
             <p>{{ $venta->updated_at->format('d/m/Y H:i:s') }}</p>
             <p style="font-size: 12px;">Cliente: {{ $venta->cliente->razon_social }}</p>
         </div>
@@ -71,6 +70,7 @@
                 </tr>
             </tbody>
         </table>
+        <p class="centered">Por: {{ $user }}</p>
         <p class="centered">Gracias por su compra</p>
     </div>
 </body>

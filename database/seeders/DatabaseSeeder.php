@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TdocumentoSeeder::class);
         $this->call(UmedidaSeeder::class);
         $this->call(MaestrosSeeder::class);
+        $this->call(ProductosSeeder::class);
+        $this->call(ClientesSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',
@@ -39,7 +41,32 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('12345678'),
             'sucursal_id' => 1
         ])->assignRole('Accesos admin', 'Mantenimiento admin', 'Abastecimiento admin', 'Despacho admin', 'Caja admin', 'Delivery admin', 'Reportes admin');
-
-        User::factory(50)->create();
+        User::factory()->create([
+            'name' => 'Maquena Zambrano',
+            'tdocumento_id' => '2',
+            'ndocumento' => '26702433',
+            'email' => 'maquena@gmail.com',
+            'fec_nac' => '1990-01-01',
+            'password' => bcrypt('060203Maryfe'),
+            'sucursal_id' => 1
+        ])->assignRole('Accesos admin', 'Mantenimiento admin', 'Abastecimiento admin', 'Despacho admin', 'Caja admin', 'Delivery admin', 'Reportes admin');
+        User::factory()->create([
+            'name' => 'María José',
+            'tdocumento_id' => '2',
+            'ndocumento' => '70724487',
+            'email' => 'mariajose@gmail.com',
+            'fec_nac' => '2000-01-01',
+            'password' => bcrypt('Moni362427'),
+            'sucursal_id' => 2
+        ])->assignRole('Accesos admin', 'Mantenimiento admin', 'Abastecimiento admin', 'Despacho admin', 'Caja admin', 'Delivery admin', 'Reportes admin');
+        User::factory()->create([
+            'name' => 'Angélica Elena Narváez del Rio',
+            'tdocumento_id' => '2',
+            'ndocumento' => '41893544',
+            'email' => 'elena@gmail.com',
+            'fec_nac' => '1990-01-01',
+            'password' => bcrypt('Granja2024'),
+            'sucursal_id' => 1
+        ])->assignRole('Accesos admin', 'Mantenimiento admin', 'Abastecimiento admin', 'Despacho admin', 'Caja admin', 'Delivery admin', 'Reportes admin');
     }
 }

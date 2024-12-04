@@ -16,12 +16,15 @@ use Maatwebsite\Excel\Facades\Excel;
 class Ventas extends Component
 {
     use WithPagination;
-
+    #[Url(except: '')]
     public $estado = '';
     #[Url(except: '10')]
     public $perPage = '10';
+    #[Url()]
     public $desde;
+    #[Url()]
     public $hasta;
+    #[Url()]
     public $sucursal;
     public $sucursales;
 

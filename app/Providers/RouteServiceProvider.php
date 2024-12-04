@@ -36,35 +36,35 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('espacio')
                 ->group(base_path('routes/espacio.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('accesos')
                 ->group(base_path('routes/accesos.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('mantenimiento')
                 ->group(base_path('routes/mantenimiento.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('abastecimiento')
                 ->group(base_path('routes/abastecimiento.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('despacho')
                 ->group(base_path('routes/despacho.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('caja')
                 ->group(base_path('routes/caja.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('delivery')
                 ->group(base_path('routes/delivery.php'));
 
-            Route::middleware('web', 'auth')
+            Route::middleware('web', 'auth', 'activo')
                 ->prefix('reportes')
                 ->group(base_path('routes/reportes.php'));
         });

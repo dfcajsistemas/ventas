@@ -15,7 +15,7 @@
                             title="Anular pedido"><i class="tf-icons fa-solid fa-xmark"></i></button>
                     @endcan
                 @endif
-                <button class="btn btn-icon btn-success" title="Imprimir ticket" wire:click='ticket'><i
+                <button class="btn btn-icon btn-warning" title="Imprimir ticket" wire:click='ticket'><i
                         class="tf-icons fa-solid fa-receipt"></i></button>
             </div>
             <div class="card mb-4">
@@ -71,7 +71,7 @@
                         <tr>
                             <td><small>Pedido[Ticket]</small><br><span
                                     class="text-primary">{{ $venta->id }}</span><span class="text-success">
-                                    [{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}]</span>
+                                    [{{ $venta->cor_ticket }}]</span>
                             </td>
                             <td><small>Pago</small><br>{!! estadoPago($venta->est_pago) !!}</td>
                             <td><small>Estado</small><br>{!! estadoVenta($venta->est_venta) !!}</td>

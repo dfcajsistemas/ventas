@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
 
-            $table->string('ser_ticket', 4)->nullable();
             $table->unsignedBigInteger('cor_ticket')->nullable();
             $table->string('serie', 4)->nullable();
             $table->unsignedBigInteger('correlativo')->nullable();
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->decimal('icbper', 14, 6)->nullable();
             $table->decimal('descuento', 14, 6)->nullable();
             $table->decimal('total', 14, 6)->nullable();
+            $table->decimal('total_pagado', 14, 6)->nullable();
             $table->string('serie_ref')->nullable();
             $table->unsignedBigInteger('correlativo_ref')->nullable();
             $table->string('motivo_ref', 4)->nullable();

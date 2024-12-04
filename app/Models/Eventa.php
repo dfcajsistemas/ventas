@@ -21,4 +21,8 @@ class Eventa extends Model
     {
         return $this->belongsTo(Venta::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

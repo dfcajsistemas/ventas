@@ -14,11 +14,11 @@ class EmpresaSeeder extends Seeder
     public function run(): void
     {
         Empresa::create([
-            'ruc' => '20202020202',
-            'razon_social' => 'Empresa SAC',
-            'nom_comercial' => 'Empresa',
-            'dom_fiscal' => 'Av. Perú 123',
-            'rep_legal' => 'Juan Perez',
+            'ruc' => '20570886569',
+            'razon_social' => 'GRANJA ORGANICA EL PARAISO E.I.R.L',
+            'nom_comercial' => '-',
+            'dom_fiscal' => 'NRO. SN FND. LA ARGENTINA (CD 8 DEL INCA INGRE 600 MT VOLT IZ 200MT) CAJAMARCA - CAJAMARCA - CAJAMARCA',
+            'rep_legal' => 'ZAMBRANO GUERRERO MARIA EUGENIA',
             'usuario_sol' => 'mbdata',
             'clave_sol' => 'mbdata',
             'distrito_id' => 551,

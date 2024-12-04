@@ -69,15 +69,22 @@ class User extends Authenticatable
     ];
 
     //Relacion uno a muchos
-    public function cajas(){
+    public function cajas()
+    {
         return $this->hasMany(Caja::class);
+    }
+    public function eventas()
+    {
+        return $this->hasMany(Eventa::class);
     }
 
     //Relacion uno a muchos inversa
-    public function sucursal(){
+    public function sucursal()
+    {
         return $this->belongsTo(Sucursal::class);
     }
-    public function tdocumento(){
+    public function tdocumento()
+    {
         return $this->belongsTo(Tdocumento::class);
     }
 }

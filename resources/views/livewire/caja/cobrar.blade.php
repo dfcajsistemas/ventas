@@ -7,7 +7,7 @@
                     <table class="table table-border-bottom-0" style="font-size: 0.9em;">
                         <tr>
                             <td><small>Pedido[Ticket]</small><br><span class="text-primary">{{ $venta->id }}</span>
-                                <span class="text-success">[{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}]</span>
+                                <span class="text-success">[{{ $venta->cor_ticket }}]</span>
                             </td>
                             <td>
                                 <small>Pago</small><br>

@@ -9,7 +9,7 @@ class Sucursal extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'direccion', 'telefono', 'cod_sunat', 'p_venta', 'estado', 'created_by', 'updated_by', 'distrito_id', 'empresa_id'];
+    protected $fillable = ['nombre', 'direccion', 'telefono', 'cod_sunat', 'p_venta', 'estado', 'created_by', 'updated_by', 'distrito_id', 'empresa_id', 'cor_ticket', 'ano_ticket'];
 
     //Relacion de uno a muchos
     public function users()

@@ -59,7 +59,7 @@
                         <tr>
                             <td><small>Pedido[Ticket]</small><br><span
                                     class="text-primary">{{ $venta->id }}</span><span class="text-danger">
-                                    [{{ $venta->ser_ticket . '-' . $venta->cor_ticket }}]</span>
+                                    [{{ $venta->cor_ticket }}]</span>
                             </td>
                             <td><small>Pago</small><br>{!! estadoPago($venta->est_pago) !!}</td>
                             <td><small>Estado</small><br>{!! estadoVenta($venta->est_venta) !!}</td>

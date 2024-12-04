@@ -34,7 +34,8 @@ class Users extends Component
         $this->resetPage();
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->tdocumentos = Tdocumento::where('estado', 1)->pluck('abreviatura', 'id');
         $this->sucursales = Sucursal::where('estado', 1)->pluck('nombre', 'id');
     }
@@ -42,12 +43,11 @@ class Users extends Component
     #[Title(['Usuarios', 'Accesos'])]
     public function render()
     {
-        $users= User::select('id', 'name', 'tdocumento_id', 'ndocumento', 'estado', 'sucursal_id')
-                    ->where('name', 'LIKE', "%$this->search%")
-                    ->orWhere('ndocumento', 'LIKE', "%$this->search%")
-                    ->where('estado', 1)
-                    ->orderBy('name')
-                    ->paginate($this->perPage);
+        $users = User::select('id', 'name', 'tdocumento_id', 'ndocumento', 'estado', 'sucursal_id')
+            ->where('name', 'LIKE', "%$this->search%")
+            ->orWhere('ndocumento', 'LIKE', "%$this->search%")
+            ->orderBy('name')
+            ->paginate($this->perPage);
         return view('livewire.accesos.users', compact('users'));
     }
 
@@ -62,28 +62,30 @@ class Users extends Component
 
     public function store()
     {
-        $this->validate([
-            'name' => 'required',
-            'tdocumento_id' => 'required',
-            'ndocumento' => 'required|unique:users,ndocumento',
-            'fec_nac' => 'required|date',
-            'email' => 'required|email|unique:users,email',
-            'sucursal_id' => 'required'
-        ],
-        [
-            'name.required' => 'Nombre obligatorio',
-            'tdocumento_id.required' => 'Tipo de Documento obligatorio',
-            'ndocumento.required' => '# Documento obligatorio',
-            'ndocumento.unique' => '# Documento existe',
-            'fec_nac.required' => 'Fec. Nacimiento obligatoria',
-            'fec_nac.date' => 'Fec. Nacimiento no válida',
-            'email.required' => 'Email obligatorio',
-            'email.email' => 'Email no válido',
-            'email.unique' => 'Email existe',
-            'sucursal_id.required' => 'Sucursal obligatoria'
-        ]);
+        $this->validate(
+            [
+                'name' => 'required',
+                'tdocumento_id' => 'required',
+                'ndocumento' => 'required|unique:users,ndocumento',
+                'fec_nac' => 'required|date',
+                'email' => 'required|email|unique:users,email',
+                'sucursal_id' => 'required'
+            ],
+            [
+                'name.required' => 'Nombre obligatorio',
+                'tdocumento_id.required' => 'Tipo de Documento obligatorio',
+                'ndocumento.required' => '# Documento obligatorio',
+                'ndocumento.unique' => '# Documento existe',
+                'fec_nac.required' => 'Fec. Nacimiento obligatoria',
+                'fec_nac.date' => 'Fec. Nacimiento no válida',
+                'email.required' => 'Email obligatorio',
+                'email.email' => 'Email no válido',
+                'email.unique' => 'Email existe',
+                'sucursal_id.required' => 'Sucursal obligatoria'
+            ]
+        );
 
-        $pass=Random::generate(8);
+        $pass = Random::generate(8);
 
         User::create([
             'name' => $this->name,
@@ -97,7 +99,7 @@ class Users extends Component
             'updated_by' => auth()->user()->id
         ]);
 
-        $this->dispatch('hm', ['m' => '¡Hecho!<br>Usuario creado. Contraseña: '.$pass, 't' => 'success']);
+        $this->dispatch('hm', ['m' => '¡Hecho!<br>Usuario creado. Contraseña: ' . $pass, 't' => 'success']);
     }
 
     public function edit(User $user)
@@ -115,27 +117,30 @@ class Users extends Component
         $this->dispatch('sm');
     }
 
-    public function update(){
-        $this->validate([
-            'name' => 'required',
-            'tdocumento_id' => 'required',
-            'ndocumento' => 'required|unique:users,ndocumento,'.$this->idm,
-            'fec_nac' => 'required|date',
-            'email' => 'required|email|unique:users,email,'.$this->idm,
-            'sucursal_id' => 'required'
-        ],
-        [
-            'name.required' => 'El Nombre es obligatorio',
-            'tdocumento_id.required' => 'Tipo de Documento obligatorio',
-            'ndocumento.required' => '# Documento obligatorio',
-            'ndocumento.unique' => '# Documento existe',
-            'fec_nac.required' => 'Fec. Nacimiento obligatoria',
-            'fec_nac.date' => 'Fec. Nacimiento no válida',
-            'email.required' => 'Email obligatorio',
-            'email.email' => 'Email no válido',
-            'email.unique' => 'Email existe',
-            'sucursal_id.required' => 'Sucursal es obligatoria'
-        ]);
+    public function update()
+    {
+        $this->validate(
+            [
+                'name' => 'required',
+                'tdocumento_id' => 'required',
+                'ndocumento' => 'required|unique:users,ndocumento,' . $this->idm,
+                'fec_nac' => 'required|date',
+                'email' => 'required|email|unique:users,email,' . $this->idm,
+                'sucursal_id' => 'required'
+            ],
+            [
+                'name.required' => 'El Nombre es obligatorio',
+                'tdocumento_id.required' => 'Tipo de Documento obligatorio',
+                'ndocumento.required' => '# Documento obligatorio',
+                'ndocumento.unique' => '# Documento existe',
+                'fec_nac.required' => 'Fec. Nacimiento obligatoria',
+                'fec_nac.date' => 'Fec. Nacimiento no válida',
+                'email.required' => 'Email obligatorio',
+                'email.email' => 'Email no válido',
+                'email.unique' => 'Email existe',
+                'sucursal_id.required' => 'Sucursal es obligatoria'
+            ]
+        );
 
         $user = User::find($this->idm);
         $user->name = $this->name;
@@ -151,9 +156,9 @@ class Users extends Component
 
     public function estado(User $user)
     {
-        $user->estado = $user->estado ? 0 : 1;
+        $user->estado = $user->estado ? null : 1;
         $user->save();
-        $this->dispatch('hm', ['m' => '¡Hecho!<br>Se cambio el estado de '.$user->name, 't' => 'success']);
+        $this->dispatch('hm', ['m' => '¡Hecho!<br>Se cambio el estado de ' . $user->name, 't' => 'success']);
     }
 
     public function editPassword(User $user)
@@ -168,14 +173,17 @@ class Users extends Component
         $this->dispatch('sp');
     }
 
-    public function updateForm(){
-        $this->validate([
-            'password' => 'required|min:8'
-        ],
-        [
-            'password.required' => 'Contraseña obligatoria',
-            'password.min' => 'Mínimo 8 caracteres'
-        ]);
+    public function updateForm()
+    {
+        $this->validate(
+            [
+                'password' => 'required|min:8'
+            ],
+            [
+                'password.required' => 'Contraseña obligatoria',
+                'password.min' => 'Mínimo 8 caracteres'
+            ]
+        );
 
         $user = User::find($this->idm);
         $user->password = bcrypt($this->password);
@@ -183,6 +191,4 @@ class Users extends Component
         $user->save();
         $this->dispatch('hp', ['m' => '¡Hecho!<br>Contraseña cambiada', 't' => 'success']);
     }
-
-
 }

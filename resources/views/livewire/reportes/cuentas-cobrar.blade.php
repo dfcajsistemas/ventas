@@ -3,8 +3,15 @@
     <div class="card">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-10 mb-2 mb-md-0">
-                    <input type="search" class="form-control" placeholder="Buscar..."
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <x-select wire:model.live='sucursal'>
+                        @foreach ($sucursales as $ids => $sucursal)
+                            <option value="{{ $ids }}">{{ $sucursal }}</option>
+                        @endforeach
+                    </x-select>
+                </div>
+                <div class="col-md-7 mb-2 mb-md-0">
+                    <input type="search" class="form-control" placeholder="Buscar cliente ..."
                         wire:model.live.debounce.300ms="search">
                 </div>
                 <div class="col-4 col-md-1">
@@ -16,11 +23,16 @@
                     </select>
                 </div>
                 <div class="col-4 col-md-1 d-grid">
-                    <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
+                    <button class="btn btn-label-secondary" title="Exportar" wire:click="export()"><i
                             class="tf-icons fa-solid fa-file-excel"></i></button>
                 </div>
             </div>
         </div>
+
+        <div wire:loading wire:target="sucursal, estado, desde, hasta, perPage, export" class="mx-3">
+            <i class="fa-solid fa-circle-notch fa-spin text-warning"></i> Cargando
+        </div>
+
         @if ($ventas->count())
             <div class="table-responsive text-noweap">
                 <table class="table table-sm table-hover text-small">
@@ -28,6 +40,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Fecha</th>
+                            <th>Sucursal</th>
                             <th>Cliente</th>
                             <th>F. pago</th>
                             <th>Pago</th>
@@ -41,17 +54,16 @@
                             <tr wire:key="{{ $venta->id }}">
                                 <td>{{ $venta->id }}</td>
                                 <td>{{ $venta->created_at->format('d/m/Y') }}</td>
-                                <td>{{ $venta->cliente->razon_social }}</td>
+                                <td>{{ $venta->sucursal->nombre }}</td>
+                                <td>{{ $venta->razon_social }}</td>
                                 <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
                                 <td>{!! estadoPago($venta->est_pago) !!}</td>
                                 <td>{!! estadoVenta($venta->est_venta) !!}</td>
                                 <td>{{ $venta->total }}</td>
                                 <td>
-                                    <button class="btn btn-icon btn-info btn-sm" title="Detalle venta"
-                                        wire:click="detalle({{ $venta->id }})"><i
-                                            class="tf-icons fa-solid fa-list"></i></button>
+                                    <a href="{{ route('reportes.detalleventa', $venta->id) }}"
+                                        class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-detail'></i></a>
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>

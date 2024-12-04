@@ -16,11 +16,16 @@
                 <div class="w-px-400 mx-auto">
                     <!-- Logo -->
                     <div class="app-brand mb-5">
-                        <a href="{{route("index")}}" class="app-brand-link gap-2">
+                        <a href="{{ route('index') }}" class="app-brand-link gap-2">
                             <span class="app-brand-logo demo">
-                                <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.28 63.71">
-                                    <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38" ry="8.38" transform="translate(22.57 -20.53) rotate(30)" fill="#696cff" fill-opacity="0.8" stroke-width="0"/>
-                                    <rect x="11.75" y="-3.15" width="23" height="70" rx="11.5" ry="11.5" transform="translate(-12.81 15.89) rotate(-30)" fill="#696cff" stroke-width="0"/>
+                                <svg id="a" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 71.28 63.71">
+                                    <rect x="41.22" y="-3.15" width="16.76" height="70" rx="8.38"
+                                        ry="8.38" transform="translate(22.57 -20.53) rotate(30)" fill="#696cff"
+                                        fill-opacity="0.8" stroke-width="0" />
+                                    <rect x="11.75" y="-3.15" width="23" height="70" rx="11.5"
+                                        ry="11.5" transform="translate(-12.81 15.89) rotate(-30)" fill="#696cff"
+                                        stroke-width="0" />
                                 </svg>
                             </span>
                             <span class="app-brand-text demo text-body fw-bold">Vensis</span>
@@ -31,7 +36,17 @@
                     <p class="mb-4">Inicie sesión en su cuenta y comience la aventura.</p>
 
                     <x-validation-errors class="mb-4" />
-
+                    @if (session('message'))
+                        <div class="alert alert-danger d-flex" role="alert">
+                            <span class="badge badge-center rounded-pill bg-danger border-label-danger p-3 me-2">
+                                <i class='bx bxs-error-alt fs-3'></i>
+                            </span>
+                            <div class="d-flex flex-column ps-1">
+                                <h6 class="alert-heading d-flex align-items-center mb-1">¡Ups! Algo salió mal.</h6>
+                                <span>{{ session('message') }}</span>
+                            </div>
+                        </div>
+                    @endif
                     <form id="formAuthentication" class="mb-3" method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">

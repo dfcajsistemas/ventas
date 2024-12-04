@@ -1,9 +1,5 @@
 <x-app-layout modulo="Espacio" pagina="Mis módulos">
-    <div class="d-flex justify-content-between">
-        <h4><span class="text-muted fw-light">Mi espacio /</span> Módulos</h4>
-        <h4><i class="fa-solid fa-store text-muted"></i>
-            {{ $sucursal->nombre }}</h4>
-    </div>
+    <h4><span class="text-muted fw-light">Mi espacio /</span> Módulos</h4>
     <div class="row">
         @can('accesos')
             <x-enlace-modulo imagen="assets/img/modulos/accesos.jpg" mod="Accesos" ruta="accesos" />

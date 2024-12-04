@@ -1,19 +1,7 @@
 <div>
-    <h4><span class="text-muted fw-light">Delivery /</span> Entregar</h4>
+    <h4><span class="text-muted fw-light">Reporte /</span> Det. de venta</h4>
     <div class="row">
         <div class="col-md-6">
-            <div class="flex mb-3">
-                <a href="{{ route('delivery.pedidos') }}" class="btn btn-icon btn-secondary" title="Regresar"><i
-                        class="fa-solid fa-arrow-left"></i></a>
-                @if ($venta->est_venta == 2)
-                    <button x-data="entregar" x-on:click="confirmar" class="btn btn-icon btn-success"
-                        title="Entregar pedido"><i class="tf-icons fa-solid fa-people-carry-box"></i></button>
-                    <button x-data="devolver" x-on:click="confirmar" class="btn btn-icon btn-danger"
-                        title="Devolver pedido"><i class="tf-icons fa-solid fa-rotate-left"></i></button>
-                @endif
-                <button class="btn btn-icon btn-warning" title="Imprimir ticket" wire:click='ticket'><i
-                        class="tf-icons fa-solid fa-receipt"></i></button>
-            </div>
             <div class="card mb-4">
                 <div class="table-responsive text-wrap">
                     @if ($productos->count())
@@ -163,19 +151,37 @@
                 }
             }))
 
-            Alpine.data('devolver', () => ({
+            Alpine.data('delivery', () => ({
                 confirmar() {
                     Swal.fire({
                         title: '¿Estás seguro?',
-                        text: "¡Se registrará la devolución y no podrás revertir esto!",
+                        text: "¡Se registrará el pedido para delivery y no podrás revertir esto!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: '¡Sí, devolver!'
+                        confirmButtonText: '¡Sí, a delivery!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            Livewire.dispatch('devolver')
+                            Livewire.dispatch('delivery')
+                        }
+                    })
+                }
+            }))
+
+            Alpine.data('anular', () => ({
+                confirmar() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡Se anulará el pedido y no podrás revertir esto!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Sí, anular!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Livewire.dispatch('anular')
                         }
                     })
                 }

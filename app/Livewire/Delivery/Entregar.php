@@ -3,7 +3,10 @@
 namespace App\Livewire\Delivery;
 
 use App\Models\Dventa;
+use App\Models\Empresa;
+use App\Models\Eventa;
 use App\Models\Venta;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
@@ -75,5 +78,25 @@ class Entregar extends Component
             DB::rollBack();
             $this->dispatch('re', ['t' => 'error', 'm' => '¡Error!<br>Hubo un error al registrar la devolución del pedido']);
         }
+    }
+
+    public function ticket()
+    {
+        //Datos de la empresa
+        $empresa = Empresa::first();
+        //Usuario que genero el despacho
+        $eventa = Eventa::where('venta_id', $this->venta->id)
+            ->where('est_venta', 1)
+            ->first();
+
+        $ancho = 226.77; // 80mm en puntos
+        $alto_por_fila = 22; // Altura estimada por fila en puntos
+        $numero_filas = $this->venta->dventas()->count();
+        $alto = 210 + $alto_por_fila * $numero_filas;
+        $pdf = Pdf::loadView('despacho.ticket', ['venta' => $this->venta, 'empresa' => $empresa, 'user' => $eventa->user->name])
+            ->setPaper([0, 0, $ancho, $alto]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, $this->venta->id . '.pdf');
     }
 }
