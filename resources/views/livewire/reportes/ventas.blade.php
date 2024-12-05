@@ -74,7 +74,7 @@
                                 <td>{{ $venta->total }}</td>
                                 @can('reportes.detalleventa')
                                     <td>
-                                        <a href="{{ route('reportes.detalleventa', $venta->id) }}"
+                                        <a href="{{ route('reportes.detalleventa', $venta->id) }}" target="_blank"
                                             class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-detail'></i></a>
                                     </td>
                                 @endcan
@@ -92,63 +92,4 @@
             </div>
         @endif
     </div>
-    @script
-        <script>
-            Livewire.on('sm', (e) => {
-                $("#mPer").modal('show')
-            });
-            Livewire.on('hm', (e) => {
-                $("#mPer").modal('hide')
-                noti(e[0]['m'], e[0]['t'])
-            })
-            Livewire.on('rd', (e) => {
-                noti(e[0]['m'], e[0]['t'])
-            })
-
-            Alpine.data('eliminar', () => ({
-                confirmar(id) {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: "¡No podrás revertir esto!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: '¡Sí, bórralo!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Livewire.dispatch('delete', {
-                                id: id
-                            })
-                        }
-                    })
-                }
-            }))
-        </script>
-    @endscript
 </div>
-
-<style>
-    .loader {
-        border: 16px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-</style>

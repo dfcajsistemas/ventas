@@ -61,7 +61,7 @@
                                 <td>{!! estadoVenta($venta->est_venta) !!}</td>
                                 <td>{{ $venta->total }}</td>
                                 <td>
-                                    <a href="{{ route('reportes.detalleventa', $venta->id) }}"
+                                    <a href="{{ route('reportes.detalleventa', $venta->id) }}" target="_blank"
                                         class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-detail'></i></a>
                                 </td>
                             </tr>

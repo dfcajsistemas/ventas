@@ -36,6 +36,31 @@ class Ventas extends Component
         $this->sucursal = Sucursal::where('estado', 1)->first()->id;
     }
 
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingDesde()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingHasta()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSucursal()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingEstado()
+    {
+        $this->resetPage();
+    }
+
     #[Title(['Ventas', 'Reportes'])]
     public function render()
     {

@@ -31,6 +31,21 @@ class CuentasCobrar extends Component
         $this->sucursal = Sucursal::where('estado', 1)->first()->id;
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSucursal()
+    {
+        $this->resetPage();
+    }
+
     #[Title(['Cuentas por cobrar', 'Reportes'])]
     public function render()
     {

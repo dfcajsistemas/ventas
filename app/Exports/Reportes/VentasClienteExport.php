@@ -1,74 +1,31 @@
 <?php
 
-namespace App\Livewire\Reportes;
+namespace App\Exports\Reportes;
 
-use App\Exports\Reportes\VentasClienteExport;
-use App\Models\Sucursal;
 use App\Models\Venta;
-use Livewire\Attributes\Title;
-use Livewire\Attributes\Url;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-#[Title(['Ventas por cliente', 'Reportes'])]
-class VentasCliente extends Component
+class VentasClienteExport implements FromView, ShouldAutoSize
 {
-    use WithPagination;
+    use Exportable;
 
-    #[Url(except: '')]
-    public $estado = '';
-    #[Url(except: '')]
-    public $search = '';
-    #[Url(except: '10')]
-    public $perPage = '10';
-    #[Url(except: '')]
-    public $desde;
-    #[Url(except: '')]
-    public $hasta;
-    #[Url(except: '')]
-    public $sucursal;
-    public $sucursales;
+    private $desde, $hasta, $sucursal, $estado, $search, $perPage;
 
-    public function mount()
+    public function __construct($desde, $hasta, $sucursal, $estado, $search, $perPage)
     {
-        $this->sucursales = Sucursal::where('estado', 1)->pluck('nombre', 'id');
-        $this->sucursal = Sucursal::where('estado', 1)->first()->id;
-        $this->desde = date('Y-m-d');
-        $this->hasta = date('Y-m-d');
+        $this->desde = $desde;
+        $this->hasta = $hasta;
+        $this->sucursal = $sucursal;
+        $this->estado = $estado;
+        $this->search = $search;
+        $this->perPage = $perPage;
     }
 
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingDesde()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingHasta()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSucursal()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingEstado()
-    {
-        $this->resetPage();
-    }
-
-    #[Title(['Ventas por cliente', 'Reportes'])]
-    public function render()
+    public function view(): View
     {
         if ($this->estado == '') {
             $ventas = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
@@ -97,11 +54,6 @@ class VentasCliente extends Component
                 ->orderBy('clientes.razon_social')
                 ->paginate($this->perPage);
         }
-        return view('livewire.reportes.ventas-cliente', compact('ventas'));
-    }
-
-    public function export()
-    {
-        return (new VentasClienteExport($this->desde, $this->hasta, $this->sucursal, $this->estado, $this->search, $this->perPage))->download('ventas-cliente_' . date('dmYHis') . '.xlsx');
+        return view('reportes.ventas-cliente-export', compact('ventas'));
     }
 }
