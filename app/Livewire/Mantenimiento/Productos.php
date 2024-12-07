@@ -13,6 +13,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 
 #[Lazy()]
 class Productos extends Component
@@ -22,18 +23,19 @@ class Productos extends Component
     public $nombre, $codigo, $descripcion, $icbper, $p_costo, $p_venta1, $p_venta2, $p_venta3, $umedida_id, $categoria_id, $igvafectacion_id, $igvporciento_id, $mMethod, $mTitle, $idm;
     public $umedidas, $igvafectacions, $categorias, $igvporcientos;
 
-    public $prod=[];
+    public $prod = [];
 
     #[Url(except: '10')]
     public $perPage = '10';
     #[Url(except: '')]
     public $search = '';
 
-    public function mount(){
-        $this->umedidas=Umedida::where('estado', 1)->pluck('descripcion', 'id');
-        $this->igvafectacions=Igvafectacion::where('estado', 1)->pluck('descripcion', 'id');
-        $this->categorias=Categoria::where('estado', 1)->pluck('nombre', 'id');
-        $this->igvporcientos=Igvporciento::where('estado', 1)->pluck('porcentaje', 'id');
+    public function mount()
+    {
+        $this->umedidas = Umedida::where('estado', 1)->pluck('descripcion', 'id');
+        $this->igvafectacions = Igvafectacion::where('estado', 1)->pluck('descripcion', 'id');
+        $this->categorias = Categoria::where('estado', 1)->pluck('nombre', 'id');
+        $this->igvporcientos = Igvporciento::where('estado', 1)->pluck('porcentaje', 'id');
     }
 
     public function updatedSearch()
@@ -49,11 +51,11 @@ class Productos extends Component
     #[Title(['Productos', 'Mantenimiento'])]
     public function render()
     {
-        $productos=Producto::select('id', 'nombre', 'codigo', 'estado', 'categoria_id')
-                    ->where('nombre', 'LIKE', "%".$this->search."%")
-                    ->orWhere('codigo', 'LIKE', "%".$this->search."%")
-                    ->orderBy('nombre')
-                    ->paginate($this->perPage);
+        $productos = Producto::select('id', 'nombre', 'codigo', 'estado', 'categoria_id')
+            ->where('nombre', 'LIKE', "%" . $this->search . "%")
+            ->orWhere('codigo', 'LIKE', "%" . $this->search . "%")
+            ->orderBy('nombre')
+            ->paginate($this->perPage);
         return view('livewire.mantenimiento.productos', compact('productos'));
     }
 
@@ -82,7 +84,7 @@ class Productos extends Component
             'categoria_id' => 'required',
             'igvafectacion_id' => 'required',
             'igvporciento_id' => 'required',
-        ],[
+        ], [
             'nombre.required' => 'Ingrese el nombre',
             'nombre.unique' => 'El nombre ya existe',
             'codigo.required' => 'Ingrese el código',
@@ -116,7 +118,7 @@ class Productos extends Component
             'updated_by' => auth()->id()
         ]);
 
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Producto registrado']);
+        $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Producto registrado']);
     }
 
     public function edit(Producto $producto)
@@ -141,10 +143,11 @@ class Productos extends Component
         $this->dispatch('sm');
     }
 
-    public function update(){
+    public function update()
+    {
         $this->validate([
-            'nombre' => 'required|unique:productos,nombre,'.$this->idm,
-            'codigo' => 'required|unique:productos,codigo,'.$this->idm,
+            'nombre' => 'required|unique:productos,nombre,' . $this->idm,
+            'codigo' => 'required|unique:productos,codigo,' . $this->idm,
             'descripcion' => 'nullable',
             'icbper' => 'nullable',
             'p_costo' => 'nullable|numeric',
@@ -155,7 +158,7 @@ class Productos extends Component
             'categoria_id' => 'required',
             'igvafectacion_id' => 'required',
             'igvporciento_id' => 'required',
-        ],[
+        ], [
             'nombre.required' => 'Ingrese el nombre',
             'nombre.unique' => 'El nombre ya existe',
             'codigo.required' => 'Ingrese el código',
@@ -188,14 +191,14 @@ class Productos extends Component
             'updated_by' => auth()->id()
         ]);
 
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Editaste el producto']);
+        $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Editaste el producto']);
     }
 
     public function status(Producto $producto)
     {
         $producto->estado = $producto->estado ? null : 1;
         $producto->save();
-        $this->dispatch('hm', ['t'=>'success', 'm'=>'¡Hecho!<br>Cambiaste el estado del producto']);
+        $this->dispatch('hm', ['t' => 'success', 'm' => '¡Hecho!<br>Cambiaste el estado del producto']);
     }
 
     public function details(Producto $producto)
@@ -203,5 +206,25 @@ class Productos extends Component
         $this->prod = $producto;
         //dd($this->producto);
         $this->dispatch('smd');
+    }
+
+    #[On('delete')]
+    public function destroy(Producto $producto)
+    {
+        if ($producto->stocks->count() > 0) {
+            $this->dispatch('rd', ['t' => 'error', 'm' => '¡Error!<br>El producto tiene movimientos de stock']);
+            return;
+        }
+        if ($producto->reposicions->count() > 0) {
+            $this->dispatch('rd', ['t' => 'error', 'm' => '¡Error!<br>El producto tiene reposiciones registradas']);
+            return;
+        }
+        if ($producto->dventas->count() > 0) {
+            $this->dispatch('rd', ['t' => 'error', 'm' => '¡Error!<br>El producto esta incluido en alguna venta']);
+            return;
+        }
+
+        $producto->delete();
+        $this->dispatch('rd', ['t' => 'success', 'm' => '¡Hecho!<br>Producto eliminado']);
     }
 }

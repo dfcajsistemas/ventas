@@ -32,6 +32,10 @@ class Sucursal extends Model
     {
         return $this->hasMany(Venta::class);
     }
+    public function reposicions()
+    {
+        return $this->hasMany(Reposicion::class);
+    }
 
     //Relacion uno a muchos inversa
     public function distrito()

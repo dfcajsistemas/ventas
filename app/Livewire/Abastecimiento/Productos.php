@@ -58,17 +58,18 @@ class Productos extends Component
             $this->idm = $s->id;
         } else {
             $this->reset('stock_minimo');
+            $this->resetValidation();
         }
         $this->dispatch('sm');
     }
     public function ustock()
     {
         $this->validate([
-            'stock_minimo' => 'required|numeric|min:5'
+            'stock_minimo' => 'required|numeric|min:0.01'
         ], [
             'stock_minimo.required' => 'El stock minimo es requerido',
             'stock_minimo.numeric' => 'El stock minimo debe ser un número',
-            'stock_minimo.min' => 'El stock minimo debe ser mayor a 5'
+            'stock_minimo.min' => 'El stock minimo debe ser mayor a 0'
         ]);
         if ($this->idm) {
             $stock = Stock::find($this->idm);

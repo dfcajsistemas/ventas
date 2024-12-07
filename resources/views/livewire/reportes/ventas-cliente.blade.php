@@ -1,5 +1,5 @@
 <div>
-    <h4><span class="text-muted fw-light">Reportes /</span> Ventas</h4>
+    <h4><span class="text-muted fw-light">Reportes /</span> Ventas Cliente</h4>
     <div class="card">
         <div class="card-header">
             <div class="row">

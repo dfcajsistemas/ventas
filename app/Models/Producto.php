@@ -58,5 +58,8 @@ class Producto extends Model
         return $this->hasMany(Dventa::class);
     }
 
-
+    public function reposicions()
+    {
+        return $this->hasMany(Reposicion::class);
+    }
 }

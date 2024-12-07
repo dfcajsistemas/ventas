@@ -16,4 +16,14 @@ class Reposicion extends Model
         'created_by',
     ];
     use HasFactory;
+
+    //relación uno a muchos inversa
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class);
+    }
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
+    }
 }

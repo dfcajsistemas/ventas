@@ -42,7 +42,7 @@ class Cproductos extends Component
     public function gcantidad()
     {
         $this->validate([
-            'cantidad' => 'required|numeric|min:1',
+            'cantidad' => 'required|numeric|min:0.01',
         ], [
             'cantidad.required' => 'Ingrese la cantidad',
             'cantidad.numeric' => 'La cantidad debe ser un número',
