@@ -59,10 +59,10 @@ class Ver extends Component
             ->select('ventas.id', 'ventas.created_at', 'clientes.razon_social as cliente')
             ->orderBy('ventas.id', 'desc')
             ->paginate($this->perPage);
-        $pagos = Pago::where('caja_id', $this->caja->id)->whereNull('estado')->orderBy('created_at', 'desc')->paginate($this->perPagePagos, pageName: 'pagePagos');
+        $pagos = Pago::where('caja_id', $this->caja->id)->orderBy('created_at', 'desc')->paginate($this->perPagePagos, pageName: 'pagePagos');
         $movimientos = Movimiento::where('caja_id', $this->caja->id)->paginate($this->perPageMovimientos, pageName: 'pageMovimientos');
         //obtener el total de pagos por caja y por nombre de mpago
-        $totalPagos = Pago::where('caja_id', $this->caja->id)->selectRaw('mpago_id, sum(monto) as total')
+        $totalPagos = Pago::where('caja_id', $this->caja->id)->selectRaw('mpago_id, sum(monto) as total')->whereNull('estado')
             ->groupBy('mpago_id')
             ->get();
         return view('livewire.caja.ver', compact('ventas', 'pagos', 'movimientos', 'totalPagos'));

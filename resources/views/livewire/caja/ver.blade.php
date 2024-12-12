@@ -64,7 +64,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($pagos as $pago)
-                                    <tr>
+                                    <tr class="{{ $pago->estado == 1 ? 'table-danger' : '' }}">
                                         <td>{{ $pago->id }}</td>
                                         <td style="font-size:0.8em;">
                                             {{ date('d/m/Y H:i:s', strtotime($pago->created_at)) }}</td>

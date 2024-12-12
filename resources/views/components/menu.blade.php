@@ -301,6 +301,14 @@
                     </a>
                 </li>
             @endcan
+            @can('reportes.despachos')
+                <li class="menu-item {{ request()->routeIs('reportes.despachos*') ? 'active' : '' }}">
+                    <a href="{{ route('reportes.despachos') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa-solid fa-basket-shopping"></i>
+                        <div class="text-truncate">Despachos</div>
+                    </a>
+                </li>
+            @endcan
         </ul>
     @break
 

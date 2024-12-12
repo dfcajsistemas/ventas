@@ -1,10 +1,10 @@
 <div>
-    <h4><span class="text-muted fw-light">Reportes /</span> Venta de productos</h4>
+    <h4><span class="text-muted fw-light">Reportes /</span> Despacho por responsables</h4>
     <div class="card">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-4 mb-2 mb-md-0">
-                    <input type="search" class="form-control" placeholder="Buscar producto..."
+                    <input type="search" class="form-control" placeholder="Buscar responsable ..."
                         wire:model.live.debounce.300ms="search">
                 </div>
                 <div class="col-md-2 mb-2 mb-md-0">
@@ -39,37 +39,50 @@
             <i class="fa-solid fa-circle-notch fa-spin text-warning"></i> Cargando
         </div>
 
-        @if ($productos->count())
+        @if ($ventas->count())
             <div class="table-responsive text-noweap">
                 <table class="table table-sm table-hover text-small">
                     <thead>
                         <tr>
                             <th># Ped</th>
-                            <th>Susursal</th>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>Total</th>
+                            <th>Responsable</th>
                             <th>Fecha</th>
+                            <th>Sucursal</th>
+                            <th>Cliente</th>
+                            <th>F. pago</th>
+                            <th>Pago</th>
+                            <th>Estado</th>
+                            <th>Monto</th>
+                            @can('reportes.detalleventa')
+                                <th>Detalle</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($productos as $producto)
-                            <tr wire:key="{{ $producto->id }}">
-                                <td>{{ $producto->id }}</td>
-                                <td>{{ $producto->sucursal }}</td>
-                                <td>{{ $producto->nombre }}</td>
-                                <td>{{ $producto->cantidad }}</td>
-                                <td>{{ $producto->precio }}</td>
-                                <td>{{ $producto->total }}</td>
-                                <td>{{ $producto->created_at }}</td>
+                        @foreach ($ventas as $venta)
+                            <tr wire:key="{{ $venta->id }}">
+                                <td>{{ $venta->id }}</td>
+                                <td>{{ $venta->responsable }}</td>
+                                <td>{{ $venta->created_at->format('d/m/Y') }}</td>
+                                <td>{{ $venta->sucursal }}</td>
+                                <td>{{ $venta->razon_social }}</td>
+                                <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
+                                <td>{!! estadoPago($venta->est_pago) !!}</td>
+                                <td>{!! estadoVenta($venta->est_venta) !!}</td>
+                                <td>{{ $venta->total }}</td>
+                                @can('reportes.detalleventa')
+                                    <td>
+                                        <a href="{{ route('reportes.detalleventa', $venta->id) }}" target="_blank"
+                                            class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-detail'></i></a>
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="m-3">
-                {{ $productos->links() }}
+                {{ $ventas->links() }}
             </div>
         @else
             <div class="mx-3 mb-3">

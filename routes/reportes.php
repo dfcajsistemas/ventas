@@ -2,6 +2,7 @@
 
 use App\Livewire\Reportes\CuentasCobrar;
 use App\Livewire\Reportes\Dashboard;
+use App\Livewire\Reportes\Despachos;
 use App\Livewire\Reportes\DetalleVenta;
 use App\Livewire\Reportes\FlujoCajas;
 use App\Livewire\Reportes\Inventario;
@@ -18,3 +19,4 @@ Route::get('/ventascliente', VentasCliente::class)->name('reportes.ventascliente
 Route::get('/flujocajas', FlujoCajas::class)->name('reportes.flujocajas')->middleware('can:reportes.flujocajas');
 Route::get('/ventaproductos', VentaProductos::class)->name('reportes.ventaproductos')->middleware('can:reportes.ventaproductos');
 Route::get('/detalleventa/{venta}', DetalleVenta::class)->name('reportes.detalleventa')->middleware('can:reportes.detalleventa');
+Route::get('/despachos', Despachos::class)->name('reportes.despachos')->middleware('can:reportes.despachos');

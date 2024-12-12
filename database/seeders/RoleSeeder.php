@@ -125,5 +125,6 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'reportes.flujocajas'])->assignRole($reportes);
         Permission::create(['name' => 'reportes.ventaproductos'])->assignRole($reportes);
         Permission::create(['name' => 'reportes.detalleventa'])->assignRole($reportes);
+        Permission::create(['name' => 'reportes.despachos'])->assignRole($reportes);
     }
 }

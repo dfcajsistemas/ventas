@@ -13,16 +13,15 @@ class VentasClienteExport implements FromView, ShouldAutoSize
 {
     use Exportable;
 
-    private $desde, $hasta, $sucursal, $estado, $search, $perPage;
+    private $desde, $hasta, $sucursal, $estado, $search;
 
-    public function __construct($desde, $hasta, $sucursal, $estado, $search, $perPage)
+    public function __construct($desde, $hasta, $sucursal, $estado, $search)
     {
         $this->desde = $desde;
         $this->hasta = $hasta;
         $this->sucursal = $sucursal;
         $this->estado = $estado;
         $this->search = $search;
-        $this->perPage = $perPage;
     }
 
     public function view(): View
@@ -39,7 +38,7 @@ class VentasClienteExport implements FromView, ShouldAutoSize
                     $query->where('clientes.razon_social', 'LIKE', "%$this->search%");
                 })
                 ->orderBy('clientes.razon_social')
-                ->paginate($this->perPage);
+                ->get();
         } else {
             $ventas = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
                 ->join('sucursals', 'ventas.sucursal_id', '=', 'sucursals.id')
@@ -52,7 +51,7 @@ class VentasClienteExport implements FromView, ShouldAutoSize
                     $query->where('clientes.razon_social', 'LIKE', "%$this->search%");
                 })
                 ->orderBy('clientes.razon_social')
-                ->paginate($this->perPage);
+                ->get();
         }
         return view('reportes.ventas-cliente-export', compact('ventas'));
     }
