@@ -1,7 +1,7 @@
 <table>
     <thead>
         <tr>
-            <th>Id</th>
+            <th># Ped</th>
             <th>Fecha</th>
             <th>Sucursal</th>
             <th>Cliente</th>
@@ -9,6 +9,7 @@
             <th>Pago</th>
             <th>Estado</th>
             <th>Monto</th>
+            <th>Deuda</th>
         </tr>
     </thead>
     <tbody>
@@ -21,7 +22,8 @@
                 <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
                 <td>{!! estadoPago($venta->est_pago) !!}</td>
                 <td>{!! estadoVenta($venta->est_venta) !!}</td>
-                <td>{{ $venta->total }}</td>
+                <td>{{ number_format($venta->total, 2) }}</td>
+                <td>{{ number_format($venta->total - $venta->total_pagado, 2) }}</td>
             </tr>
         @endforeach
     </tbody>

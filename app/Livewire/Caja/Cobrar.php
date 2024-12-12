@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 
+use function PHPUnit\Framework\isNull;
+
 #[Lazy()]
 class Cobrar extends Component
 {
@@ -97,9 +99,19 @@ class Cobrar extends Component
                 'observacion' => $this->observacion,
                 'created_by' => auth()->user()->id
             ]);
+
+
             if (($this->mpagado + $this->monto) == $this->venta->total) {
                 $this->venta->update([
-                    'est_pago' => null
+                    'est_pago' => null,
+                    'total_pagado' => null
+                ]);
+            }
+            //agregamos el monto pagado a la venta
+            $tp = $this->venta->total_pagado ?? 0;
+            if ($this->venta->est_pago == 1) {
+                $this->venta->update([
+                    'total_pagado' => $tp + $this->monto
                 ]);
             }
             DB::commit();
@@ -182,8 +194,10 @@ class Cobrar extends Component
     {
         DB::beginTransaction();
         try {
+            $tp = $this->venta->total_pagado ?? $this->venta->total;
             $this->venta->update([
                 'est_pago' => 1,
+                'total_pagado' => $tp - $pago->monto
             ]);
 
             if ($pago->cuota_id) {
@@ -337,9 +351,16 @@ class Cobrar extends Component
                     'updated_by' => auth()->user()->id
                 ]);
             }
+            //agregamos el monto pagado a la venta
+            $tp = $this->venta->total_pagado ?? 0;
+            $this->venta->update([
+                'total_pagado' => $tp + $this->monto
+            ]);
+            //actualizamos el estado de la venta, si se ha pagado todo
             if ($this->venta->pagos()->whereNull('estado')->sum('monto') == $this->venta->total) {
                 $this->venta->update([
-                    'est_pago' => null
+                    'est_pago' => null,
+                    'total_pagado' => null
                 ]);
             }
 

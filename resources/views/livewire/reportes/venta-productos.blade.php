@@ -1,3 +1,80 @@
 <div>
-    {{-- The best athlete wants his opponent at his best. --}}
+    <h4><span class="text-muted fw-light">Reportes /</span> Flujo de productos</h4>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-4 mb-2 mb-md-0">
+                    <input type="search" class="form-control" placeholder="Buscar producto..."
+                        wire:model.live.debounce.300ms="search">
+                </div>
+                <div class="col-md-2 mb-2 mb-md-0">
+                    <x-select wire:model.live='sucursal'>
+                        @foreach ($sucursales as $ids => $sucursal)
+                            <option value="{{ $ids }}">{{ $sucursal }}</option>
+                        @endforeach
+                    </x-select>
+                </div>
+                <div class="col-md-2">
+                    <x-input type="date" wire:model.live='desde' />
+                </div>
+                <div class="col-md-2">
+                    <x-input type="date" wire:model.live='hasta' />
+                </div>
+                <div class="col-4 col-md-1">
+                    <select class="form-select" wire:model.live="perPage">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-4 col-md-1 d-grid">
+                    <button class="btn btn-label-secondary" title="Exportar" wire:click="export()"><i
+                            class="tf-icons fa-solid fa-file-excel"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div wire:loading wire:target="search, sucursal, desde, hasta, perPage, export" class="mx-3">
+            <i class="fa-solid fa-circle-notch fa-spin text-warning"></i> Cargando
+        </div>
+
+        @if ($productos->count())
+            <div class="table-responsive text-noweap">
+                <table class="table table-sm table-hover text-small">
+                    <thead>
+                        <tr>
+                            <th># Ped</th>
+                            <th>Susursal</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($productos as $producto)
+                            <tr wire:key="{{ $producto->id }}">
+                                <td>{{ $producto->id }}</td>
+                                <td>{{ $producto->sucursal }}</td>
+                                <td>{{ $producto->nombre }}</td>
+                                <td>{{ $producto->cantidad }}</td>
+                                <td>{{ $producto->precio }}</td>
+                                <td>{{ $producto->total }}</td>
+                                <td>{{ $producto->created_at }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="m-3">
+                {{ $productos->links() }}
+            </div>
+        @else
+            <div class="mx-3 mb-3">
+                <x-msg type="info" msg="No se encontraron resultados" />
+            </div>
+        @endif
+    </div>
 </div>

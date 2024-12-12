@@ -38,7 +38,7 @@
                 <table class="table table-sm table-hover text-small">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th># Ped</th>
                             <th>Fecha</th>
                             <th>Sucursal</th>
                             <th>Cliente</th>
@@ -46,6 +46,7 @@
                             <th>Pago</th>
                             <th>Estado</th>
                             <th>Monto</th>
+                            <th>Deuda</th>
                             <th>Detalle</th>
                         </tr>
                     </thead>
@@ -59,7 +60,8 @@
                                 <td>{{ $venta->fpago == null ? 'Contado' : 'Crédito' }}</td>
                                 <td>{!! estadoPago($venta->est_pago) !!}</td>
                                 <td>{!! estadoVenta($venta->est_venta) !!}</td>
-                                <td>{{ $venta->total }}</td>
+                                <td>{{ number_format($venta->total, 2) }}</td>
+                                <td>{{ number_format($venta->total - $venta->total_pagado, 2) }}</td>
                                 <td>
                                     <a href="{{ route('reportes.detalleventa', $venta->id) }}" target="_blank"
                                         class="btn btn-icon btn-info btn-sm"><i class='tf-icons bx bxs-detail'></i></a>
