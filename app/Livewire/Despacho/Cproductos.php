@@ -202,10 +202,10 @@ class Cproductos extends Component
             //actualizamos la venta y la serie del ticket
             $this->cventa->update([
                 'cor_ticket' => $correlativo,
-                'op_grabada' => number_format($g, 6),
+                'op_grabada' => number_format($g, 6, '.', ''),
                 'op_exonerada' => $e,
                 'op_inafecta' => $i,
-                'igv' => number_format(($gigv - $g), 6),
+                'igv' => number_format(($gigv - $g), 6, '.', ''),
                 'total' => $gigv + $e + $i,
                 'est_venta' => 1,
                 'updated_by' => auth()->user()->id
