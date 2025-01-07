@@ -5,12 +5,13 @@ namespace App\Livewire\Reportes;
 use App\Exports\Reportes\VentasClienteExport;
 use App\Models\Sucursal;
 use App\Models\Venta;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title(['Ventas por cliente', 'Reportes'])]
+#[Lazy()]
 class VentasCliente extends Component
 {
     use WithPagination;
@@ -102,6 +103,6 @@ class VentasCliente extends Component
 
     public function export()
     {
-        return (new VentasClienteExport($this->desde, $this->hasta, $this->sucursal, $this->estado, $this->search, $this->perPage))->download('ventas-cliente_' . date('dmYHis') . '.xlsx');
+        return (new VentasClienteExport($this->desde, $this->hasta, $this->sucursal, $this->estado, $this->search))->download('ventas-cliente_' . date('dmYHis') . '.xlsx');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Reportes;
 
-use App\Exports\Reportes\VentaProductosExport;
+use App\Exports\Reportes\DespachosExport;
 use App\Models\Sucursal;
 use App\Models\Venta;
 use Livewire\Attributes\Lazy;
@@ -12,7 +12,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Lazy()]
-class VentaProductos extends Component
+class Despachos extends Component
 {
     use WithPagination;
 
@@ -36,52 +36,54 @@ class VentaProductos extends Component
         $this->hasta = date('Y-m-d');
     }
 
-    public function updatedSearch()
+    public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function updatedPerPage()
+    public function updatingPerPage()
     {
         $this->resetPage();
     }
 
-    public function updatedDesde()
+    public function updatingDesde()
     {
         $this->resetPage();
     }
 
-    public function updatedHasta()
+    public function updatingHasta()
     {
         $this->resetPage();
     }
 
-    public function updatedSucursal()
+    public function updatingSucursal()
     {
         $this->resetPage();
     }
 
-    #[Title(['Venta de productos', 'Reportes'])]
+    #[Title(['Despachos por responsable', 'Reportes'])]
     public function render()
     {
-        $productos = Venta::join('dventas', 'ventas.id', '=', 'dventas.venta_id')
-            ->join('productos', 'dventas.producto_id', '=', 'productos.id')
+        $ventas = Venta::join('clientes', 'ventas.cliente_id', '=', 'clientes.id')
             ->join('sucursals', 'ventas.sucursal_id', '=', 'sucursals.id')
+            ->join('users', 'ventas.user_id', '=', 'users.id')
+            ->join('eventas', 'ventas.id', '=', 'eventas.venta_id')
+            ->select('ventas.id', 'eventas.created_at', 'clientes.razon_social', 'ventas.fpago', 'ventas.est_venta', 'ventas.est_pago', 'ventas.total', 'ventas.est_venta', 'sucursals.nombre as sucursal', 'users.name as responsable')
+            ->where('ventas.sucursal_id', $this->sucursal)
+            ->whereNotNull('ventas.est_venta')
             ->where(function ($query) {
-                $query->where('productos.nombre', 'like', "%$this->search%")
-                    ->where('ventas.sucursal_id', $this->sucursal)
-                    ->whereIn('ventas.est_venta', [1, 2, 3, 5])
+                $query->where('users.name', 'LIKE', "%$this->search%")
+                    ->where('eventas.est_venta', 1)
                     ->whereBetween('ventas.created_at', [$this->desde . ' 00:00:00', $this->hasta . ' 23:59:59']);
             })
-            ->select('productos.nombre', 'sucursals.nombre as sucursal', 'dventas.cantidad', 'dventas.precio', 'dventas.total', 'ventas.created_at', 'ventas.id')
-            ->orderBy('ventas.id', 'desc')
+            ->orderBy('ventas.id')
             ->paginate($this->perPage);
 
-        return view('livewire.reportes.venta-productos', compact('productos'));
+        return view('livewire.reportes.despachos', compact('ventas'));
     }
 
     public function export()
     {
-        return (new VentaProductosExport($this->desde, $this->hasta, $this->sucursal, $this->search))->download('venta-productos_' . date('dmYHis') . '.xlsx');
+        return (new DespachosExport($this->desde, $this->hasta, $this->sucursal, $this->search))->download('despachos_' . date('dmYHis') . '.xlsx');
     }
 }

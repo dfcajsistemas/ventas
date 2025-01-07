@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reportes;
 
+use App\Exports\Reportes\FlujoCajasExport;
 use App\Models\Caja;
 use App\Models\Sucursal;
 use Livewire\Attributes\Lazy;
@@ -73,5 +74,10 @@ class FlujoCajas extends Component
             })
             ->paginate($this->perPage);
         return view('livewire.reportes.flujo-cajas', compact('cajas'));
+    }
+
+    public function export()
+    {
+        return (new FlujoCajasExport($this->desde, $this->hasta, $this->sucursal, $this->search))->download('flujo-cajas_' . date('dmYHis') . '.xlsx');
     }
 }
