@@ -25,6 +25,10 @@ class Reposiciones extends Component
 
     #[Url(except: '')]
     public $search = '';
+    #[Url(except: '')]
+    public $desde = '';
+    #[Url(except: '')]
+    public $hasta = '';
     #[Url(except: '10')]
     public $perPage = '10';
 
@@ -33,6 +37,8 @@ class Reposiciones extends Component
         $this->sucursal = Auth::user()->sucursal;
         $this->producto = $producto;
         $this->stock = $producto->stocks->where('sucursal_id', $this->sucursal->id)->first();
+        $this->desde = now()->subMonths(2)->format('Y-m-d');
+        $this->hasta = now()->format('Y-m-d');
     }
 
     public function updatedSearch()
@@ -50,8 +56,8 @@ class Reposiciones extends Component
     {
         $reposiciones = Reposicion::where('sucursal_id', $this->sucursal->id)
             ->where('producto_id', $this->producto->id)
-            ->where('lote', 'LIKE', "%" . $this->search . "%")
-            ->orderBy('id', 'desc')
+            ->whereBetween('created_at', [$this->desde, $this->hasta])
+            ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
         return view('livewire.abastecimiento.reposiciones', compact('reposiciones'));
     }

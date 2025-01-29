@@ -86,11 +86,13 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-8 mb-2 mb-md-0">
-                            <input type="search" class="form-control" placeholder="Buscar..."
-                                wire:model.live.debounce.300ms="search">
+                        <div class="col-2 col-md-4">
+                            <x-input type='date' wire:model.live='desde' />
                         </div>
-                        <div class="col-4 col-md-2">
+                        <div class="col-2 col-md-4">
+                            <x-input type='date' wire:model.live='hasta' />
+                        </div>
+                        <div class="col-2 col-md-2">
                             <select class="form-select" wire:model.live="perPage">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
@@ -99,12 +101,12 @@
                             </select>
                         </div>
                         @can('abastecimiento.productos.reposiciones.agregar')
-                            <div class="col-4 col-md-1 d-grid">
+                            <div class="col-3 col-md-1 d-grid">
                                 <button class="btn btn-primary" title="Nuevo" wire:click="create()"><i
                                         class="tf-icons fa-solid fa-plus"></i></button>
                             </div>
                         @endcan
-                        <div class="col-4 col-md-1 d-grid">
+                        <div class="col-3 col-md-1 d-grid">
                             <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
                                     class="tf-icons fa-solid fa-file-excel"></i></button>
                         </div>
