@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Abastecimiento;
 
+use App\Exports\Abastecimiento\ReposicionesExport;
 use App\Models\Producto;
 use App\Models\Reposicion;
 use Illuminate\Support\Facades\Auth;
@@ -133,5 +134,10 @@ class Reposiciones extends Component
         $this->observaciones = $reposicion->observaciones;
         $this->created_at = $reposicion->created_at;
         $this->dispatch('smd');
+    }
+
+    public function export()
+    {
+        return (new ReposicionesExport($this->producto->nombre, $this->producto->id, $this->desde, $this->hasta, $this->sucursal))->download('reposiciones_' . date('dmYHis') . '.xlsx');
     }
 }

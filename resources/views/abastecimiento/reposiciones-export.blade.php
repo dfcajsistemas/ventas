@@ -1,29 +1,27 @@
-<table class="table table-sm table-hover text-small">
+<table>
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Sucursal</th>
-            <th>Producto</th>
-            <th>Stock Mínimo</th>
-            <th>Stock</th>
-            <th>Precio Costo</th>
-            <th>Precio 1</th>
-            <th>Precio 2</th>
-            <th>Precio 3</th>
+            <th colspan="4" style="font-size: 11px; font-weight:500;">REPOSISCIONES
+                ({{ date('d/m/Y', strtotime($desde)) }} -
+                {{ date('d/m/Y', strtotime($hasta)) }})</th>
+        </tr>
+        <tr>
+            <th colspan="4" style="font-size: 13px; font-weight:500;">{{ $nombre }}</th>
+        </tr>
+        <tr>
+            <th style="font-weight: bold;">Id</th>
+            <th style="font-weight: bold;">Lote</th>
+            <th style="font-weight: bold;">Cantidad</th>
+            <th style="font-weight: bold;">Fecha</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($productos as $producto)
-            <tr wire:key="{{ $producto->id }}">
-                <td>{{ $producto->id }}</td>
-                <td>{{ $producto->sucursal }}</td>
-                <td>{{ $producto->nombre }}</td>
-                <td>{{ $producto->stock_minimo }}</td>
-                <td>{{ $producto->stock }}</td>
-                <td>{{ $producto->p_costo }}</td>
-                <td>{{ $producto->p_venta1 }}</td>
-                <td>{{ $producto->p_venta2 }}</td>
-                <td>{{ $producto->p_venta3 }}</td>
+        @foreach ($reposiciones as $reposicion)
+            <tr wire:key="{{ $reposicion->id }}">
+                <td>{{ $reposicion->id }}</td>
+                <td>{{ $reposicion->lote }}</td>
+                <td>{{ $reposicion->cantidad }}</td>
+                <td>{{ date('d/m/Y', strtotime($reposicion->created_at)) }}</td>
             </tr>
         @endforeach
     </tbody>

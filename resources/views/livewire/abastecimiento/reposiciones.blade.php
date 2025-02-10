@@ -107,7 +107,7 @@
                             </div>
                         @endcan
                         <div class="col-3 col-md-1 d-grid">
-                            <button class="btn btn-label-secondary" title="Exportar" wire:click="exportar()"><i
+                            <button class="btn btn-label-secondary" title="Exportar" wire:click="export()"><i
                                     class="tf-icons fa-solid fa-file-excel"></i></button>
                         </div>
                     </div>
