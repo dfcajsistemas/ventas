@@ -50,14 +50,19 @@ class Bproductos extends Component
         //obtenemos el % de igv para el producto
         $pigv = $producto->igvporciento->porcentaje;
 
-        if ($stock->stock < 1) {
+        $a = 0;
+        if ($stock->stock <= 0) {
             $this->dispatch('rep', ['t' => 'error', 'm' => '¡Error!<br>Stock insuficiente']);
             return;
+        } elseif ($stock->stock > 0 && $stock->stock < 1) {
+            $a = $stock->stock;
+        } elseif ($stock->stock >= 1) {
+            $a = 1;
         }
 
         if ($dventa) {
 
-            $c = $dventa->cantidad + 1;
+            $c = $dventa->cantidad + $a;
             $p = $dventa->precio;
             $t = $p * $c;
             if ($producto->igvafectacion_id == 1) {
@@ -69,7 +74,7 @@ class Bproductos extends Component
             try {
                 DB::beginTransaction();
                 $stock->update([
-                    'stock' => $stock->stock - 1,
+                    'stock' => $stock->stock - $a,
                     'updated_by' => auth()->user()->id
                 ]);
 
@@ -92,17 +97,17 @@ class Bproductos extends Component
             try {
                 DB::beginTransaction();
                 $stock->update([
-                    'stock' => $stock->stock - 1,
+                    'stock' => $stock->stock - $a,
                     'updated_by' => auth()->user()->id
                 ]);
 
                 Dventa::create([
                     'venta_id' => $this->venta->id,
                     'producto_id' => $producto->id,
-                    'cantidad' => 1,
+                    'cantidad' => $a,
                     'precio' => $p,
                     'igv' => (($producto->igvafectacion_id == 1) ? (($p * $pigv) / (100 + $pigv)) : 0),
-                    'total' => $p,
+                    'total' => $a * $p,
                     'created_by' => auth()->user()->id,
                 ]);
                 DB::commit();

@@ -76,7 +76,7 @@ class Cobrar extends Component
             return;
         }
         $this->validate([
-            'monto' => 'required|numeric|min:1',
+            'monto' => 'required|numeric|min:0.01',
             'mpago' => 'required',
             'mrecibido' => 'nullable|numeric|min:' . $this->monto . '|required_if:mpago,1',
         ], [
@@ -149,7 +149,7 @@ class Cobrar extends Component
     {
         $this->validate([
             'fvence' => 'required|date',
-            'mcuota' => 'required|numeric|min:1',
+            'mcuota' => 'required|numeric|min:0.01',
         ], [
             'fvence.required' => 'Ingrese la fecha de vencimiento',
             'fvence.date' => 'Fecha de vencimiento no válida',
@@ -321,9 +321,9 @@ class Cobrar extends Component
             return;
         }
         $this->validate([
-            'monto' => 'required|numeric|min:1',
+            'monto' => 'required|numeric|min:0.01',
             'mpago' => 'required',
-            'mrecibido' => 'nullable|numeric|min:1|required_if:mpago,1',
+            'mrecibido' => 'nullable|numeric|min:0.01|required_if:mpago,1',
         ], [
             'monto.required' => 'Ingrese el monto',
             'monto.numeric' => 'El monto debe ser un número',
