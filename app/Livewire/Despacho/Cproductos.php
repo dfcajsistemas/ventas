@@ -51,7 +51,7 @@ class Cproductos extends Component
         $dventa = Dventa::find($this->idm);
 
         $stock = $dventa->producto->stocks->where('sucursal_id', auth()->user()->sucursal->id)->first();
-        $nc = $this->cantidad - $dventa->cantidad;
+        $nc = round($this->cantidad, 2) - $dventa->cantidad;
         if ($stock->stock < $nc) {
             $this->dispatch('hmca', ['t' => 'error', 'm' => '¡Error!<br>Stock insuficiente']);
             return;
@@ -61,9 +61,9 @@ class Cproductos extends Component
         $pigv = $dventa->producto->igvporciento->porcentaje;
 
         $p = $dventa->precio;
-        $t = $p * $this->cantidad;
+        $t = round($p * round($this->cantidad, 2), 6);
         if ($dventa->producto->igvafectacion_id == 1) {
-            $igv = ($t * $pigv) / (100 + $pigv);
+            $igv = round((($t * $pigv) / (100 + $pigv)), 6);
         } else {
             $igv = 0;
         }
@@ -71,12 +71,12 @@ class Cproductos extends Component
         try {
             DB::beginTransaction();
             $stock->update([
-                'stock' => $stock->stock - $nc,
+                'stock' => round(($stock->stock - $nc), 2),
                 'updated_by' => auth()->user()->id
             ]);
 
             $dventa->update([
-                'cantidad' => $this->cantidad,
+                'cantidad' => round($this->cantidad, 2),
                 'total' => $t,
                 'igv' => $igv
             ]);
@@ -113,9 +113,9 @@ class Cproductos extends Component
         //obtenemos el porcentaje del igv
         $pigv = $dventa->producto->igvporciento->porcentaje;
 
-        $t = $this->precio * $dventa->cantidad;
+        $t = round(round($this->precio, 2) * $dventa->cantidad, 6);
         if ($dventa->producto->igvafectacion_id == 1) {
-            $igv = ($t * $pigv) / (100 + $pigv);
+            $igv = round((($t * $pigv) / (100 + $pigv)), 6);
         } else {
             $igv = 0;
         }
@@ -123,7 +123,7 @@ class Cproductos extends Component
         try {
             DB::beginTransaction();
             $dventa->update([
-                'precio' => $this->precio,
+                'precio' => round($this->precio, 2),
                 'total' => $t,
                 'igv' => $igv,
                 'updated_by' => auth()->user()->id
@@ -174,7 +174,7 @@ class Cproductos extends Component
         foreach ($afectaciones as $afectacion) {
             if ($afectacion->codigo == '10') {
                 $gigv += $afectacion->total;
-                $g += $afectacion->total / (1 + ($afectacion->porcentaje / 100));
+                $g += round($afectacion->total / (1 + ($afectacion->porcentaje / 100)), 6);
             } elseif ($afectacion->codigo == '20') {
                 $e += $afectacion->total;
             } elseif ($afectacion->codigo == '30') {
@@ -203,10 +203,10 @@ class Cproductos extends Component
             $this->cventa->update([
                 'cor_ticket' => $correlativo,
                 'op_grabada' => number_format($g, 6, '.', ''),
-                'op_exonerada' => $e,
-                'op_inafecta' => $i,
+                'op_exonerada' => number_format($e, 6, '.', ''),
+                'op_inafecta' => number_format($i, 6, '.', ''),
                 'igv' => number_format(($gigv - $g), 6, '.', ''),
-                'total' => $gigv + $e + $i,
+                'total' => number_format($gigv + $e + $i, 6, '.', ''),
                 'est_venta' => 1,
                 'updated_by' => auth()->user()->id
             ]);

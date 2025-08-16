@@ -64,9 +64,9 @@ class Bproductos extends Component
 
             $c = $dventa->cantidad + $a;
             $p = $dventa->precio;
-            $t = $p * $c;
+            $t = round($p * $c, 6);
             if ($producto->igvafectacion_id == 1) {
-                $igv = ($t * $pigv) / (100 + $pigv);
+                $igv = round((($t * $pigv) / (100 + $pigv)), 6);
             } else {
                 $igv = 0;
             }
@@ -106,8 +106,8 @@ class Bproductos extends Component
                     'producto_id' => $producto->id,
                     'cantidad' => $a,
                     'precio' => $p,
-                    'igv' => (($producto->igvafectacion_id == 1) ? (($p * $pigv) / (100 + $pigv)) : 0),
-                    'total' => $a * $p,
+                    'igv' => (($producto->igvafectacion_id == 1) ? round(((round($p * $a, 6) * $pigv) / (100 + $pigv)), 6) : 0),
+                    'total' => round($a * $p, 6),
                     'created_by' => auth()->user()->id,
                 ]);
                 DB::commit();
