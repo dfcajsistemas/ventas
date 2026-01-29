@@ -10,7 +10,7 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
+            font-family: 'Arial', sans-serif;
             font-size: 10px;
         }
 
@@ -49,7 +49,7 @@
                 <tr style="border-bottom: 1px solid #777;">
                     <th>#</th>
                     <th>PRODUCTO</th>
-                    <th style="text-align: center;">CANT.</th>
+                    <th style="text-align: center;">CANT</th>
                     <th style="text-align: center;">PU</th>
                     <th style="text-align: right;">TOTAL</th>
                 </tr>

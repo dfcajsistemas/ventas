@@ -76,13 +76,13 @@ class Cobrar extends Component
             return;
         }
         $this->validate([
-            'monto' => 'required|numeric|min:0.01',
+            'monto' => 'required|numeric|min:0.00',
             'mpago' => 'required',
             'mrecibido' => 'nullable|numeric|min:' . $this->monto . '|required_if:mpago,1',
         ], [
             'monto.required' => 'Ingrese el monto',
             'monto.numeric' => 'El monto debe ser un número',
-            'monto.min' => 'El monto debe ser mayor a 0',
+            'monto.min' => 'El monto debe ser mayor o igual a 0',
             'mpago.required' => 'Seleccione el medio de pago',
             'mrecibido.required_if' => 'Ingrese el monto recibido',
             'mrecibido.numeric' => 'El monto recibido debe ser un número',
@@ -149,13 +149,13 @@ class Cobrar extends Component
     {
         $this->validate([
             'fvence' => 'required|date',
-            'mcuota' => 'required|numeric|min:0.01',
+            'mcuota' => 'required|numeric|min:0.00',
         ], [
             'fvence.required' => 'Ingrese la fecha de vencimiento',
             'fvence.date' => 'Fecha de vencimiento no válida',
             'mcuota.required' => 'Ingrese el monto de la cuota',
             'mcuota.numeric' => 'El monto de la cuota debe ser un número',
-            'mcuota.min' => 'El monto de la cuota debe ser mayor a 0',
+            'mcuota.min' => 'El monto de la cuota debe ser mayor o igual a 0',
         ]);
 
         $mt = $this->venta->total;
@@ -321,16 +321,16 @@ class Cobrar extends Component
             return;
         }
         $this->validate([
-            'monto' => 'required|numeric|min:0.01',
+            'monto' => 'required|numeric|min:0.00',
             'mpago' => 'required',
-            'mrecibido' => 'nullable|numeric|min:0.01|required_if:mpago,1',
+            'mrecibido' => 'nullable|numeric|min:0.00|required_if:mpago,1',
         ], [
             'monto.required' => 'Ingrese el monto',
             'monto.numeric' => 'El monto debe ser un número',
-            'monto.min' => 'El monto debe ser mayor a 0',
+            'monto.min' => 'El monto debe ser mayor o igual a 0',
             'mpago.required' => 'Seleccione el medio de pago',
             'mrecibido.required_if' => 'Ingrese el monto recibido',
-            'mrecibido.numeric' => 'El monto recibido debe ser mayor a 0',
+            'mrecibido.numeric' => 'El monto recibido debe ser mayor o igual a 0',
             'mrecibido.min' => 'El monto recibido es inválido',
         ]);
 

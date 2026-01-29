@@ -102,11 +102,11 @@ class Cproductos extends Component
     public function gprecio()
     {
         $this->validate([
-            'precio' => 'required|numeric|min:0.01',
+            'precio' => 'required|numeric|min:0.00',
         ], [
             'precio.required' => 'Ingrese el precio',
             'precio.numeric' => 'El precio debe ser un número',
-            'precio.min' => 'El precio debe ser mayor a 0',
+            'precio.min' => 'El precio debe ser mayor o igual a 0',
         ]);
         $dventa = Dventa::find($this->idm);
 
