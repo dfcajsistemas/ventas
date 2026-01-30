@@ -28,5 +28,6 @@
         @can('reportes')
             <x-enlace-modulo imagen="assets/img/modulos/reportes.png" mod="Reportes" ruta="reportes.ventas" />
         @endcan
+        <h4>Estos son mis módulos</h4>
     </div>
 </x-app-layout>
